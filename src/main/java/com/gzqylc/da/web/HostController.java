@@ -1,0 +1,125 @@
+package com.gzqylc.da.web;
+
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.InfoCmd;
+import com.github.dockerjava.api.exception.ConflictException;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.Info;
+import com.gzqylc.da.entity.Host;
+import com.gzqylc.da.service.HostService;
+import com.gzqylc.da.entity.Registry;
+import com.gzqylc.framework.AjaxResult;
+import com.gzqylc.framework.Route;
+import com.gzqylc.lang.bean.Option;
+import com.gzqylc.lang.web.RequestTool;
+import com.gzqylc.lang.web.base.BaseController;
+import com.gzqylc.utils.DockerTool;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@Slf4j
+@Route(value = "api/host")
+public class HostController extends BaseController {
+
+
+    @Autowired
+    private HostService service;
+
+    @Route("getScript")
+    public AjaxResult add(HttpServletRequest request) throws IOException {
+        String server = RequestTool.getBaseUrl(request);
+        String uri = FrpController.INSTALL_FRPC;
+        if(uri.startsWith("/")){
+            uri = uri.substring(1);
+        }
+        String scriptUrl = server + uri;
+        String cmd = "curl -s " + scriptUrl + " | sh -e";
+
+        return AjaxResult.success("获取命令成功",cmd);
+    }
+
+    @Route("notifyAdd/{dockerId}")
+    public AjaxResult add(@PathVariable String dockerId) throws IOException {
+        DockerClient client = DockerTool.getClient(dockerId);
+
+        Info info = client.infoCmd().exec();
+
+        Host host = new Host();
+        host.setName(info.getName());
+        host.setDockerId(dockerId);
+
+        service.save(host);
+
+        return AjaxResult.success("添加主机成功");
+    }
+
+    @Route("list")
+    public Page<Host> list(Pageable pageable, @RequestBody Host host) {
+        Page<Host> list = service.findAll(host, pageable);
+        return list;
+    }
+
+
+    @Route("delete")
+    public AjaxResult delete(@RequestBody List<String> ids) {
+        service.deleteAllById(ids);
+        return AjaxResult.success("删除成功");
+    }
+
+
+    @Route("options")
+    public List<Option> options(String searchText, String[] selected, Pageable pageable) {
+        return service.findOptionList(searchText, selected, pageable, Registry.Fields.name, Host::getName);
+    }
+
+    @Route("get")
+    public Map<String, Object> get(String id) {
+        Host host = service.findOne(id);
+        Info info = service.getDockerInfo(host);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("host", host);
+        result.put("info", info);
+
+        return result;
+    }
+
+
+    @Route("containers")
+    public List<Container> containers(String id) {
+        return service.getContainers(id);
+    }
+
+    @Route("images")
+    public List<Image> images(String id) {
+        return service.getImages(id);
+    }
+
+    @Route("deleteImage")
+    public AjaxResult deleteImage(String id, String imageId) {
+        try {
+            service.deleteImage(id, imageId);
+        } catch (ConflictException e) {
+            return AjaxResult.error("删除镜像失败" + e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
+}

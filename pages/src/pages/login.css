@@ -1,0 +1,28 @@
+.login-page {
+  margin-top: 100px;
+  background: rgba(198, 200, 166, 0.3);
+  padding: 100px;
+}
+
+.login-form {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.login-page h1 {
+  margin-bottom: 20px;
+  color: white;
+}
+

@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "cross-env UMI_ENV=dev umi dev",
+    "start-yyq": "cross-env UMI_ENV=dev-yyq  umi dev",
+    "build": "umi build",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/charts": "^1.0.2",
+    "@ant-design/icons": "^4.2.1",
+    "@ant-design/pro-layout": "^5.0.12",
+    "@ant-design/pro-table": "^2.29.0",
+    "@umijs/preset-react": "^1.5.16",
+    "@umijs/test": "^3.2.9",
+    "ant-design-pro": "^2.3.2",
+    "antd": "^4.12.2",
+    "antd-img-crop": "^3.9.0",
+    "braft-editor": "^2.3.9",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "react": "^16.12.0",
+    "react-amap": "1.1.1",
+    "react-dom": "^16.12.0",
+    "react-lazylog": "^4.5.2",
+    "umi": "^3.2.9",
+    "yorkie": "^2.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2"
+  }
+}

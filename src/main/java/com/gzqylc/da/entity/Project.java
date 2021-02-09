@@ -1,0 +1,42 @@
+package com.gzqylc.da.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gzqylc.lang.web.base.BaseEntity;
+import com.gzqylc.lang.web.jpa.converter.ObjectConverter;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Getter
+@Setter
+@Entity
+@FieldNameConstants
+public class Project extends BaseEntity {
+
+    @NotNull
+    String name;
+
+
+    String gitUrl;
+    String gitUsername;
+
+    String gitPassword;
+
+    @NotNull
+    String imageUrl;
+
+
+    @NotNull
+    @ManyToOne
+    Registry registry;
+
+    @JsonIgnore
+    @Lob
+    @Convert(converter = ObjectConverter.class)
+    App.BuildConfig buildConfig;
+
+
+}

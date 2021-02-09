@@ -1,0 +1,13 @@
+.site-layout .site-layout-background {
+  background: white;
+  opacity: 0.95;
+  width: 950px;
+  margin: 0 auto;
+}
+
+.site-layout {
+  background-image: url("../assets/bg.jpg") !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

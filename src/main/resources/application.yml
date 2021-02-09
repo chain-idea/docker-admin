@@ -1,0 +1,72 @@
+dbip: 192.168.2.193
+dbpwd: xjw1234
+
+dbport: 3306
+dbname: docker_admin
+
+
+
+
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+  port: 8080
+
+# 用户配置
+user:
+  password:
+    # 密码错误{maxRetryCount}次锁定10分钟
+    maxRetryCount: 5
+
+# Spring配置
+spring:
+  profiles:
+    active:
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 2000
+        one-indexed-parameters: true
+        page-parameter: pageNumber
+        size-parameter: pageSize
+      sort.sort-parameter: orderBy
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 300MB
+  jpa:
+    hibernate.ddl-auto: update
+    database: MYSQL
+    database-platform: MYSQL
+    show-sql: true
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+    jdbc-url: jdbc:mysql://${dbip}:${dbport}/${dbname}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    url: jdbc:mysql://${dbip}:${dbport}/${dbname}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    username: root
+    password: ${dbpwd}
+    hikari:
+      connection-test-query: SELECT 1
+      max-lifetime: 30000
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+
