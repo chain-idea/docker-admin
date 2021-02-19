@@ -4,5 +4,3 @@ services:
     build: .
     ports:
       - "8082:8080"
-  redis:
-    image: "registry.cn-beijing.aliyuncs.com/chain-idea/docker-admin"
