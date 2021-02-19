@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    image: registry.cn-beijing.aliyuncs.com/chain-idea/docker-admin
     ports:
       - "8082:8080"
     environment:
