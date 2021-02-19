@@ -1,8 +1,11 @@
-package com.gzqylc.da.service;
+package com.gzqylc.da.web;
 
 import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.entity.Repository;
 import com.gzqylc.da.entity.Tag;
+import com.gzqylc.da.service.IRepositoryService;
+import com.gzqylc.da.service.RegistryService;
+import com.gzqylc.da.service.RepositoryServiceFactory;
 import com.gzqylc.framework.Route;
 import com.gzqylc.lang.bean.Option;
 import com.gzqylc.lang.web.base.BaseController;
@@ -23,9 +26,7 @@ public class RepositoryController extends BaseController {
 
 
     @Route("list")
-    public Page<Repository> list(Pageable pageable, String keyword, String registryId) throws Exception {
-        registryId = "2e56727fa2d1456aa1399cb8a9728a50";
-
+    public Page<Repository> list(Pageable pageable, String keyword, @RequestParam(required = true) String registryId) throws Exception {
         Registry registry = registryService.findOne(registryId);
 
         IRepositoryService repositoryService = RepositoryServiceFactory.getRepositoryService(registry);

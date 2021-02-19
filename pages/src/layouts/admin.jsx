@@ -26,23 +26,23 @@ export default class extends React.Component {
     return (
       <Layout>
         <Sider width={150}>
-          <Space direction="vertical" style={{width:'100%',margin:20}}>
-          <Divider style={{height: 1}}></Divider>
+          <Space direction="vertical" style={{width: '100%', margin: 20}}>
+            <Divider style={{height: 1}}></Divider>
 
-          <Link to="/admin">首页</Link>
-          <h3>应用平台</h3>
+            <Link to="/admin">首页</Link>
+            <h3>应用平台</h3>
 
-          <Link to="/admin/project">项目</Link>
-          <Link to="/admin/app">应用</Link>
+            <Link to="/admin/project">项目</Link>
+            <Link to="/admin/app">应用</Link>
 
-          <Link to="/admin/host">主机</Link>
+            <Link to="/admin/host">主机</Link>
 
-          <h3>交付中心</h3>
-          <Link to="/admin/repository">镜像仓库</Link>
+            <h3>镜像中心</h3>
+            <Link to="/admin/repository">镜像仓库</Link><a>我的收藏</a>
 
 
-          <h3>用户中心</h3>
-          <Link to="/admin/user/registry">仓库配置</Link>
+            <h3>用户中心</h3>
+            <Link to="/admin/user/registry">仓库配置</Link>
           </Space>
 
         </Sider>

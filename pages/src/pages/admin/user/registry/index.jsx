@@ -31,7 +31,7 @@ export default class extends React.Component {
       dataIndex: 'name',
     },
     {
-      title: '主机地址',
+      title: '仓库地址',
       dataIndex: 'host',
     },
     {

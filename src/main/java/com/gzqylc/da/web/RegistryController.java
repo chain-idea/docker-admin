@@ -29,6 +29,12 @@ public class RegistryController extends BaseController {
         return list;
     }
 
+    @Route("all")
+    public List<Registry> all() {
+        List<Registry> list = service.findAll();
+        return list;
+    }
+
     @Route("save")
     public AjaxResult save(@RequestBody Registry t) {
         service.save(t);
@@ -52,6 +58,5 @@ public class RegistryController extends BaseController {
     public List<Option> options(String searchText, String[] selected, Pageable pageable) {
         return service.findOptionList(searchText, selected, pageable, Registry.Fields.name, Registry::getName);
     }
-
 
 }

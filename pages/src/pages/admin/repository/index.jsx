@@ -1,4 +1,4 @@
-import {Button} from 'antd';
+import {Button, Tabs} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
@@ -11,9 +11,7 @@ let api = '/api/repository/';
 export default class extends React.Component {
 
   state = {
-    showAddForm: false,
-    showEditForm: false,
-    formValues: {},
+    registryList: []
   }
   actionRef = React.createRef();
 
@@ -39,27 +37,40 @@ export default class extends React.Component {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, row) => {
-       return <Button onClick={()=>history.push("app/deploy?url=" + row.url)}>部署最新版</Button>
+        return <Button onClick={() => history.push("app/deploy?url=" + row.url)}>部署最新版</Button>
       },
     },
   ];
 
+
+  componentDidMount() {
+    http.get("api/registry/all").then(registryList => {
+      this.setState({registryList})
+    })
+
+
+  }
+
   render() {
 
-    return (<div>
-      <ProTable
-        actionRef={this.actionRef}
-        request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        rowKey="name"
-        size="small"
-        bordered={true}
-        search={false}
-        options={{search:true}}
-      />
+    return (<div className="panel">
+      <Tabs defaultActiveKey="0">
+        {this.state.registryList.map((registry, index) => <Tabs.TabPane tab={registry.name} key={index}>
+          <ProTable
+            actionRef={this.actionRef}
+            request={(params, sort) => http.getPageableData(api + 'list?registryId=' + registry.id, params, sort)}
+            columns={this.columns}
+            rowSelection={false}
+            rowKey="name"
+            size="small"
+            bordered={true}
+            search={false}
+            options={{search: true}}
+          />
+        </Tabs.TabPane>)}
 
 
+      </Tabs>
 
 
     </div>)
