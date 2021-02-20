@@ -28,9 +28,6 @@ echo "容器引擎标识: ${docker_id}"
 id=$(tr [A-Z] [a-z] <<< "${docker_id}" | sed 's/://g' >&1)
 echo "根据容器引擎标识生产FRP标识 ${id}"
 
-echo "正在检查可曾安装过"
-rm -rf /etc/frp && mkdir /etc/frp
-systemctl stop frpc
 
 
 echo "下载frpc..."
