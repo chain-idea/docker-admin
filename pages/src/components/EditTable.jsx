@@ -21,8 +21,7 @@ export default class extends React.Component {
 
   add = () => {
     let {dataSource} = this.state;
-    dataSource.push({
-    })
+    dataSource.push({})
 
     this.setState({dataSource})
   }
@@ -56,21 +55,21 @@ export default class extends React.Component {
         {dataSource.map((p, i) => <tr key={i}>
           {columns.map(c => <td key={c.dataIndex}>
             {c.dataType == 'Input' && <Input size="small"
-              value={p[c.dataIndex]}
-              onChange={e => {
-                this.edit(c.dataIndex, e.target.value, i)
-              }}/>}
+                                             value={p[c.dataIndex]}
+                                             onChange={e => {
+                                               this.edit(c.dataIndex, e.target.value, i)
+                                             }}/>}
 
             {c.dataType == 'InputNumber' && <InputNumber size="small"
-              value={p[c.dataIndex]}
-              onChange={v => {
-                this.edit(c.dataIndex, v, i)
-              }}/>}
+                                                         value={p[c.dataIndex]}
+                                                         onChange={v => {
+                                                           this.edit(c.dataIndex, v, i)
+                                                         }}/>}
 
 
             {c.dataType == 'Select' && <Select value={p[c.dataIndex]} size="small"
                                                onChange={v => this.edit(c.dataIndex, v, i)}
-            style={{minWidth:100}}
+                                               style={{minWidth: 100}}
             >
 
               {Object.keys(c.valueEnum).map(k => <Select.Option key={k} value={k}>{c.valueEnum[k]}</Select.Option>)}
@@ -80,6 +79,11 @@ export default class extends React.Component {
             <Button size="small" onClick={() => this.remove(i)}>删除</Button>
           </td>
         </tr>)}
+
+        {dataSource.length == 0 && <tr>
+          <td height={50} colSpan={columns.length + 1}>暂无数据</td>
+        </tr>}
+
         </tbody>
       </table>
 

@@ -37,8 +37,8 @@ export default class extends React.Component {
   ]
 
   envColumns = [
-    {title: 'key', dataIndex: 'key', dataType: 'Input'},
-    {title: 'key', dataIndex: 'value', dataType: 'Input'},
+    {title: '键', dataIndex: 'key', dataType: 'Input'},
+    {title: '值', dataIndex: 'value', dataType: 'Input'},
   ]
 
   update = () => {
