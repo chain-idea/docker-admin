@@ -65,11 +65,23 @@ pre.code {
   font-size: 14px;
 }
 
-.ant-layout-sider a{
+.ant-layout-sider a {
   color: #9ba3af;
   margin-left: 4px;
 }
-.ant-layout-sider h3{
+
+.ant-layout-sider h3 {
   margin-top: 30px;
   color: #595f69;
 }
+
+
+.q-table-desc td, .q-table-desc th {
+  padding: 4px;
+}
+
+.q-table-desc th:after {
+  content: ':';
+}
+
+
