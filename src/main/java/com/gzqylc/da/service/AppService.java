@@ -55,7 +55,7 @@ public class AppService extends BaseService<App> {
                        App.AppConfig cfg) throws InterruptedException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
         logger.info("部署阶段开始");
-        DockerClient client = DockerTool.getClient(dockerId, registryHost, registryUsername, registryPassword);
+        DockerClient client = DockerTool.getRemoteClient(dockerId, registryHost, registryUsername, registryPassword);
 
         logger.info("开始拉取镜像");
         client.pullImageCmd(image).exec(new PullImageCallback(logger)).awaitCompletion();

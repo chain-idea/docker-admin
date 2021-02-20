@@ -46,14 +46,17 @@ public class DockerTool {
     }
 
     public static DockerClient getClient(String dockerId) {
-        return getClient(dockerId, null, null, null);
+        if (dockerId == null) {
+            return getLocalClient(null, null, null);
+        }
+        return getRemoteClient(dockerId, null, null, null);
     }
 
 
     /**
-     * @param dockerId abc.test.com
+     * @param dockerId
      */
-    public static DockerClient getClient(String dockerId, String url, String username, String password) {
+    public static DockerClient getRemoteClient(String dockerId, String url, String username, String password) {
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost(DOCKER_HOST_ROUTER)
                 .withRegistryUsername(username)
@@ -70,8 +73,6 @@ public class DockerTool {
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
         return dockerClient;
     }
-
-
 
 
 }
