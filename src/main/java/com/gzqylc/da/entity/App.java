@@ -92,11 +92,12 @@ public class App extends BaseEntity {
 
     @Data
     public static class BuildConfig {
-
         String context = "/";
         String dockerfile = "Dockerfile";
 
         boolean autoBuild = false;
         boolean useCache = true;
+
+        String buildHost; // 构建镜像的主机ID
     }
 }
