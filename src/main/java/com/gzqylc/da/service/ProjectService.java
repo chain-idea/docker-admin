@@ -120,6 +120,7 @@ public class ProjectService extends BaseService<Project> {
         logger.info("是否使用缓存  {}", useCache);
         buildImageCmd.withNoCache(!useCache);
 
+        logger.info("向docker发送构建指令");
         String imageId = buildImageCmd.exec(new BuildImageResultCallback(logger)).awaitImageId();
         logger.info("镜像构建结束 imageId={}", imageId);
 
