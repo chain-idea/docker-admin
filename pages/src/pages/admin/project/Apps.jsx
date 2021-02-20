@@ -25,7 +25,13 @@ export default class extends React.Component {
         return <a onClick={() => history.push("/admin/app/" + row.id)}>{name}</a>
       }
     },
-
+    {
+      title: '主机',
+      dataIndex: 'host',
+      render(v){
+        return v.name
+      }
+    },
 
     {title: '最近更新', dataIndex: 'modifyTime'},
     {title: '状态', dataIndex: 'status'},
@@ -54,7 +60,8 @@ export default class extends React.Component {
     const {project} = this.props;
 
     return (<div>
-      <Button className="q-mb-md" onClick={() => history.push("/admin/app/deploy?url=" + project.imageUrl)} type="primary">部署新应用</Button>
+      <Button className="q-mb-md" onClick={() => history.push("/admin/app/deploy?url=" + project.imageUrl)}
+              type="primary">部署新应用</Button>
       <Table rowKey="id" columns={this.columns} dataSource={list}>
 
       </Table>
