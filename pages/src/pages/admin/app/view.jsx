@@ -1,4 +1,4 @@
-import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider} from 'antd';
+import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert} from 'antd';
 import React from 'react';
 import http from "@/utils/request";
 import Log from "./Log";
@@ -69,7 +69,6 @@ export default class extends React.Component {
     return (<div>
 
       <Card className="panel" title={app.name} bordered size="small" extra={<Space>
-
         <Button onClick={this.start} type="primary">启动</Button>
         <Button onClick={this.stop} type="primary" danger>停止</Button>
         <Button onClick={this.deploy} type="primary">重新部署</Button>
@@ -86,13 +85,10 @@ export default class extends React.Component {
           </tr>
           <tr>
             <th>容器</th>
-            <td>{containerInfo.name} <Divider type="vertical"></Divider>{containerInfo.id}</td>
+            <td>{containerInfo.name} <Divider type="vertical"></Divider>{containerInfo.id} <Divider
+              type="vertical"></Divider> {containerInfo.status}</td>
           </tr>
 
-          <tr>
-            <th>状态</th>
-            <td>{containerInfo.status}</td>
-          </tr>
           <tr>
             <th>端口(主机:容器)</th>
             <td> {containerInfo.ports}</td>

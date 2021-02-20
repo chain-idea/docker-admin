@@ -107,7 +107,7 @@ export default class extends React.Component {
 
 
       <div className="panel">
-        <a href="https://cr.console.aliyun.com/cn-beijing/instances" target="_blank">阿里云镜像仓库</a>
+        <a href="https://cr.console.aliyun.com" target="_blank">阿里云镜像仓库</a>
       </div>
       <div className="panel">
         <ProTable
