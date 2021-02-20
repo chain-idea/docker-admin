@@ -46,7 +46,7 @@ export default class extends React.Component {
     {
       title: '密码',
       dataIndex: 'password',
-      hideInTable:true
+      hideInTable: true
     },
     {
       title: '操作',
@@ -60,9 +60,9 @@ export default class extends React.Component {
             this.setState(this.state)
           }}>修改</a>
           <Divider type="vertical"></Divider>
-            <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete([record])}>
-              <a>删除</a>
-            </Popconfirm>
+          <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete([record])}>
+            <a>删除</a>
+          </Popconfirm>
         </div>;
 
 
@@ -105,26 +105,28 @@ export default class extends React.Component {
 
     return (<div>
 
-      <a href="https://cr.console.aliyun.com/cn-beijing/instances">跳转到阿里云</a>
 
-      <ProTable
-        actionRef={this.actionRef}
-        toolBarRender={(action, {selectedRows}) => [
-          <Button type="primary" onClick={() => {
-            this.state.showAddForm = true;
-            this.setState(this.state)
-          }}>
-            <PlusOutlined/> 新建
-          </Button>,
-        ]}
-        request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        search={false}
-        rowKey="id"
-      />
-
-
+      <div className="panel">
+        <a href="https://cr.console.aliyun.com/cn-beijing/instances" target="_blank">阿里云镜像仓库</a>
+      </div>
+      <div className="panel">
+        <ProTable
+          actionRef={this.actionRef}
+          toolBarRender={(action, {selectedRows}) => [
+            <Button type="primary" onClick={() => {
+              this.state.showAddForm = true;
+              this.setState(this.state)
+            }}>
+              <PlusOutlined/> 新建
+            </Button>,
+          ]}
+          request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
+          columns={this.columns}
+          rowSelection={false}
+          search={false}
+          rowKey="id"
+        />
+      </div>
       <Modal
         maskClosable={false}
         destroyOnClose
