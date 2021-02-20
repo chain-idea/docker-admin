@@ -83,7 +83,7 @@ public class ProjectService extends BaseService<Project> {
         DockerClient dockerClient;
 
         String buildHost = cfg.getBuildHost();
-        if (buildHost != null || buildHost.equals("-1")) {
+        if (buildHost == null) {
             logger.info("未配置构建主机，将使用本机构建");
             dockerClient = DockerTool.getLocalClient(cfg.getRegistryHost(),
                     cfg.getRegistryUsername(),
@@ -91,9 +91,17 @@ public class ProjectService extends BaseService<Project> {
 
         } else {
             Host host = hostDao.findOne(buildHost);
-            dockerClient = DockerTool.getRemoteClient(host.getDockerId(), cfg.getRegistryHost(),
-                    cfg.getRegistryUsername(),
-                    cfg.getRegistryPassword());
+            logger.info("构建主机:{}", host);
+            if (host.getDockerId() != null) {
+                dockerClient = DockerTool.getRemoteClient(host.getDockerId(), cfg.getRegistryHost(),
+                        cfg.getRegistryUsername(),
+                        cfg.getRegistryPassword());
+            } else {
+                dockerClient = DockerTool.getLocalClient(cfg.getRegistryHost(),
+                        cfg.getRegistryUsername(),
+                        cfg.getRegistryPassword());
+            }
+
         }
 
         logger.info("使用本地主机构建");

@@ -131,8 +131,8 @@ public class PipelineService extends BaseService<Pipeline> {
         try {
             switch (pipe.getType()) {
                 case BUILD_IMAGE: {
-                    Pipeline.PipeBuildConfig yaml = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
-                    projectService.buildImage(pipelineId, yaml);
+                    Pipeline.PipeBuildConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
+                    projectService.buildImage(pipelineId, cfg);
                     break;
                 }
                 case DEPLOY: {
