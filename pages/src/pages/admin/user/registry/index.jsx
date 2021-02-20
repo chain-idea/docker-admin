@@ -105,7 +105,8 @@ export default class extends React.Component {
 
     return (<div>
 
-      {/*表格*/}
+      <a href="https://cr.console.aliyun.com/cn-beijing/instances">跳转到阿里云</a>
+
       <ProTable
         actionRef={this.actionRef}
         toolBarRender={(action, {selectedRows}) => [
@@ -124,7 +125,6 @@ export default class extends React.Component {
       />
 
 
-      {/*添加表单*/}
       <Modal
         maskClosable={false}
         destroyOnClose
@@ -140,12 +140,11 @@ export default class extends React.Component {
           onSubmit={this.handleSave}
           type="form"
           columns={this.columns}
-          rowSelection={{}}
+          rowSelection={false}
         />
       </Modal>
 
 
-      {/*修改表单*/}
       <Modal
         maskClosable={false}
         destroyOnClose
@@ -162,7 +161,7 @@ export default class extends React.Component {
           form={{initialValues: this.state.formValues}}
           type="form"
           columns={this.columns}
-          rowSelection={{}}
+          rowSelection={false}
         />
       </Modal>
 
