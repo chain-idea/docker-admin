@@ -18,7 +18,8 @@ command_exists() {
 
 # 检查docker是否安装
 if ! command_exists docker; then
-		echo "请现安装docker"
+		echo "请先安装docker"
+		exit 1
 fi
 
 # 获得docker唯一标识
