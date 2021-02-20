@@ -6,13 +6,12 @@ import com.github.dockerjava.api.command.PushImageCmd;
 import com.google.common.collect.Sets;
 import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
-import com.gzqylc.da.dao.RunnerHostConfigDao;
+import com.gzqylc.da.dao.RunnerDao;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.pipe.callback.BuildImageResultCallback;
 import com.gzqylc.da.service.pipe.callback.PushImageCallback;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
-import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.utils.DockerTool;
 import com.gzqylc.lang.web.base.BaseService;
 import org.apache.commons.io.FileUtils;
@@ -39,7 +38,7 @@ public class ProjectService extends BaseService<Project> {
     HostDao hostDao;
 
     @Autowired
-    RunnerHostConfigDao runnerHostConfigDao;
+    RunnerDao runnerDao;
 
     public void saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
@@ -47,7 +46,7 @@ public class ProjectService extends BaseService<Project> {
         project.setImageUrl(registry.getHost() + "/" + registry.getNamespace() + "/" + project.getName());
         if (project.getBuildConfig() == null) {
             App.BuildConfig buildConfig = new App.BuildConfig();
-            RunnerHostConfig config = runnerHostConfigDao.findTop1(new Criteria<>(), Sort.by("seq"));
+            Runner config = runnerDao.findTop1(new Criteria<>(), Sort.by("seq"));
             if (config != null) {
                 buildConfig.setBuildHost(config.getHost().getId());
             }

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
-public class RunnerHostConfig extends BaseEntity {
+public class Runner extends BaseEntity {
 
     @NotNull
     @ManyToOne
