@@ -7,12 +7,17 @@ import {CheckCircleFilled, ClockCircleOutlined, CloseCircleFilled, Loading3Quart
 
 let api = '/api/pipeline/';
 
-const iconDict = {
-  PENDING: <ClockCircleOutlined/>,
-  PROCESSING: <Loading3QuartersOutlined spin/>,
-  SUCCESS: <CheckCircleFilled style={{color: 'green'}}/>,
-  ERROR: <CloseCircleFilled style={{color: 'red'}}/>
+
+function getIcon(key, index) {
+  const iconDict = {
+    PENDING: <ClockCircleOutlined key={index}/>,
+    PROCESSING: <Loading3QuartersOutlined key={index} spin/>,
+    SUCCESS: <CheckCircleFilled key={index} style={{color: 'green'}}/>,
+    ERROR: <CloseCircleFilled key={index} style={{color: 'red'}}/>
+  }
+  return iconDict[key]
 }
+
 
 export default class extends React.Component {
 
@@ -47,8 +52,11 @@ export default class extends React.Component {
       dataIndex: 'status',
       render: (v, row) => {
         return <Row onClick={() => this.showPipelineLog(row)} gutter={8}>
-          {row.stageList.map(stage => <Col>
-              {stage.pipeList.map(pipe => iconDict[pipe.status])}
+          {row.stageList.map((stage, sIndex) => <Col key={sIndex}>
+              {stage.pipeList.map((pipe, index) => {
+                let el = getIcon(pipe.status, index);
+                return el;
+              })}
             </Col>
           )}
         </Row>
