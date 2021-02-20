@@ -34,6 +34,7 @@ echo "最小化标识 ${id}"
 echo "下载frpc..."
 curl  "${web_api}/frp/frpc" -o /usr/bin/frpc && chmod +x /usr/bin/frpc
 curl  "${web_api}/frp/frpc.service" -o /etc/systemd/system/frpc.service
+mkdir /etc/frp
 curl  "${web_api}/frp/${id}/frpc.ini" -o /etc/frp/frpc.ini
 echo "下载frpc完毕"
 
