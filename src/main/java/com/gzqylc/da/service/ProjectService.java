@@ -4,6 +4,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
 import com.google.common.collect.Sets;
+import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.logger.PipelineLogger;
@@ -30,6 +31,9 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     RegistryDao registryDao;
 
+    @Autowired
+    HostDao hostDao;
+
     public void saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
 
@@ -42,16 +46,16 @@ public class ProjectService extends BaseService<Project> {
     }
 
 
-    public void buildImage(String pipelineId, Pipeline.PipeBuildConfig yaml) throws GitAPIException, InterruptedException, IOException {
+    public void buildImage(String pipelineId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
         logger.info("开始构建镜像");
         // 获取代码
         File workDir = new File("/tmp/" + UUID.randomUUID());
         logger.info("工作目录为 {}", workDir.getAbsolutePath());
-        logger.info("获取代码 git clone {}", yaml.getGitUrl());
+        logger.info("获取代码 git clone {}", cfg.getGitUrl());
 
 
-        UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(yaml.getGitUsername(), yaml.getGitPassword());
+        UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(cfg.getGitUsername(), cfg.getGitPassword());
 
         if (workDir.exists()) {
             boolean delete = workDir.delete();
@@ -59,7 +63,7 @@ public class ProjectService extends BaseService<Project> {
         }
 
         Git git = Git.cloneRepository()
-                .setURI(yaml.getGitUrl())
+                .setURI(cfg.getGitUrl())
                 .setNoTags()
                 .setCredentialsProvider(provider)
                 .setDirectory(workDir)
@@ -76,23 +80,35 @@ public class ProjectService extends BaseService<Project> {
         // 构建
         logger.info("构建镜像");
 
-        DockerClient dockerClient = DockerTool.getLocalClient(yaml.getRegistryHost(),
-                yaml.getRegistryUsername(),
-                yaml.getRegistryPassword());
+        DockerClient dockerClient;
+
+        String buildHost = cfg.getBuildHost();
+        if (buildHost != null || buildHost.equals("-1")) {
+            logger.info("未配置构建主机，将使用本机构建");
+            dockerClient = DockerTool.getLocalClient(cfg.getRegistryHost(),
+                    cfg.getRegistryUsername(),
+                    cfg.getRegistryPassword());
+
+        } else {
+            Host host = hostDao.findOne(buildHost);
+            dockerClient = DockerTool.getRemoteClient(host.getDockerId(), cfg.getRegistryHost(),
+                    cfg.getRegistryUsername(),
+                    cfg.getRegistryPassword());
+        }
 
         logger.info("使用本地主机构建");
 
 
-        String imageUrl = yaml.getImageUrl();
+        String imageUrl = cfg.getImageUrl();
         String latestTag = imageUrl + ":latest";
-        String commitTag = imageUrl + ":" + yaml.getBranch();
+        String commitTag = imageUrl + ":" + cfg.getBranch();
         Set<String> tags = Sets.newHashSet(latestTag, commitTag);
 
 
-        File buildDir = new File(workDir, yaml.getContext());
+        File buildDir = new File(workDir, cfg.getContext());
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
-        boolean useCache = yaml.isUseCache();
+        boolean useCache = cfg.isUseCache();
         logger.info("是否使用缓存  {}", useCache);
         buildImageCmd.withNoCache(!useCache);
 

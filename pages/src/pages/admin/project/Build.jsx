@@ -1,6 +1,7 @@
 import React from 'react';
 import http from "../../../utils/request";
 import {Button, Form, Switch, Input} from "antd";
+import RemoteSelect from "../../../components/RemoteSelect";
 
 let api = '/api/project/';
 
@@ -62,6 +63,11 @@ export default class  extends React.Component {
         <Form.Item name="autoBuild" label="自动构建" valuePropName="checked">
           <Switch></Switch>
         </Form.Item>
+
+        <Form.Item name="buildHost" label="构建主机" >
+          <RemoteSelect url="api/host/options"></RemoteSelect>
+        </Form.Item>
+
 
         <Form.Item wrapperCol={{offset: 4}}>
           <Button type="primary" htmlType="submit">

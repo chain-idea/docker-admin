@@ -26,26 +26,26 @@ class RemoteSelect extends React.Component {
   componentDidMount() {
     // 下载默认值的label
     if (this.props.value && this.props.value.length > 0) {
-      this.fetchUser({loadMore: false, selected: this.props.value})
+      this.fetchData({loadMore: false, selected: this.props.value})
     } else {
-      this.fetchUser({loadMore: false});
+      this.fetchData({loadMore: false});
     }
   }
 
   componentWillReceiveProps(nextProps){
     if(nextProps.url !== this.props.url){
       this.setState({url: nextProps.url},()=>{
-        this.fetchUser({loadMore: false});
+        this.fetchData({loadMore: false});
       })
     }
   }
 
   handleSearch = searchText => {
     this.setState({searchText, pageNumber: 1})
-    this.fetchUser({loadMore: false, searchText: searchText});
+    this.fetchData({loadMore: false, searchText: searchText});
   }
 
-  fetchUser = ({loadMore, selected, searchText}) => {
+  fetchData = ({loadMore, selected, searchText}) => {
     const {url} = this.state;
     // console.log("----------333" + url)
     // console.log("----------444" + this.state.url)
@@ -99,7 +99,7 @@ class RemoteSelect extends React.Component {
       message.warning("没有更多数据了")
       return
     }
-    this.fetchUser({loadMore: true})
+    this.fetchData({loadMore: true})
   }
 
   handleChange = value => {

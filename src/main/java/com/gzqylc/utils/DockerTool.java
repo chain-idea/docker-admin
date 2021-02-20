@@ -56,12 +56,12 @@ public class DockerTool {
     /**
      * @param dockerId
      */
-    public static DockerClient getRemoteClient(String dockerId, String url, String username, String password) {
+    public static DockerClient getRemoteClient(String dockerId, String registryUrl, String registryUsername, String registryPassword) {
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost(DOCKER_HOST_ROUTER)
-                .withRegistryUsername(username)
-                .withRegistryPassword(password)
-                .withRegistryUrl(url)
+                .withRegistryUsername(registryUsername)
+                .withRegistryPassword(registryPassword)
+                .withRegistryUrl(registryUrl)
                 .build();
 
 

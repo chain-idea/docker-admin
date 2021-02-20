@@ -57,7 +57,7 @@ export default class extends React.Component {
         </Row>
       </div>
       <div className="panel">
-        {project.id && <Tabs defaultActiveKey="1">
+        {project.id && <Tabs defaultActiveKey="2">
           <Tabs.TabPane tab="执行记录" key="1">
             <PipelineJnl ref={this.pipelineJnlRef} project={project}></PipelineJnl>
           </Tabs.TabPane>
