@@ -6,7 +6,6 @@ import http from "../../../utils/request";
 import {history} from 'umi';
 
 const addTitle = "添加主机"
-const deleteTitle = '删除主机'
 let api = '/api/host/';
 
 
@@ -36,7 +35,6 @@ export default class extends React.Component {
     },
 
 
-
     {
       title: '操作',
       dataIndex: 'option',
@@ -50,7 +48,7 @@ export default class extends React.Component {
 
   clickAddBtn = () => {
     http.get(api + "getScript").then(rs => {
-      this.setState({cmd:rs.data})
+      this.setState({cmd: rs.data})
     })
     this.state.showAddForm = true;
     this.setState(this.state)
@@ -88,6 +86,7 @@ export default class extends React.Component {
         maskClosable={false}
         destroyOnClose
         title={addTitle}
+        width={800}
         visible={showAddForm}
         onCancel={() => {
           this.state.showAddForm = false;
@@ -100,9 +99,9 @@ export default class extends React.Component {
         <p> 安装主机监控程序</p>
         <p> 安装好 Docker 后，运行主机安装命令。查看如何安装 Docker</p>
 
-        <pre>
+        <code>
           {this.state.cmd}
-        </pre>
+        </code>
 
       </Modal>
 

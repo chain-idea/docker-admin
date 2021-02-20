@@ -91,3 +91,8 @@ pre.code {
 .q-mb-md {
   margin-bottom: 8px;
 }
+
+code {
+  background: #9ba3af;
+  padding: 12px;
+}
