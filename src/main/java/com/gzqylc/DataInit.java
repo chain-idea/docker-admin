@@ -36,6 +36,7 @@ public class DataInit implements ApplicationRunner {
 
         if (host == null) {
             host = new Host();
+            host.setId("-1");
             host.setName("本机");
             hostService.save(host);
         }
