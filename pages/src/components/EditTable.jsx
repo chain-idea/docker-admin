@@ -1,6 +1,13 @@
 import {Space, Input, Button, Form, Table, InputNumber, Select} from "antd";
 import React from "react";
-import {MinusCircleOutlined, PlusCircleFilled, PlusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {
+  DeleteFilled,
+  DeleteOutlined,
+  MinusCircleOutlined,
+  PlusCircleFilled,
+  PlusCircleOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
 
 export default class extends React.Component {
 
@@ -76,7 +83,7 @@ export default class extends React.Component {
             </Select>}
           </td>)}
           <td>
-            <Button size="small" onClick={() => this.remove(i)}>删除</Button>
+            <DeleteOutlined onClick={() => this.remove(i)}></DeleteOutlined>
           </td>
         </tr>)}
 

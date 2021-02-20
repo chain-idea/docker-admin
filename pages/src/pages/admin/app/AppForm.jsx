@@ -52,7 +52,7 @@ export default class extends React.Component {
 
       <Row>
         <Col flex="100px">
-          <h3>端口绑定</h3>
+          <h4>端口绑定</h4>
         </Col>
         <Col flex="auto">
           <EditTable columns={this.portsColumns} dataSource={form.ports}></EditTable>
@@ -62,7 +62,7 @@ export default class extends React.Component {
 
       <Row>
         <Col flex="100px">
-          <h3>卷映射</h3>
+          <h4>卷映射</h4>
         </Col>
         <Col flex="auto">
           <EditTable columns={this.bindsColumns} dataSource={form.binds}></EditTable>
@@ -72,7 +72,7 @@ export default class extends React.Component {
 
       <Row>
         <Col flex="100px">
-          <h3>环境变量</h3>
+          <h4>环境变量</h4>
         </Col>
         <Col flex="auto">
           <EditTable columns={this.envColumns} dataSource={form.environment}></EditTable>
