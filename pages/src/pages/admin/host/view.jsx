@@ -15,7 +15,7 @@ const dict = {
   NCPU: 'NCPU',
   OperatingSystem: '操作系统',
   SystemTime: '系统时间',
-  ServerVersion: '版本',
+  ServerVersion: 'docker版本',
 }
 const keys = Object.keys(dict)
 
