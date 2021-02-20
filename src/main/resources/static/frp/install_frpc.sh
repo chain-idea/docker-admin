@@ -32,9 +32,9 @@ echo "根据容器引擎标识生产FRP标识 ${id}"
 
 
 echo "下载frpc..."
-curl -sSv "${web_api}/frp/frpc" -o /usr/bin/frpc && chmod +x /usr/bin/frpc
-curl -sSv "${web_api}/frp/frpc.service" -o /etc/systemd/system/frpc.service
-curl -sSv "${web_api}/frp/${id}/frpc.ini" -o /etc/frp/frpc.ini
+curl  "${web_api}/frp/frpc" -o /usr/bin/frpc && chmod +x /usr/bin/frpc
+curl  "${web_api}/frp/frpc.service" -o /etc/systemd/system/frpc.service
+curl  "${web_api}/frp/${id}/frpc.ini" -o /etc/frp/frpc.ini
 echo "下载frpc完毕"
 
 systemctl daemon-reload
