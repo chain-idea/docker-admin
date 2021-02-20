@@ -27,7 +27,7 @@ docker_id=$(curl -s -XGET --unix-socket /var/run/docker.sock http://localhost/in
 echo "容器引擎标识: ${docker_id}"
 
 id=$(tr [A-Z] [a-z] <<< "${docker_id}" | sed 's/://g' >&1)
-echo "根据容器引擎标识生产FRP标识 ${id}"
+echo "最小化标识 ${id}"
 
 
 
