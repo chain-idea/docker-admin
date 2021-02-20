@@ -17,6 +17,7 @@ public class Host extends BaseEntity {
     String name;
 
 
+    @Column(unique = true)
     String dockerId;
 
 }

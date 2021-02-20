@@ -19,7 +19,7 @@ import java.util.List;
 public class HostService extends BaseService<Host> {
 
 
-    public Info getDockerInfo(Host host){
+    public Info getDockerInfo(Host host) {
 
         DockerClient client = DockerTool.getClient(host.getDockerId());
         Info info = client.infoCmd().exec();
@@ -27,15 +27,6 @@ public class HostService extends BaseService<Host> {
         return info;
     }
 
-
-
-
-    @Transactional
-    public Host saveHost(Host input) {
-        Host db = super.save(input);
-
-        return db;
-    }
 
     public List<Container> getContainers(String id) {
         Host db = this.findOne(id);
