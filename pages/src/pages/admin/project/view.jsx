@@ -52,7 +52,7 @@ export default class extends React.Component {
             <h5>镜像：{project.imageUrl}<Divider type="vertical"></Divider> 代码源: {project.gitUrl}</h5>
           </Col>
           <Col flex="200px">
-            <Button onClick={this.triggerPipeline}>手动触发</Button>
+            <Button onClick={this.triggerPipeline} type="primary">立即构建</Button>
           </Col>
         </Row>
       </div>
