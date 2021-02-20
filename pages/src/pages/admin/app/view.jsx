@@ -68,42 +68,39 @@ export default class extends React.Component {
 
     return (<div>
 
-      <div className="panel">
-        <Card title={app.name} bordered size="small" extra={<Space>
+      <Card className="panel" title={app.name} bordered size="small" extra={<Space>
 
-          <Button onClick={this.start} type="primary">启动</Button>
-          <Button onClick={this.stop} type="primary" danger>停止</Button>
-          <Button onClick={this.deploy} type="primary">重新部署</Button>
-        </Space>}>
-          <table className="q-table-desc">
-            <tbody>
-            <tr>
-              <th>主机</th>
-              <td>{app.host.name}</td>
-            </tr>
-            <tr>
-              <th>镜像</th>
-              <td>{app.imageUrl}:{app.imageTag}</td>
-            </tr>
-            <tr>
-              <th>容器</th>
-              <td>{containerInfo.name} <Divider type="vertical"></Divider>{containerInfo.id}</td>
-            </tr>
+        <Button onClick={this.start} type="primary">启动</Button>
+        <Button onClick={this.stop} type="primary" danger>停止</Button>
+        <Button onClick={this.deploy} type="primary">重新部署</Button>
+      </Space>}>
+        <table className="q-table-desc">
+          <tbody>
+          <tr>
+            <th>主机</th>
+            <td>{app.host.name}</td>
+          </tr>
+          <tr>
+            <th>镜像</th>
+            <td>{app.imageUrl}:{app.imageTag}</td>
+          </tr>
+          <tr>
+            <th>容器</th>
+            <td>{containerInfo.name} <Divider type="vertical"></Divider>{containerInfo.id}</td>
+          </tr>
 
-            <tr>
-              <th>状态</th>
-              <td>{containerInfo.status}</td>
-            </tr>
-            <tr>
-              <th>端口(主机:容器)</th>
-              <td> {containerInfo.ports}</td>
-            </tr>
-            </tbody>
-          </table>
-        </Card>
+          <tr>
+            <th>状态</th>
+            <td>{containerInfo.status}</td>
+          </tr>
+          <tr>
+            <th>端口(主机:容器)</th>
+            <td> {containerInfo.ports}</td>
+          </tr>
+          </tbody>
+        </table>
+      </Card>
 
-
-      </div>
 
       {app.id && <div>
         <div className="panel">
