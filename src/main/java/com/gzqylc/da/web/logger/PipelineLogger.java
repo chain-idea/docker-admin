@@ -28,8 +28,10 @@ public class PipelineLogger {
     private PipelineLogger(String id) {
         this.id = id;
         this.logFile = new File(LoggerConstants.getLogPath(id));
+        log.info("日志路径:{}", logFile.getAbsoluteFile());
         if (!logFile.exists()) {
             try {
+                FileUtils.forceMkdirParent(logFile);
                 logFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -72,7 +74,7 @@ public class PipelineLogger {
         String result = format;
         if (arguments.length != 0) {
             for (Object arg : arguments) {
-                result = result.replaceFirst("\\{\\}", arg == null ? "": String.valueOf(arg));
+                result = result.replaceFirst("\\{\\}", arg == null ? "" : String.valueOf(arg));
             }
         }
         writeLineToFile(result);
