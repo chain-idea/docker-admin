@@ -55,20 +55,20 @@ export default class extends React.Component {
         <tbody>
         {dataSource.map((p, i) => <tr key={i}>
           {columns.map(c => <td key={c.dataIndex}>
-            {c.dataType == 'Input' && <Input
+            {c.dataType == 'Input' && <Input size="small"
               value={p[c.dataIndex]}
               onChange={e => {
                 this.edit(c.dataIndex, e.target.value, i)
               }}/>}
 
-            {c.dataType == 'InputNumber' && <InputNumber
+            {c.dataType == 'InputNumber' && <InputNumber size="small"
               value={p[c.dataIndex]}
               onChange={v => {
                 this.edit(c.dataIndex, v, i)
               }}/>}
 
 
-            {c.dataType == 'Select' && <Select value={p[c.dataIndex]}
+            {c.dataType == 'Select' && <Select value={p[c.dataIndex]} size="small"
                                                onChange={v => this.edit(c.dataIndex, v, i)}
             style={{minWidth:100}}
             >
