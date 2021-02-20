@@ -25,6 +25,10 @@ fi
 # 获得docker唯一标识
 docker_id=$(curl -s -XGET --unix-socket /var/run/docker.sock http://localhost/info | cut -d "\"" -f 4  >&1)
 echo "容器引擎标识: ${docker_id}"
+if [ -z "$docker_id" ];then
+  echo "docker未启动，请先启动docker： systemctl start docker"
+  exit 1
+fi
 
 id=$(tr [A-Z] [a-z] <<< "${docker_id}" | sed 's/://g' >&1)
 echo "最小化标识 ${id}"
