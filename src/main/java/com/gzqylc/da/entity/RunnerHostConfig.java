@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
-public class BuildHostConfig extends BaseEntity {
+public class RunnerHostConfig extends BaseEntity {
 
     @NotNull
     @ManyToOne
@@ -23,7 +23,7 @@ public class BuildHostConfig extends BaseEntity {
     int seq;
 
     // 局域网的git地址，替换公网地址，加快速度
-    String lanGitHost;
+    String gitUrlReplace;
 
 
 }
