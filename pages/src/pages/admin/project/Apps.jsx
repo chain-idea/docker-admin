@@ -1,6 +1,6 @@
 import React from 'react';
 import http from "../../../utils/request";
-import {Switch, Table} from "antd";
+import {Button, Divider, Space, Switch, Table} from "antd";
 import {history} from "umi";
 
 
@@ -51,14 +51,13 @@ export default class extends React.Component {
   render() {
 
     const {list} = this.state;
+    const {project} = this.props;
 
     return (<div>
-
-
+      <Button className="q-mb-md" onClick={() => history.push("/admin/app/deploy?url=" + project.imageUrl)} type="primary">部署新应用</Button>
       <Table rowKey="id" columns={this.columns} dataSource={list}>
 
       </Table>
-
     </div>)
   }
 

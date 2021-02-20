@@ -85,3 +85,9 @@ pre.code {
 }
 
 
+.q-mb-sm {
+  margin-bottom: 4px;
+}
+.q-mb-md {
+  margin-bottom: 8px;
+}

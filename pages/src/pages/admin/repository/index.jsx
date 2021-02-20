@@ -37,7 +37,7 @@ export default class extends React.Component {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, row) => {
-        return <Button onClick={() => history.push("app/deploy?url=" + row.url)}>部署最新版</Button>
+        return <Button onClick={() => history.push("app/deploy?url=" + row.url)}>部署应用</Button>
       },
     },
   ];
