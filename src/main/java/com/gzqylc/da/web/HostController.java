@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +72,7 @@ public class HostController extends BaseController {
     }
 
     @Route("list")
-    public Page<Host> list(Pageable pageable, @RequestBody Host host) {
+    public Page<Host> list(@PageableDefault(sort = "name") Pageable pageable, @RequestBody Host host) {
         Page<Host> list = service.findAll(host, pageable);
         return list;
     }
