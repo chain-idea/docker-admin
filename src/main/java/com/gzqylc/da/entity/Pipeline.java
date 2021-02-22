@@ -73,6 +73,7 @@ public class Pipeline extends BaseEntity {
         String registryUsername;
         String registryPassword;
 
+        String serverUrl; // 网页访问的地址
     }
 
     @Data

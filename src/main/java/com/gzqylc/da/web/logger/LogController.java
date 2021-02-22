@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/log")
+
 public class LogController {
 
-    @RequestMapping
+    public static final String API_LOG = "api/log";
+
+    @RequestMapping(API_LOG)
     public void log(String id, @RequestBody String body) {
         PipelineLogger logger = PipelineLogger.getLogger(id);
         logger.info(body);

@@ -39,16 +39,16 @@ public class PipeLineController {
     public Page<Pipeline> list(@RequestParam String projectId, @PageableDefault(sort = BaseEntity.Fields.createTime, direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request) {
         String prefix = "ws://" + request.getServerName() + ":" + request.getServerPort() + LoggerConstants.WEBSOCKET_URL_PREFIX;
         Criteria<Pipeline> c = new Criteria<>();
-        c.add(Restrictions.eq(Pipeline.Fields.project +".id", projectId));
-        Page<Pipeline> list = service.findAll(c,pageable);
+        c.add(Restrictions.eq(Pipeline.Fields.project + ".id", projectId));
+        Page<Pipeline> list = service.findAll(c, pageable);
         list.forEach(p -> p.setLogUrl(prefix + p.getId()));
         return list;
     }
 
     @RequestMapping("trigger")
-    public AjaxResult trigger(String id, String type, String value) throws GitAPIException, InterruptedException {
+    public AjaxResult trigger(String id, String type, String value, HttpServletRequest req) throws GitAPIException, InterruptedException {
         Project p = projectService.findOne(id);
-        service.trigger(p, value);
+        service.trigger(p, value, req);
 
         return AjaxResult.success("流水线触发成功");
     }

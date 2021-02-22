@@ -3,6 +3,7 @@ package com.gzqylc.da.service;
 import com.gzqylc.da.dao.PipelineJnlDao;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.lang.web.JsonTool;
+import com.gzqylc.lang.web.RequestTool;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.lang.web.spring.SpringTool;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class PipelineService extends BaseService<Pipeline> {
     @Autowired
     RegistryService registryService;
 
-    public void trigger(Project project, String branch) throws GitAPIException, InterruptedException {
+    public void trigger(Project project, String branch, HttpServletRequest request) throws GitAPIException, InterruptedException {
         // 添加上下文参数
         Pipeline jnl = new Pipeline();
         jnl.setProject(project);
@@ -63,6 +65,7 @@ public class PipelineService extends BaseService<Pipeline> {
             cfg.setRegistryUsername(project.getRegistry().getUsername());
             cfg.setRegistryPassword(project.getRegistry().getPassword());
 
+            cfg.setServerUrl(RequestTool.getBaseUrl(request));
 
             buildPipe.setConfig(JsonTool.toJsonQuietly(cfg));
 

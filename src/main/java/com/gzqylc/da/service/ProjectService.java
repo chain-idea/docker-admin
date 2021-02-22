@@ -9,6 +9,7 @@ import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
 import com.gzqylc.da.dao.RunnerDao;
 import com.gzqylc.da.entity.*;
+import com.gzqylc.da.web.logger.LogController;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.docker.BuildImageResultCallback;
 import com.gzqylc.da.service.docker.PushImageCallback;
@@ -131,9 +132,19 @@ public class ProjectService extends BaseService<Project> {
             logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
 
             BuildImageForm form = new BuildImageForm();
+            form.gitUrl = cfg.getGitUrl();
+            form.gitUsername = cfg.getGitUsername();
+            form.gitPassword = cfg.getGitPassword();
+            form.branch = cfg.getBranch();
+            form.regHost = cfg.getRegistryHost();
+            form.regUsername = cfg.getRegistryUsername();
+            form.regPassword = cfg.getRegistryPassword();
+            form.imageUrl = cfg.getImageUrl();
+            form.buildContext = cfg.getContext();
+            form.logUrl = cfg.getServerUrl() + LogController.API_LOG + "?id=" + pipelineId;
 
             String cmd = JsonTool.toJsonQuietly(form);
-            String resp = HttpRequest.post(DockerTool.getFrpVhost())
+            String resp = HttpRequest.post(DockerTool.getFrpVhost() + "/agent/build")
                     .header("Host", dockerId)
                     .send(cmd).body();
             logger.info("指令已发送 host {} {}", cmd, resp);
