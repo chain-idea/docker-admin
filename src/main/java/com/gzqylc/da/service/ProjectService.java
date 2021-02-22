@@ -153,6 +153,7 @@ public class ProjectService extends BaseService<Project> {
             String cmd = JsonTool.toJsonQuietly(form);
             String runnerUrl = "http://" + frpServer + ":" + vhostHttpPort + "/agent/build";
             logger.info("发送指令 {}", runnerUrl);
+            logger.info(cmd);
             HttpRequest request = HttpRequest.post(runnerUrl)
                     .header("Host", dockerId)
                     .send(cmd);
