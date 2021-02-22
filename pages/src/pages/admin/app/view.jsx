@@ -106,7 +106,11 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="日志" key="log">
+            <Tabs.TabPane tab="容器日志" key="log">
+              {container.Id && <Log id={app.id} container={container}></Log>}
+            </Tabs.TabPane>
+
+            <Tabs.TabPane tab="部署日志" key="deploy-log">
               {container.Id && <Log id={app.id} container={container}></Log>}
             </Tabs.TabPane>
 
