@@ -17,6 +17,7 @@ import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.lang.web.base.BaseService;
+import com.gzqylc.utils.HttpTool;
 import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -150,17 +151,15 @@ public class ProjectService extends BaseService<Project> {
             String frpServer = frpService.getFrpServer();
             int vhostHttpPort = frpService.getVhostHttpPort();
 
-            String cmd = JsonTool.toJsonQuietly(form);
-            String runnerUrl = "http://" + frpServer + ":" + vhostHttpPort + "/agent/build";
-            logger.info("发送指令 {}", runnerUrl);
-            logger.info(cmd);
-            HttpRequest request = HttpRequest.post(runnerUrl)
-                    .header("Host", dockerId)
-                    .send(cmd);
-            String resp = request.body();
-            logger.info("指令已发送 host {} {}", cmd, resp);
-            int code = request.code();
-            Assert.state(code == 200, "执行远程构建命令异常 " + resp);
+            String postData = JsonTool.toJsonQuietly(form);
+            String postUrl = "http://" + frpServer + ":" + vhostHttpPort + "/agent/build";
+
+            logger.info("请求地址 {}", postUrl);
+            logger.info("请求数据 {}", postData);
+            String resp = HttpTool.postJson(dockerId, postUrl, postData);
+
+
+            logger.info("响应数据 {}", resp);
         }
 
 
