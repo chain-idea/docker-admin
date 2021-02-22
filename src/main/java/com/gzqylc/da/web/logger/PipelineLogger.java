@@ -1,6 +1,7 @@
 package com.gzqylc.da.web.logger;
 
 import com.github.dockerjava.api.model.ResponseItem;
+import com.github.kevinsawicki.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +97,7 @@ public class PipelineLogger {
             return;
         }
         log.info(msg);
+
 
         try {
             String time = DateFormatUtils.format(System.currentTimeMillis(), "HH:mm:ss");
