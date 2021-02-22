@@ -29,17 +29,17 @@ public class FrpController {
 
     @RequestMapping(INSTALL_FRPC)
     @ResponseBody
-    public String frpcsh(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public String frpcsh(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String base = RequestTool.getBaseUrl(request);
-        if(base.endsWith("/")){
-            base = base.substring(0, base.length() -1);
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
         }
         ClassPathResource res = new ClassPathResource("static/frp/install_frpc.sh");
         try (InputStream is = res.getInputStream()) {
             String sh = IOUtils.toString(is, StandardCharsets.UTF_8);
 
-            sh = sh.replaceAll("\r","")
-                    .replace("arg_web_server",base)
+            sh = sh.replaceAll("\r", "")
+                    .replace("arg_web_server", base)
 
             ;
 
@@ -66,8 +66,9 @@ public class FrpController {
 
             ini = ini.replace("127.0.0.1", frpServer)
                     .replace("7000", String.valueOf(frpPort))
-                    .replace("id", id)
-                    .replace("id", id);
+                    .replace("{id}", id)
+                    .replace("{id}", id)
+                    .replace("{id}", id);
 
 
             response.addHeader("Content-Type", "application/octet-stream");
@@ -76,7 +77,6 @@ public class FrpController {
         }
 
     }
-
 
 
 }
