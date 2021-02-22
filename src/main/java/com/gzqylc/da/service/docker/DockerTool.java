@@ -12,19 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DockerTool {
 
-    private static String REMOTE_DOCKER_HOST_BY_FRP;
+    private static String FRP_VHOST;
 
-    public static void setFrpVHost(String frpWeb) {
-        REMOTE_DOCKER_HOST_BY_FRP = frpWeb;
+    public static void setFrpVHost(String frpVHost) {
+        FRP_VHOST = frpVHost;
     }
 
+    public static String getFrpVhost() {
+        return FRP_VHOST;
+    }
 
     public static DockerClient getClient(String dockerId) {
         return getClient(dockerId, null, null, null);
     }
 
     public static DockerClient getClient(String dockerId, String registryUrl, String registryUsername, String registryPassword) {
-        String dockerHost = dockerId == null ? getLocalDockerHost() : REMOTE_DOCKER_HOST_BY_FRP;
+        String dockerHost = dockerId == null ? getLocalDockerHost() : FRP_VHOST;
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost(dockerHost)
                 .withRegistryUsername(registryUsername)

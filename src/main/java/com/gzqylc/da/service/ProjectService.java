@@ -3,6 +3,7 @@ package com.gzqylc.da.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
+import com.github.kevinsawicki.http.HttpRequest;
 import com.google.common.collect.Sets;
 import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
@@ -11,9 +12,11 @@ import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.docker.BuildImageResultCallback;
 import com.gzqylc.da.service.docker.PushImageCallback;
+import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.lang.web.base.BaseService;
+import lombok.Data;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -64,75 +67,93 @@ public class ProjectService extends BaseService<Project> {
         logger.info("开始构建镜像任务开始");
 
         String dockerId = cfg.getBuildHostDockerId();
-        boolean remoteBuild = dockerId != null;
-        if (remoteBuild) {
-            logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
-        } else {
+        if (dockerId == null) {
             logger.info("使用本机构建");
+            // 获取代码
+            File workDir = new File("/tmp/" + UUID.randomUUID());
+            logger.info("工作目录为 {}", workDir.getAbsolutePath());
+            logger.info("获取代码 git clone {}", cfg.getGitUrl());
 
+
+            UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(cfg.getGitUsername(), cfg.getGitPassword());
+
+            if (workDir.exists()) {
+                boolean delete = workDir.delete();
+                Assert.state(delete, "删除文件失败");
+            }
+
+            Git git = Git.cloneRepository()
+                    .setURI(cfg.getGitUrl())
+                    .setNoTags()
+                    .setCredentialsProvider(provider)
+                    .setDirectory(workDir)
+                    .call();
+
+            String commitMsg = git.log().call().iterator().next().getFullMessage();
+            logger.info("git log : {}", commitMsg);
+            git.close();
+
+
+            logger.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
+
+            logger.info("连接构建主机容器引擎中...");
+            DockerClient dockerClient = DockerTool.getClient(dockerId, cfg.getRegistryHost(),
+                    cfg.getRegistryUsername(),
+                    cfg.getRegistryPassword());
+            String imageUrl = cfg.getImageUrl();
+            String latestTag = imageUrl + ":latest";
+            String commitTag = imageUrl + ":" + cfg.getBranch();
+            Set<String> tags = Sets.newHashSet(latestTag, commitTag);
+
+
+            File buildDir = new File(workDir, cfg.getContext());
+
+
+            BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
+            boolean useCache = cfg.isUseCache();
+            logger.info("是否使用缓存  {}", useCache);
+            buildImageCmd.withNoCache(!useCache);
+
+            logger.info("向docker发送构建指令");
+            String imageId = buildImageCmd.exec(new BuildImageResultCallback(logger)).awaitImageId();
+            logger.info("镜像构建结束 imageId={}", imageId);
+
+            // 推送
+            logger.info("推送镜像");
+            for (String tag : tags) {
+                PushImageCmd pushImageCmd = dockerClient.pushImageCmd(tag);
+                pushImageCmd.exec(new PushImageCallback(logger)).awaitCompletion();
+            }
+
+            dockerClient.close();
+            logger.info("构建阶段结束");
+        } else {
+            logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
+
+            BuildImageForm form = new BuildImageForm();
+
+            String cmd = JsonTool.toJsonQuietly(form);
+            String resp = HttpRequest.post(DockerTool.getFrpVhost())
+                    .header("Host", dockerId)
+                    .send(cmd).body();
+            logger.info("指令已发送 host {} {}", cmd, resp);
         }
 
-        // 获取代码
-        File workDir = new File("/tmp/" + UUID.randomUUID());
-        logger.info("工作目录为 {}", workDir.getAbsolutePath());
-        logger.info("获取代码 git clone {}", cfg.getGitUrl());
 
-
-        UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(cfg.getGitUsername(), cfg.getGitPassword());
-
-        if (workDir.exists()) {
-            boolean delete = workDir.delete();
-            Assert.state(delete, "删除文件失败");
-        }
-
-        Git git = Git.cloneRepository()
-                .setURI(cfg.getGitUrl())
-                .setNoTags()
-                .setCredentialsProvider(provider)
-                .setDirectory(workDir)
-                .call();
-
-        String commitMsg = git.log().call().iterator().next().getFullMessage();
-        logger.info("git log : {}", commitMsg);
-        git.close();
-
-
-        logger.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
-
-        logger.info("连接构建主机容器引擎中...");
-        DockerClient dockerClient = DockerTool.getClient(dockerId, cfg.getRegistryHost(),
-                cfg.getRegistryUsername(),
-                cfg.getRegistryPassword());
-        String imageUrl = cfg.getImageUrl();
-        String latestTag = imageUrl + ":latest";
-        String commitTag = imageUrl + ":" + cfg.getBranch();
-        Set<String> tags = Sets.newHashSet(latestTag, commitTag);
-
-
-        File buildDir = new File(workDir, cfg.getContext());
-
-
-
-        BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
-        boolean useCache = cfg.isUseCache();
-        logger.info("是否使用缓存  {}", useCache);
-        buildImageCmd.withNoCache(!useCache);
-
-        logger.info("向docker发送构建指令");
-        String imageId = buildImageCmd.exec(new BuildImageResultCallback(logger)).awaitImageId();
-        logger.info("镜像构建结束 imageId={}", imageId);
-
-        // 推送
-        logger.info("推送镜像");
-        for (String tag : tags) {
-            PushImageCmd pushImageCmd = dockerClient.pushImageCmd(tag);
-            pushImageCmd.exec(new PushImageCallback(logger)).awaitCompletion();
-        }
-
-        dockerClient.close();
-
-
-        logger.info("构建阶段结束");
     }
 
+
+    @Data
+    public static class BuildImageForm {
+        String gitUrl;
+        String gitUsername;
+        String gitPassword;
+        String branch;
+        String regHost;
+        String regUsername;
+        String regPassword;
+        String imageUrl;
+        String buildContext;
+        String logUrl;
+    }
 }
