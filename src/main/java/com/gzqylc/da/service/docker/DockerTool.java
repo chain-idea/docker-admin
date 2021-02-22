@@ -1,4 +1,4 @@
-package com.gzqylc.utils;
+package com.gzqylc.da.service.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -39,8 +39,6 @@ public class DockerTool {
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
         return dockerClient;
-
-
     }
 
 
