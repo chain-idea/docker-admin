@@ -49,6 +49,7 @@ public class ProjectService extends BaseService<Project> {
             Runner config = runnerDao.findTop1(new Criteria<>(), Sort.by("seq"));
             if (config != null) {
                 buildConfig.setBuildHost(config.getHost().getId());
+                buildConfig.setBuildHostDockerId(config.getHost().getDockerId());
             }
 
             project.setBuildConfig(buildConfig);
@@ -60,7 +61,17 @@ public class ProjectService extends BaseService<Project> {
 
     public void buildImage(String pipelineId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
-        logger.info("开始构建镜像");
+        logger.info("开始构建镜像任务开始");
+
+        String dockerId = cfg.getBuildHostDockerId();
+        boolean remoteBuild = dockerId != null;
+        if (remoteBuild) {
+            logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
+        } else {
+            logger.info("使用本机构建");
+
+        }
+
         // 获取代码
         File workDir = new File("/tmp/" + UUID.randomUUID());
         logger.info("工作目录为 {}", workDir.getAbsolutePath());
@@ -88,37 +99,10 @@ public class ProjectService extends BaseService<Project> {
 
         logger.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
 
-
-        // 构建
-        logger.info("构建镜像");
-
-        DockerClient dockerClient;
-
-        String buildHost = cfg.getBuildHost();
-        if (buildHost == null) {
-            logger.info("未配置构建主机，将使用本机构建");
-            dockerClient = DockerTool.getLocalClient(cfg.getRegistryHost(),
-                    cfg.getRegistryUsername(),
-                    cfg.getRegistryPassword());
-
-        } else {
-            Host host = hostDao.findOne(buildHost);
-            logger.info("构建主机:{}", host);
-            if (host.getDockerId() != null) {
-                dockerClient = DockerTool.getRemoteClient(host.getDockerId(), cfg.getRegistryHost(),
-                        cfg.getRegistryUsername(),
-                        cfg.getRegistryPassword());
-            } else {
-                dockerClient = DockerTool.getLocalClient(cfg.getRegistryHost(),
-                        cfg.getRegistryUsername(),
-                        cfg.getRegistryPassword());
-            }
-
-        }
-
-        logger.info("使用本地主机构建");
-
-
+        logger.info("连接构建主机容器引擎中...");
+        DockerClient dockerClient = DockerTool.getClient(dockerId, cfg.getRegistryHost(),
+                cfg.getRegistryUsername(),
+                cfg.getRegistryPassword());
         String imageUrl = cfg.getImageUrl();
         String latestTag = imageUrl + ":latest";
         String commitTag = imageUrl + ":" + cfg.getBranch();
@@ -126,6 +110,8 @@ public class ProjectService extends BaseService<Project> {
 
 
         File buildDir = new File(workDir, cfg.getContext());
+
+
 
         BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(buildDir).withTags(tags);
         boolean useCache = cfg.isUseCache();
@@ -148,4 +134,5 @@ public class ProjectService extends BaseService<Project> {
 
         logger.info("构建阶段结束");
     }
+
 }

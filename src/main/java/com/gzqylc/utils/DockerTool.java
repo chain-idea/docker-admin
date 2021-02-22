@@ -12,29 +12,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DockerTool {
 
-    private static String DOCKER_HOST_ROUTER;
+    private static String REMOTE_DOCKER_HOST_BY_FRP;
 
-    public static void setFrpWeb(String frpWeb) {
-        DOCKER_HOST_ROUTER = frpWeb;
+    public static void setFrpVHost(String frpWeb) {
+        REMOTE_DOCKER_HOST_BY_FRP = frpWeb;
     }
 
-    public static DockerClient getLocalClient(String url, String username, String password) {
-        String localDockerHost = getLocalDockerHost();
-        log.info("本机dockerHost {}", localDockerHost);
-        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                .withDockerHost(localDockerHost)
-                .withRegistryUsername(username)
-                .withRegistryPassword(password)
-                .withRegistryUrl(url)
-                .build();
 
+    public static DockerClient getClient(String dockerId) {
+        return getClient(dockerId, null, null, null);
+    }
+
+    public static DockerClient getClient(String dockerId, String registryUrl, String registryUsername, String registryPassword) {
+        String dockerHost = dockerId == null ? getLocalDockerHost() : REMOTE_DOCKER_HOST_BY_FRP;
+        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost(dockerHost)
+                .withRegistryUsername(registryUsername)
+                .withRegistryPassword(registryPassword)
+                .withRegistryUrl(registryUrl)
+                .build();
 
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
                 .sslConfig(config.getSSLConfig())
+                .virtualHost(dockerId) // 使用dockerId 作为路由转发的标识
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
         return dockerClient;
+
+
     }
 
 
@@ -43,35 +49,6 @@ public class DockerTool {
             return "tcp://localhost:2375";
         }
         return "unix:///var/run/docker.sock";
-    }
-
-    public static DockerClient getClient(String dockerId) {
-        if (dockerId == null) {
-            return getLocalClient(null, null, null);
-        }
-        return getRemoteClient(dockerId, null, null, null);
-    }
-
-
-    /**
-     * @param dockerId
-     */
-    public static DockerClient getRemoteClient(String dockerId, String registryUrl, String registryUsername, String registryPassword) {
-        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
-                .withDockerHost(DOCKER_HOST_ROUTER)
-                .withRegistryUsername(registryUsername)
-                .withRegistryPassword(registryPassword)
-                .withRegistryUrl(registryUrl)
-                .build();
-
-
-        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
-                .dockerHost(config.getDockerHost())
-                .sslConfig(config.getSSLConfig())
-                .virtualHost(dockerId)
-                .build();
-        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
-        return dockerClient;
     }
 
 

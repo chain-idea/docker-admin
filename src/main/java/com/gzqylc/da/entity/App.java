@@ -99,5 +99,6 @@ public class App extends BaseEntity {
         boolean useCache = true;
 
         String buildHost; // 构建镜像的主机ID
+        String buildHostDockerId; // 构建镜像的主机 容器引擎ID
     }
 }

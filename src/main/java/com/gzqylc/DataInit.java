@@ -29,7 +29,7 @@ public class DataInit implements ApplicationRunner {
         String frpServer = frpService.getFrpServer();
         int vhostHttpPort = frpService.getVhostHttpPort();
         String frpWeb = "tcp://" + frpServer + ":" + vhostHttpPort;
-        DockerTool.setFrpWeb(frpWeb);
+        DockerTool.setFrpVHost(frpWeb);
 
         // 将宿主机也作为主机
         Host host = hostService.findOne("-1");
