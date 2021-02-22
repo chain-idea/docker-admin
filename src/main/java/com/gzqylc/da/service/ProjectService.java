@@ -44,6 +44,9 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     RunnerDao runnerDao;
 
+    @Autowired
+    FrpService frpService;
+
     public void saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
 
@@ -143,11 +146,20 @@ public class ProjectService extends BaseService<Project> {
             form.buildContext = cfg.getContext();
             form.logUrl = cfg.getServerUrl() + LogController.API_LOG + "?id=" + pipelineId;
 
+
+            String frpServer = frpService.getFrpServer();
+            int vhostHttpPort = frpService.getVhostHttpPort();
+
             String cmd = JsonTool.toJsonQuietly(form);
-            String resp = HttpRequest.post(DockerTool.getFrpVhost() + "/agent/build")
+            String runnerUrl = "http://" + frpServer + ":" + vhostHttpPort + "/agent/build";
+            logger.info("发送指令 {}", runnerUrl);
+            HttpRequest request = HttpRequest.post(runnerUrl)
                     .header("Host", dockerId)
-                    .send(cmd).body();
+                    .send(cmd);
+            String resp = request.body();
             logger.info("指令已发送 host {} {}", cmd, resp);
+            int code = request.code();
+            Assert.state(code == 200, "执行远程构建命令异常 " + resp);
         }
 
 
