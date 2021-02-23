@@ -11,7 +11,7 @@ export default class extends React.Component {
   render() {
     const {id} = this.props;
     const {container} = this.props
-    let containerId = container.Id;
+    let containerId = container.id;
     let url = serverUrl + api + "log?appId=" + id + "&containerId=" + containerId;
 
     return <div style={{height: 500, width: '100%'}}>

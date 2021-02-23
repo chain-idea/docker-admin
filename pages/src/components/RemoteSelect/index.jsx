@@ -116,7 +116,6 @@ class RemoteSelect extends React.Component {
 
     return (
       <Select
-
         value={this.props.value instanceof Array ? this.props.value : (this.props.value ? [this.props.value] : [])}
         notFoundContent={fetching ? <Spin size="small"/> : null}
         filterOption={false}

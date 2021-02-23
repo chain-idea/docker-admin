@@ -20,8 +20,10 @@ public class ContainerVo implements Serializable {
         image = c.getImage();
         name = c.getNames()[0].substring(1);
         state = c.getState();
+        id = c.getId();
     }
 
+    String id;
     String image;
     String name;
 

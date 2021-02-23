@@ -51,7 +51,7 @@ export default class extends React.Component {
           <RemoteSelect url={"/api/repository/tagList?url=" + this.state.url}></RemoteSelect>
         </Form.Item>
         <Form.Item label="运行环境" name="hostId" wrapperCol={{span: 5}}>
-          <RemoteSelect url="/api/host/options"></RemoteSelect>
+          <RemoteSelect showSearch url="/api/host/options"></RemoteSelect>
         </Form.Item>
 
 
