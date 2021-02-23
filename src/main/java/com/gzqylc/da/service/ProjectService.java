@@ -66,7 +66,7 @@ public class ProjectService extends BaseService<Project> {
     }
 
 
-    public void buildImage(String pipelineId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
+    public Pipeline.PipeProcessResult buildImage(String pipelineId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
         logger.info("开始构建镜像任务开始");
 
@@ -131,6 +131,7 @@ public class ProjectService extends BaseService<Project> {
 
             dockerClient.close();
             logger.info("构建阶段结束");
+            return Pipeline.PipeProcessResult.FINISH;
         } else {
             logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
 
@@ -159,6 +160,8 @@ public class ProjectService extends BaseService<Project> {
 
 
             logger.info("响应数据 {}", resp);
+
+            return Pipeline.PipeProcessResult.PROCESSING;
         }
 
 

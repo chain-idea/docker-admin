@@ -4,6 +4,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import com.gzqylc.da.entity.App;
+import com.gzqylc.da.entity.Pipeline;
 import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.service.docker.PullImageCallback;
 import com.gzqylc.lang.web.base.BaseService;
@@ -24,7 +25,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class AppService extends BaseService<App> {
-
 
 
     @Autowired
@@ -50,9 +50,9 @@ public class AppService extends BaseService<App> {
     }
 
 
-    public void deploy(String pipelineId, String name, String dockerId, String image,
-                       String registryHost, String registryUsername, String registryPassword,
-                       App.AppConfig cfg) throws InterruptedException {
+    public Pipeline.PipeProcessResult deploy(String pipelineId, String name, String dockerId, String image,
+                                             String registryHost, String registryUsername, String registryPassword,
+                                             App.AppConfig cfg) throws InterruptedException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
         logger.info("部署阶段开始");
         DockerClient client = DockerTool.getClient(dockerId, registryHost, registryUsername, registryPassword);
@@ -125,6 +125,8 @@ public class AppService extends BaseService<App> {
 
         logger.info("启动容器");
         logger.info("部署阶段结束");
+
+        return Pipeline.PipeProcessResult.FINISH;
     }
 
     public void stop(String id) {
@@ -176,7 +178,7 @@ public class AppService extends BaseService<App> {
 
         Map<String, String> labels = getAppLabelFilter(name);
         List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             return list.get(0);
         }
         return null;

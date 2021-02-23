@@ -6,6 +6,7 @@ import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.RequestTool;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.lang.web.spring.SpringTool;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PipelineService extends BaseService<Pipeline> {
 
     @Autowired
@@ -33,19 +35,27 @@ public class PipelineService extends BaseService<Pipeline> {
 
     public void trigger(Project project, String branch, HttpServletRequest request) throws GitAPIException, InterruptedException {
         // 添加上下文参数
-        Pipeline jnl = new Pipeline();
-        jnl.setProject(project);
-        jnl.setCommit(branch);
+        Pipeline pipeline = new Pipeline();
+        pipeline.setProject(project);
+        pipeline.setCommit(branch);
 
         String image = project.getImageUrl() + ":" + branch;
 
 
-        List<Pipeline.PipeStage> stageList = jnl.getStageList();
+        List<Pipeline.PipeStage> stageList = pipeline.getStageList();
+
+        int stageNumber = 1;
+        int pipeNumber = 1;
 
         {
             Pipeline.PipeStage buildState = new Pipeline.PipeStage();
+            buildState.setId("" + stageNumber);
+            stageNumber++;
             buildState.setName("构建阶段");
+
             Pipeline.Pipe buildPipe = new Pipeline.Pipe();
+            buildPipe.setId(buildState.getId() + "-" + pipeNumber);
+            pipeNumber++;
             buildPipe.setName("标准构建");
             buildPipe.setType(Pipeline.Pipe.Type.BUILD_IMAGE);
 
@@ -72,16 +82,23 @@ public class PipelineService extends BaseService<Pipeline> {
 
             buildState.getPipeList().add(buildPipe);
             stageList.add(buildState);
+
+
         }
 
         {
             List<App> apps = appService.findByImageUrl(project.getImageUrl());
 
             Pipeline.PipeStage deployStage = new Pipeline.PipeStage();
+            deployStage.setId("" + stageNumber);
+            stageNumber++;
             deployStage.setName("部署阶段");
             for (App a : apps) {
                 if (a.getAutoDeploy()) {
                     Pipeline.Pipe deployPipe = new Pipeline.Pipe();
+                    deployPipe.setId(deployPipe.getId() + "-" + pipeNumber);
+                    pipeNumber++;
+
                     deployPipe.setType(Pipeline.Pipe.Type.DEPLOY);
                     deployPipe.setName("部署应用");
 
@@ -110,53 +127,73 @@ public class PipelineService extends BaseService<Pipeline> {
             }
         }
 
-        jnl.setStatus(Pipeline.Status.PENDING);
+        pipeline.setStatus(Pipeline.Status.PENDING);
 
 
         // 保存
-        jnl = dao.save(jnl);
+        pipeline = dao.save(pipeline);
 
         // 触发第一阶段
         Pipeline.PipeStage firstStage = stageList.get(0);
         for (Pipeline.Pipe pipe : firstStage.getPipeList()) {
-            SpringTool.getBean(getClass()).handlePipe(jnl.getId(), jnl.getStageList(), pipe);
+            PipelineService service = SpringTool.getBean(getClass());
+            service.handlePipeAsync(pipeline, pipe);
         }
     }
 
     @Async
-    public void handlePipe(String pipelineId, List<Pipeline.PipeStage> stageList, Pipeline.Pipe pipe) {
+    public void handlePipeAsync(Pipeline pipeline, Pipeline.Pipe pipe) {
+        String pipelineId = pipeline.getId();
+        List<Pipeline.PipeStage> stageList = pipeline.getStageList();
+
+        // 修改状态
         Pipeline db = dao.findOne(pipelineId);
         db.setStatus(Pipeline.Status.PROCESSING);
         pipe.setStatus(Pipeline.Pipe.Status.PROCESSING);
-        db.setStageList(stageList);
         dao.save(db);
 
+
+        Pipeline.PipeProcessResult result = Pipeline.PipeProcessResult.TODO;
         try {
             switch (pipe.getType()) {
                 case BUILD_IMAGE: {
                     Pipeline.PipeBuildConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
-                    projectService.buildImage(pipelineId, cfg);
-
-
+                    result = projectService.buildImage(pipelineId, cfg);
                     break;
                 }
                 case DEPLOY: {
                     Pipeline.PipeDeployConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeDeployConfig.class);
-                    appService.deploy(pipelineId, cfg.getName(), cfg.getHostname(), cfg.getImage(), cfg.getRegistryHost(),
+                    result = appService.deploy(pipelineId, cfg.getName(), cfg.getHostname(), cfg.getImage(), cfg.getRegistryHost(),
                             cfg.getRegistryUsername(), cfg.getRegistryPassword(), cfg
                     );
                     break;
                 }
             }
-            notifyPipeFinish(pipelineId, stageList, pipe, true);
+
         } catch (Exception e) {
             e.printStackTrace();
-            notifyPipeFinish(pipelineId, stageList, pipe, false);
+            result = Pipeline.PipeProcessResult.ERROR;
         }
 
+        log.info("pipe执行结果{}", result);
+        switch (result) {
+            case TODO:
+                break;
+            case FINISH:
+                notifyPipeFinish(pipeline, pipe, true);
+                break;
+            case PROCESSING:
+                break;
+            case ERROR:
+                notifyPipeFinish(pipeline, pipe, false);
+                break;
+        }
     }
 
-    private void notifyPipeFinish(String pipelineId, List<Pipeline.PipeStage> stageList, Pipeline.Pipe pipe, boolean success) {
+    private void notifyPipeFinish(Pipeline pipeline, Pipeline.Pipe pipe, boolean success) {
+        String pipelineId = pipeline.getId();
+        List<Pipeline.PipeStage> stageList = pipeline.getStageList();
+
         pipe.setStatus(success ? Pipeline.Pipe.Status.SUCCESS : Pipeline.Pipe.Status.ERROR);
 
         Pipeline db = dao.findOne(pipelineId);
@@ -180,7 +217,7 @@ public class PipelineService extends BaseService<Pipeline> {
             } else if (nextStageIndex < stageList.size()) {
                 Pipeline.PipeStage nextStage = stageList.get(nextStageIndex);
                 for (Pipeline.Pipe nextPipe : nextStage.getPipeList()) {
-                    this.handlePipe(pipelineId, stageList, nextPipe);
+                    this.handlePipeAsync(pipeline, nextPipe);
                 }
             }
         }

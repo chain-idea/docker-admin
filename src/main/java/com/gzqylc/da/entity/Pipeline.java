@@ -93,7 +93,7 @@ public class Pipeline extends BaseEntity {
     @Data
     public static class PipeStage {
 
-
+        String id;
         String name;
 
         List<Pipe> pipeList = new ArrayList<>();
@@ -107,6 +107,9 @@ public class Pipeline extends BaseEntity {
 
     @Data
     public static class Pipe {
+
+
+        String id;
         String name;
         String config;
 
@@ -127,5 +130,12 @@ public class Pipeline extends BaseEntity {
             SUCCESS,
             ERROR
         }
+    }
+
+    public static enum PipeProcessResult {
+        TODO,
+        FINISH,
+        PROCESSING, // 异步
+        ERROR
     }
 }
