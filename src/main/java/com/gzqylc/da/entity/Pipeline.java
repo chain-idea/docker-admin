@@ -134,8 +134,9 @@ public class Pipeline extends BaseEntity {
 
     public static enum PipeProcessResult {
         TODO,
-        FINISH,
+
         PROCESSING, // 异步
+        SUCCESS,
         ERROR
     }
 }

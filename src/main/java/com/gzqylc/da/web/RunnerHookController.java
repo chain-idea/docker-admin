@@ -15,7 +15,7 @@ import java.io.IOException;
 public class RunnerHookController {
 
     public static final String API_LOG = "api/runner_hook/log";
-    public static final String API_EVENT = "api/runner_hook/event";
+    public static final String API_PIPE_FINISH = "api/runner_hook/pipe_finish";
 
 
     @RequestMapping(API_LOG + "/{id}")
@@ -24,11 +24,12 @@ public class RunnerHookController {
         logger.info(msg);
     }
 
-    @RequestMapping(API_EVENT + "/{id}")
-    public void hook(@PathVariable String id, String event) throws IOException {
+    @RequestMapping(API_PIPE_FINISH + "/{id}/{pipeId}/{result}")
+    public void hook(@PathVariable String id, @PathVariable String pipeId, @PathVariable boolean result) throws IOException {
         PipelineLogger logger = PipelineLogger.getLogger(id);
-        logger.info("接受到事件 {}" + event);
+        logger.info("接收到hook {},{}, {}", id, pipeId, result);
 
+        pipelineService.notifyPipeFinishAsync(id, pipeId, result);
     }
 
 

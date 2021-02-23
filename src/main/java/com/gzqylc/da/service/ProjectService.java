@@ -66,7 +66,7 @@ public class ProjectService extends BaseService<Project> {
     }
 
 
-    public Pipeline.PipeProcessResult buildImage(String pipelineId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
+    public Pipeline.PipeProcessResult buildImage(String pipelineId, String pipeId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
         PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
         logger.info("开始构建镜像任务开始");
 
@@ -131,7 +131,7 @@ public class ProjectService extends BaseService<Project> {
 
             dockerClient.close();
             logger.info("构建阶段结束");
-            return Pipeline.PipeProcessResult.FINISH;
+            return Pipeline.PipeProcessResult.SUCCESS;
         } else {
             logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
 
@@ -145,8 +145,8 @@ public class ProjectService extends BaseService<Project> {
             form.regPassword = cfg.getRegistryPassword();
             form.imageUrl = cfg.getImageUrl();
             form.buildContext = cfg.getContext();
-            form.logUrl = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
-
+            form.logHook = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
+            form.resultHook = cfg.getServerUrl() + RunnerHookController.API_PIPE_FINISH + "/" + pipelineId + "/" + pipeId;
 
             String frpServer = frpService.getFrpServer();
             int vhostHttpPort = frpService.getVhostHttpPort();
@@ -179,6 +179,7 @@ public class ProjectService extends BaseService<Project> {
         String regPassword;
         String imageUrl;
         String buildContext;
-        String logUrl;
+        String logHook;
+        String resultHook;
     }
 }

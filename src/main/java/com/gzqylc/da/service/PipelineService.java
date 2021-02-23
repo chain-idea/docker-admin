@@ -190,6 +190,26 @@ public class PipelineService extends BaseService<Pipeline> {
         }
     }
 
+    @Async
+    public void notifyPipeFinishAsync(String pipelineId, String pipeId, boolean success) {
+        Pipeline pipeline = dao.findOne(pipelineId);
+
+        Pipeline.Pipe pipe = null;
+        for (Pipeline.PipeStage stage : pipeline.getStageList()) {
+            for (Pipeline.Pipe p : stage.getPipeList()) {
+                if (p.getId().equals(pipeId)) {
+                    pipe = p;
+                    break;
+                }
+
+            }
+        }
+
+        this.notifyPipeFinish(pipeline, pipe, success);
+
+    }
+
+
     private void notifyPipeFinish(Pipeline pipeline, Pipeline.Pipe pipe, boolean success) {
         String pipelineId = pipeline.getId();
         List<Pipeline.PipeStage> stageList = pipeline.getStageList();
