@@ -26,7 +26,8 @@ public class HttpTool {
 
             int code = response.getCode();
 
-            Assert.state(code == 200, "请求失败");
+
+            Assert.state(code == 200, "请求执行节点失败");
 
             return response.getEntity().toString();
         }
