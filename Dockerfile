@@ -26,7 +26,7 @@ RUN mvn -q -DskipTests=true package \
         && mv target/*.jar /app.jar \
         && cd / && rm -rf /tmp/build
 
-FROM openjdk:8-alipne
+FROM openjdk:8-alpine
 COPY --from=1 /app.jar /app.jar
 
 EXPOSE 8080
