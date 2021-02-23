@@ -23,22 +23,14 @@ export default class extends React.Component {
     this.containerId = params.containerId
   }
 
-  componentDidMount() {
-    let params = this.props.match.params;
-    http.get(api + "get", params).then(dockerInfo => {
-      this.setState({dockerInfo})
-    })
-
-  }
-
 
   render() {
     const {containerId, hostId} = this;
-    return (<div>
 
-      {JSON.stringify(this.state.dockerInfo)}
+    return (<div style={{height: '100%'}}>
 
-      <div style={{minHeight: 400}}>
+
+      <div style={{height: '100%'}}>
         <ScrollFollow
           startFollowing={true}
           render={({follow, onScroll}) => (
