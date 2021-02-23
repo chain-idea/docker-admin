@@ -1,8 +1,9 @@
-import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert} from 'antd';
+import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert, Modal} from 'antd';
 import React from 'react';
 import http from "@/utils/request";
 import Log from "./Log";
 import AppForm from "./AppForm";
+import {BugFilled} from "@ant-design/icons";
 
 let api = '/api/app/';
 
@@ -16,8 +17,7 @@ export default class extends React.Component {
       yaml: '',
       host: {}
     },
-    container: {
-    }
+    container: {}
 
   }
 
@@ -51,6 +51,15 @@ export default class extends React.Component {
     http.get("/api/app/autoDeploy", {id, autoDeploy})
   }
 
+  handleDelete = () => {
+    const id = this.state.app.id
+    http.post(api + 'delete', id, '删除数据').then(rs => {
+
+      Modal.info({title: '删除操作', content: rs.msg})
+      console.log(rs)
+    })
+  }
+
   render() {
     const {app, container} = this.state;
 
@@ -81,10 +90,6 @@ export default class extends React.Component {
               type="vertical"></Divider> {container.status}</td>
           </tr>
 
-          <tr>
-            <th>端口(主机:容器)</th>
-            <td> {container.ports}</td>
-          </tr>
           </tbody>
         </table>
       </Card>
@@ -92,7 +97,7 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="2">
+          <Tabs tabPosition="left" defaultActiveKey="6">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>
@@ -106,9 +111,11 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
             <Tabs.TabPane tab="设置" key="6">
-              <Row>
-                <Col flex="100px"> 自动发布</Col>
-                <Col>
+
+
+              <div className="key-value">
+                <p>
+                  <label>自动发布</label>
                   <Switch checked={app.autoDeploy}
                           onChange={checked => {
                             app.autoDeploy = checked
@@ -116,8 +123,18 @@ export default class extends React.Component {
                             this.setAutoDeploy(app.id, checked)
                           }}
                   ></Switch>
-                </Col>
-              </Row>
+                </p>
+                <p>
+                  <label>删除应用</label>
+                  <div>
+                    <Alert message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?" type="warning"
+                           style={{marginBottom: 8}}></Alert>
+                    <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
+                  </div>
+                </p>
+
+              </div>
+
 
             </Tabs.TabPane>
           </Tabs>

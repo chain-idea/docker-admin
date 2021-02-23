@@ -4,6 +4,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
 import com.gzqylc.da.entity.App;
+import com.gzqylc.da.entity.Host;
 import com.gzqylc.da.entity.Pipeline;
 import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.service.docker.PullImageCallback;
@@ -200,5 +201,31 @@ public class AppService extends BaseService<App> {
         db.getConfig().setPorts(ports);
         return save(db);
 
+    }
+
+    public void deleteApp(String id) {
+        // 远程删除应用
+
+        App app = baseDao.findOne(id);
+        Host host = app.getHost();
+
+        DockerClient client = DockerTool.getClient(host.getDockerId());
+
+
+        Map<String, String> labels = getAppLabelFilter(app.getName());
+        List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
+        log.info("已有容器个数 {}", list.size());
+
+        list.forEach(c -> {
+            if (c.getState().equals("running")) {
+                log.info("正在停止容器 {}", c);
+                client.stopContainerCmd(c.getId()).exec();
+            }
+            log.info("正在删除容器 {}", c);
+            client.removeContainerCmd(c.getId()).exec();
+        });
+
+
+        baseDao.deleteById(id);
     }
 }

@@ -88,6 +88,7 @@ pre.code {
 .q-mb-sm {
   margin-bottom: 4px;
 }
+
 .q-mb-md {
   margin-bottom: 8px;
 }
@@ -95,4 +96,21 @@ pre.code {
 code {
   background: #9ba3af;
   padding: 12px;
+}
+
+
+.key-value > p {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.key-value > p > label {
+  width: 100px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.key-value > p > div {
+  width: calc(100% - 100px);
+  display: inline-block;
 }

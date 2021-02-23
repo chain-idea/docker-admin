@@ -42,8 +42,9 @@ public class AppController {
 
 
     @Route("delete")
-    public AjaxResult delete(@RequestBody List<String> ids) {
-        service.deleteAllById(ids);
+    public AjaxResult delete(@RequestBody String id) {
+        service.deleteApp(id);
+
         return AjaxResult.success("删除成功");
     }
 

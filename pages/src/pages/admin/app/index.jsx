@@ -5,8 +5,6 @@ import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
 import {history} from 'umi';
 
-const addTitle = "添加应用"
-const editTitle = '编辑应用'
 const deleteTitle = '删除应用'
 let api = '/api/app/';
 
@@ -31,7 +29,7 @@ export default class extends React.Component {
     {
       title: '主机',
       dataIndex: 'host',
-      render(v){
+      render(v) {
         return v.name
       }
     },
@@ -58,65 +56,14 @@ export default class extends React.Component {
 
     },
 
-    {
-      title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => {
-        let menu = <Menu>
-          <Menu.Item key="1" onClick={() => {
-            this.state.showEditForm = true;
-            this.state.formValues = record;
-            this.setState(this.state)
-          }}>修改</Menu.Item>
-          <Menu.Item key="2">
-            <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete([record])}>
-              <a>删除</a>
-            </Popconfirm>
-          </Menu.Item>
-        </Menu>;
-
-
-        return <Dropdown.Button overlay={menu}
-                                onClick={() => history.push("app/" + record.id)}>查看详情</Dropdown.Button>
-
-      },
-    },
   ];
-  handleSave = value => {
 
 
-    http.post(api + 'save', value).then(rs => {
-      this.state.showAddForm = false;
-      this.setState(this.state)
-      this.actionRef.current.reload();
-    })
-  }
-
-  handleUpdate = value => {
-    let params = {...this.state.formValues, ...value};
-    http.post(api + 'update', params).then(rs => {
-      this.state.showEditForm = false;
-      this.setState(this.state)
-      this.actionRef.current.reload();
-    })
-  }
-
-  handleDelete = rows => {
-    if (!rows) return true;
-
-    let ids = rows.map(row => row.id);
-    http.post(api + 'delete', ids, '删除数据').then(rs => {
-      this.actionRef.current.reload();
-    })
-  }
 
   render() {
-    let {showAddForm, showEditForm} = this.state
 
     return (<div>
 
-      {/*表格*/}
       <ProTable
         actionRef={this.actionRef}
         toolBarRender={(action, {selectedRows}) => [
@@ -135,49 +82,6 @@ export default class extends React.Component {
         search={false}
       />
 
-
-      {/*添加表单*/}
-      <Modal
-        maskClosable={false}
-        destroyOnClose
-        title={addTitle}
-        visible={showAddForm}
-        onCancel={() => {
-          this.state.showAddForm = false;
-          this.setState(this.state)
-        }}
-        footer={null}
-      >
-        <ProTable
-          onSubmit={this.handleSave}
-          type="form"
-          form={{labelCol: {span: 5}, layout: 'horizontal'}}
-          columns={this.columns}
-          rowSelection={{}}
-        />
-      </Modal>
-
-
-      {/*修改表单*/}
-      <Modal
-        maskClosable={false}
-        destroyOnClose
-        title={editTitle}
-        visible={showEditForm}
-        onCancel={() => {
-          this.state.showEditForm = false;
-          this.setState(this.state)
-        }}
-        footer={null}
-      >
-        <ProTable
-          onSubmit={this.handleUpdate}
-          form={{initialValues: this.state.formValues}}
-          type="form"
-          columns={this.columns}
-          rowSelection={{}}
-        />
-      </Modal>
 
     </div>)
   }
