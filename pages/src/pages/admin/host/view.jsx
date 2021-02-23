@@ -42,7 +42,7 @@ export default class extends React.Component {
       <div className="panel">
         <div>
           {
-            keys.map(k => <Row><Col fle>{dict[k]} :</Col> <Col>{info[k]}</Col> </Row>)
+            keys.map(k => <Row><Col fle>{dict[k]}:</Col> <Col> {info[k]}</Col> </Row>)
           }
         </div>
 
