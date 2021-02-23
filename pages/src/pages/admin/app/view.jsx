@@ -39,7 +39,8 @@ export default class extends React.Component {
       const containerInfo = {
         name: container.Names[0].substr(1),
         id: container.Id.substr(0, 12),
-        status: container.Status
+        status: container.Status,
+        state: container.State
       }
       this.setState({container, containerInfo})
     })
@@ -66,12 +67,16 @@ export default class extends React.Component {
   render() {
     const {app, container, containerInfo} = this.state;
 
+    const {state} = containerInfo;
+
     return (<div>
 
       <Card className="panel" title={app.name} bordered size="small" extra={<Space>
-        <Button onClick={this.start} type="primary">启动</Button>
-        <Button onClick={this.stop} type="primary" danger>停止</Button>
+        {state == 'exited' && <Button onClick={this.start} type="primary">启动</Button>}
+        {state == 'running' && <Button onClick={this.stop} type="primary" danger>停止</Button>}
+
         <Button onClick={this.deploy} type="primary">重新部署</Button>
+
       </Space>}>
         <table className="q-table-desc">
           <tbody>
@@ -106,14 +111,12 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="容器日志" key="log">
+            <Tabs.TabPane tab="日志" key="log">
               {container.Id && <Log id={app.id} container={container}></Log>}
             </Tabs.TabPane>
-
-            <Tabs.TabPane tab="部署日志" key="deploy-log">
-              {container.Id && <Log id={app.id} container={container}></Log>}
+            <Tabs.TabPane tab="事件" key="event">
+              TODO 时间线记录， 启动，部署等
             </Tabs.TabPane>
-
 
             <Tabs.TabPane tab="设置" key="6">
               <Row>

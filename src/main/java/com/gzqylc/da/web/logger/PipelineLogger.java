@@ -29,7 +29,6 @@ public class PipelineLogger {
     private PipelineLogger(String id) {
         this.id = id;
         this.logFile = new File(LoggerConstants.getLogPath(id));
-        log.info("日志路径:{}", logFile.getAbsoluteFile());
         if (!logFile.exists()) {
             try {
                 FileUtils.forceMkdirParent(logFile);
