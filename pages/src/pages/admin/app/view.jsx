@@ -114,7 +114,7 @@ export default class extends React.Component {
 
 
               <div className="key-value">
-                <p>
+                <div>
                   <label>自动发布</label>
                   <Switch checked={app.autoDeploy}
                           onChange={checked => {
@@ -123,15 +123,15 @@ export default class extends React.Component {
                             this.setAutoDeploy(app.id, checked)
                           }}
                   ></Switch>
-                </p>
-                <p>
+                </div>
+                <div>
                   <label>删除应用</label>
                   <div>
                     <Alert message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?" type="warning"
                            style={{marginBottom: 8}}></Alert>
                     <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
                   </div>
-                </p>
+                </div>
 
               </div>
 

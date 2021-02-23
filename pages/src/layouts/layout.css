@@ -99,18 +99,18 @@ code {
 }
 
 
-.key-value > p {
+.key-value > div {
   width: 100%;
   margin-bottom: 16px;
 }
 
-.key-value > p > label {
+.key-value > div > label {
   width: 100px;
   display: inline-block;
   vertical-align: top;
 }
 
-.key-value > p > div {
+.key-value > div > div {
   width: calc(100% - 100px);
   display: inline-block;
 }
