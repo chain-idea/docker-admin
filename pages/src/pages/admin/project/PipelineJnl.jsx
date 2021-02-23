@@ -65,10 +65,7 @@ export default class extends React.Component {
       title: '开始时间',
       dataIndex: 'createTime'
     },
-    {
-      title: '结束时间',
-      dataIndex: 'stopTime',
-    },
+
     {
       title: '耗时（秒）',
       dataIndex: 'consumeTime',
