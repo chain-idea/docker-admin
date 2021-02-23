@@ -8,7 +8,7 @@ import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
 import com.gzqylc.da.dao.RunnerDao;
 import com.gzqylc.da.entity.*;
-import com.gzqylc.da.web.RunnerMsgReceiveController;
+import com.gzqylc.da.web.RunnerHookController;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.docker.BuildImageResultCallback;
 import com.gzqylc.da.service.docker.PushImageCallback;
@@ -144,7 +144,7 @@ public class ProjectService extends BaseService<Project> {
             form.regPassword = cfg.getRegistryPassword();
             form.imageUrl = cfg.getImageUrl();
             form.buildContext = cfg.getContext();
-            form.logUrl = cfg.getServerUrl() + RunnerMsgReceiveController.API_LOG + "/" + pipelineId;
+            form.logUrl = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
 
 
             String frpServer = frpService.getFrpServer();

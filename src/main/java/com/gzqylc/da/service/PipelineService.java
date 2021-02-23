@@ -136,6 +136,8 @@ public class PipelineService extends BaseService<Pipeline> {
                 case BUILD_IMAGE: {
                     Pipeline.PipeBuildConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
                     projectService.buildImage(pipelineId, cfg);
+
+
                     break;
                 }
                 case DEPLOY: {
