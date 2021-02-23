@@ -126,7 +126,7 @@ public class AppService extends BaseService<App> {
         logger.info("启动容器");
         logger.info("部署阶段结束");
 
-        return Pipeline.PipeProcessResult.FINISH;
+        return Pipeline.PipeProcessResult.SUCCESS;
     }
 
     public void stop(String id) {

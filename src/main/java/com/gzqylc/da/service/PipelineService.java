@@ -158,7 +158,7 @@ public class PipelineService extends BaseService<Pipeline> {
             switch (pipe.getType()) {
                 case BUILD_IMAGE: {
                     Pipeline.PipeBuildConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
-                    result = projectService.buildImage(pipelineId, cfg);
+                    result = projectService.buildImage(pipelineId, pipe.getId(),cfg);
                     break;
                 }
                 case DEPLOY: {
@@ -179,7 +179,7 @@ public class PipelineService extends BaseService<Pipeline> {
         switch (result) {
             case TODO:
                 break;
-            case FINISH:
+            case SUCCESS:
                 notifyPipeFinish(pipeline, pipe, true);
                 break;
             case PROCESSING:
