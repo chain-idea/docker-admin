@@ -1,4 +1,4 @@
-import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert, Modal} from 'antd';
+import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert, Modal, Tag} from 'antd';
 import React from 'react';
 import http from "@/utils/request";
 import Log from "./Log";
@@ -87,7 +87,10 @@ export default class extends React.Component {
           <tr>
             <th>容器</th>
             <td>{container.name} <Divider type="vertical"></Divider>{container.id} <Divider
-              type="vertical"></Divider> {container.status}</td>
+              type="vertical"></Divider>
+              <Tag color={container.state == 'running'?'green': 'red'}>{container.status}</Tag>
+
+            </td>
           </tr>
 
           </tbody>
