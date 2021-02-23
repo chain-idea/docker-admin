@@ -16,13 +16,13 @@ WORKDIR /tmp/build
 
 ADD pom.xml .
 ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootApplication.java
-RUN mvn -q -DskipTests=true  package
+RUN mvn -DskipTests=true  package
 
 
 
 ADD src ./src
 COPY --from=0 /tmp/build/dist/ src/main/resources/static/
-RUN mvn -q -DskipTests=true package \
+RUN mvn  -DskipTests=true package \
         && mv target/*.jar /app.jar \
         && cd / && rm -rf /tmp/build
 
