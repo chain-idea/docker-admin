@@ -18,13 +18,13 @@ ADD pom.xml .
 ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootApplication.java
 # 将局域网的maven库的注解去掉
 RUN sed -i 's/<!--lan//g' pom.xml && sed -i 's/lan-->//g' pom.xml && cat pom.xml
-RUN mvn -DskipTests=true  package
+RUN mvn -q -DskipTests=true  package
 
 
 
 ADD src ./src
 COPY --from=0 /tmp/build/dist/ src/main/resources/static/
-RUN mvn  -DskipTests=true package \
+RUN mvn -q  -DskipTests=true package \
         && mv target/*.jar /app.jar \
         && cd / && rm -rf /tmp/build
 
