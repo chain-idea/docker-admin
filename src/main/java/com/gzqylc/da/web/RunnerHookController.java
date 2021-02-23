@@ -21,7 +21,7 @@ public class RunnerHookController {
     @RequestMapping(API_LOG + "/{id}")
     public void log(@PathVariable String id, @RequestBody String msg) throws IOException {
         PipelineLogger logger = PipelineLogger.getLogger(id);
-        logger.info("远程住址日志：" + msg);
+        logger.info("远程主机日志：" + msg);
     }
 
     @RequestMapping(API_PIPE_FINISH + "/{id}/{pipeId}/{result}")
