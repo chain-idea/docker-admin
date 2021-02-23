@@ -53,7 +53,7 @@ public class PipeLineController {
         return AjaxResult.success("流水线触发成功");
     }
 
-    @Route("delete")
+    @RequestMapping("delete")
     public AjaxResult delete(@RequestBody List<String> ids) {
         service.deleteAllById(ids);
         return AjaxResult.success("删除成功");

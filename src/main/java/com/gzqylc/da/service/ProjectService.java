@@ -3,13 +3,12 @@ package com.gzqylc.da.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.PushImageCmd;
-import com.github.kevinsawicki.http.HttpRequest;
 import com.google.common.collect.Sets;
 import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
 import com.gzqylc.da.dao.RunnerDao;
 import com.gzqylc.da.entity.*;
-import com.gzqylc.da.web.logger.LogController;
+import com.gzqylc.da.web.RunnerMsgReceiveController;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.docker.BuildImageResultCallback;
 import com.gzqylc.da.service.docker.PushImageCallback;
@@ -145,7 +144,7 @@ public class ProjectService extends BaseService<Project> {
             form.regPassword = cfg.getRegistryPassword();
             form.imageUrl = cfg.getImageUrl();
             form.buildContext = cfg.getContext();
-            form.logUrl = cfg.getServerUrl() + LogController.API_LOG + "?id=" + pipelineId;
+            form.logUrl = cfg.getServerUrl() + RunnerMsgReceiveController.API_LOG + "/" + pipelineId;
 
 
             String frpServer = frpService.getFrpServer();
