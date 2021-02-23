@@ -105,6 +105,13 @@
 
 
     <repositories>
+       <!--lan
+       <repository>
+            <id>qylc-lan</id>
+            <url>http://192.168.2.222:8081/repository/maven-public/</url>
+        </repository>
+        lan-->
+
         <repository>
             <id>aliyun</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -116,6 +123,11 @@
 
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>qylc-lan</id>
+            <url>http://192.168.2.222:8081/repository/maven-public/</url>
+        </pluginRepository>
+
         <pluginRepository>
             <id>aliyun</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>

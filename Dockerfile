@@ -16,6 +16,7 @@ WORKDIR /tmp/build
 
 ADD pom.xml .
 ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootApplication.java
+RUN sed -i 's/<!--lan//g' pom.xml && cat pom.xml
 RUN mvn -DskipTests=true  package
 
 
