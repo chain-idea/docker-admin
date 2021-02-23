@@ -16,6 +16,7 @@ const dict = {
   OperatingSystem: '操作系统',
   SystemTime: '系统时间',
   ServerVersion: 'docker版本',
+  ID: 'dockerId',
 }
 const keys = Object.keys(dict)
 
