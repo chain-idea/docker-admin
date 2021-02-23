@@ -17,13 +17,6 @@ export default class extends React.Component {
       host: {}
     },
     container: {
-      Names: []
-    },
-    containerInfo: {
-      id: '',
-      name: '',
-      ports: '',
-      status: ''
     }
 
   }
@@ -36,13 +29,7 @@ export default class extends React.Component {
     })
 
     http.get("/api/app/container", params).then(container => {
-      const containerInfo = {
-        name: container.Names[0].substr(1),
-        id: container.Id.substr(0, 12),
-        status: container.Status,
-        state: container.State
-      }
-      this.setState({container, containerInfo})
+      this.setState({container})
     })
   }
 
@@ -65,9 +52,9 @@ export default class extends React.Component {
   }
 
   render() {
-    const {app, container, containerInfo} = this.state;
+    const {app, container} = this.state;
 
-    const {state} = containerInfo;
+    const {state} = container;
 
     return (<div>
 
@@ -86,17 +73,17 @@ export default class extends React.Component {
           </tr>
           <tr>
             <th>镜像</th>
-            <td>{app.imageUrl}:{app.imageTag}</td>
+            <td>{container.image}</td>
           </tr>
           <tr>
             <th>容器</th>
-            <td>{containerInfo.name} <Divider type="vertical"></Divider>{containerInfo.id} <Divider
-              type="vertical"></Divider> {containerInfo.status}</td>
+            <td>{container.name} <Divider type="vertical"></Divider>{container.id} <Divider
+              type="vertical"></Divider> {container.status}</td>
           </tr>
 
           <tr>
             <th>端口(主机:容器)</th>
-            <td> {containerInfo.ports}</td>
+            <td> {container.ports}</td>
           </tr>
           </tbody>
         </table>
@@ -112,7 +99,7 @@ export default class extends React.Component {
 
 
             <Tabs.TabPane tab="日志" key="log">
-              {container.Id && <Log id={app.id} container={container}></Log>}
+              {container.id && <Log id={app.id} container={container}></Log>}
             </Tabs.TabPane>
             <Tabs.TabPane tab="事件" key="event">
               TODO 时间线记录， 启动，部署等

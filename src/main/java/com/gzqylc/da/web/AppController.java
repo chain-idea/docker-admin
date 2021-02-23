@@ -5,6 +5,7 @@ import com.gzqylc.da.web.form.DeployForm;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
 import com.gzqylc.da.service.HostService;
+import com.gzqylc.da.web.vo.ContainerVo;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
 import lombok.extern.slf4j.Slf4j;
@@ -127,8 +128,9 @@ public class AppController {
     }
 
     @Route("container")
-    public Container containers(String id) {
-        return service.getContainer(id);
+    public ContainerVo containers(String id) {
+        Container container = service.getContainer(id);
+        return new ContainerVo(container);
     }
 
 }
