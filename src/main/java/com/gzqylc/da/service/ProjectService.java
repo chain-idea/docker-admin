@@ -47,6 +47,9 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     FrpService frpService;
 
+    @Autowired
+    RunnerDao dao;
+
     public void saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
 
@@ -133,6 +136,8 @@ public class ProjectService extends BaseService<Project> {
             logger.info("构建阶段结束");
             return Pipeline.PipeProcessResult.SUCCESS;
         } else {
+
+
             logger.info("使用远程机器构建, 构建主机Id {}. dockerId:{}", cfg.getBuildHost(), cfg.getBuildHostDockerId());
 
             BuildImageForm form = new BuildImageForm();
@@ -147,6 +152,13 @@ public class ProjectService extends BaseService<Project> {
             form.buildContext = cfg.getContext();
             form.logHook = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
             form.resultHook = cfg.getServerUrl() + RunnerHookController.API_PIPE_FINISH + "/" + pipelineId + "/" + pipeId;
+
+            Runner runner = runnerDao.findByDockerId(dockerId);
+            if (runner != null) {
+                form.gitUrl = form.gitUrl.replace(runner.getGitUrlReplaceSource(), runner.getGitUrlReplaceTarget());
+                logger.info("替换git地址 {}", form.gitUrl);
+            }
+
 
             String frpServer = frpService.getFrpServer();
             int vhostHttpPort = frpService.getVhostHttpPort();
