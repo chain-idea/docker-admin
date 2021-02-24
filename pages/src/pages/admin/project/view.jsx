@@ -80,7 +80,7 @@ export default class extends React.Component {
               layout="vertical"
               initialValues={{value: 'master'}}
               preserve={false}>
-          <Form.Item name="value" label="分支、标签、CommitId">
+          <Form.Item name="value" label="分支、标签、commit id">
             <Input/>
           </Form.Item>
         </Form>
