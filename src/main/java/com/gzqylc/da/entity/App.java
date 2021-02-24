@@ -1,5 +1,6 @@
 package com.gzqylc.da.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gzqylc.lang.web.base.BaseEntity;
 import com.gzqylc.lang.web.jpa.converter.ObjectConverter;
 import lombok.Data;
@@ -73,6 +74,7 @@ public class App extends BaseEntity {
         List<EnvironmentConfig> environment = new ArrayList<>();
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     public static class BindConfig {
         String publicVolume;
@@ -81,12 +83,14 @@ public class App extends BaseEntity {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     public static class EnvironmentConfig {
         String key;
         String value;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     public static class PortBinding {
         Integer publicPort;
@@ -94,12 +98,12 @@ public class App extends BaseEntity {
         String protocol;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @Data
     public static class BuildConfig {
         String context = "/";
         String dockerfile = "Dockerfile";
 
-        boolean autoBuild = false;
         boolean useCache = true;
 
         String buildHost; // 构建镜像的主机ID

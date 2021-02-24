@@ -60,9 +60,7 @@ export default class  extends React.Component {
           <Switch></Switch>
         </Form.Item>
 
-        <Form.Item name="autoBuild" label="自动构建" valuePropName="checked">
-          <Switch></Switch>
-        </Form.Item>
+
 
         <Form.Item name="buildHost" label="构建主机" >
           <RemoteSelect url="api/host/options"></RemoteSelect>

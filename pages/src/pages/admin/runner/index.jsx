@@ -1,11 +1,10 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select} from 'antd';
+import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select, Alert, Space} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
-import {serverUrl} from "@/config";
-import {history} from 'umi';
 import RemoteSelect from "../../../components/RemoteSelect";
+import {Link} from 'umi';
 
 const addTitle = "添加模板"
 const editTitle = '编辑模板'
@@ -106,6 +105,10 @@ export default class extends React.Component {
 
     return (<div>
       <div className="panel">
+        <Space>
+          <Alert message="执行器需要运行镜像 	registry.cn-beijing.aliyuncs.com/chain-idea/docker-admin-agent"></Alert>
+          <Link to="/admin/repository">跳转到镜像仓库</Link>
+        </Space>
         <ProTable
           actionRef={this.actionRef}
           toolBarRender={(action, {selectedRows}) => [
