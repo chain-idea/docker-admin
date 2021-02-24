@@ -124,6 +124,13 @@ public class AppController {
     }
 
 
+    @Route("moveApp")
+    public AjaxResult moveApp(String id, String hostId) throws InterruptedException {
+        service.moveApp(id, hostId);
+
+        return AjaxResult.success();
+    }
+
     @Route("start/{appId}")
     public AjaxResult start(@PathVariable String appId) {
         service.start(appId);

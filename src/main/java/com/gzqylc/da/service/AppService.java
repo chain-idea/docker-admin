@@ -3,6 +3,7 @@ package com.gzqylc.da.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
+import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.entity.Host;
 import com.gzqylc.da.entity.Pipeline;
@@ -13,10 +14,12 @@ import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.da.service.docker.DockerTool;
+import com.gzqylc.lang.web.spring.SpringTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,9 @@ public class AppService extends BaseService<App> {
 
     @Autowired
     RegistryService registryService;
+
+    @Autowired
+    HostDao hostDao;
 
 
     @Async
@@ -210,11 +216,29 @@ public class AppService extends BaseService<App> {
 
     public void deleteApp(String id) {
         // 远程删除应用
-
         App app = baseDao.findOne(id);
-        Host host = app.getHost();
+        deleteContainer(app);
 
-        DockerClient client = DockerTool.getClient(host.getDockerId());
+        baseDao.deleteById(id);
+    }
+
+
+    public void moveApp(String id, String hostId) throws InterruptedException {
+        Assert.hasLength(hostId, "hostId不能为空");
+        // 远程删除应用
+        App app = baseDao.findOne(id);
+        this.deleteContainer(app);
+
+
+        Host targetHost = hostDao.findOne(hostId);
+        app.setHost(targetHost);
+        save(app);
+        SpringTool.getBean(getClass()).deploy(app);
+
+    }
+
+    private void deleteContainer(App app) {
+        DockerClient client = DockerTool.getClient(app.getHost().getDockerId());
 
 
         Map<String, String> labels = getAppLabelFilter(app.getName());
@@ -229,8 +253,5 @@ public class AppService extends BaseService<App> {
             log.info("正在删除容器 {}", c);
             client.removeContainerCmd(c.getId()).exec();
         });
-
-
-        baseDao.deleteById(id);
     }
 }

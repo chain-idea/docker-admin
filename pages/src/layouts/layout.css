@@ -76,14 +76,6 @@ pre.code {
 }
 
 
-.q-table-desc td, .q-table-desc th {
-  padding: 4px;
-}
-
-.q-table-desc th:after {
-  content: ':';
-}
-
 
 .q-mb-sm {
   margin-bottom: 4px;
@@ -99,18 +91,3 @@ code {
 }
 
 
-.key-value > div {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.key-value > div > label {
-  width: 100px;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.key-value > div > div {
-  width: calc(100% - 100px);
-  display: inline-block;
-}
