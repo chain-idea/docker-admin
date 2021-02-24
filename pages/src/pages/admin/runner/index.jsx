@@ -5,15 +5,12 @@ import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
 import {serverUrl} from "@/config";
 import {history} from 'umi';
+import RemoteSelect from "../../../components/RemoteSelect";
 
 const addTitle = "添加模板"
 const editTitle = '编辑模板'
 const deleteTitle = '删除模板'
-let api = '/api/registry/';
-let prefix = serverUrl;
-if (prefix.endsWith("/")) {
-  prefix = prefix.substr(0, prefix.length - 1);
-}
+let api = '/api/runner/';
 
 
 export default class extends React.Component {
@@ -27,27 +24,30 @@ export default class extends React.Component {
 
   columns = [
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: '主机',
+      dataIndex: 'hostId',
+      render: (v, row) => {
+        return row.host.name
+      },
+      renderFormItem: h => {
+        return <RemoteSelect url="api/host/options" showSearch></RemoteSelect>
+      }
+
     },
     {
-      title: '仓库地址',
-      dataIndex: 'host',
+      title: '优先级',
+      dataIndex: 'seq',
     },
     {
-      title: '命名空间',
-      dataIndex: 'namespace',
+      title: 'git地址替换（源）',
+      dataIndex: 'gitUrlReplaceSource',
     },
 
     {
-      title: '账号',
-      dataIndex: 'username',
+      title: 'git地址替换（目标）',
+      dataIndex: 'gitUrlReplaceTarget',
     },
-    {
-      title: '密码',
-      dataIndex: 'password',
-      hideInTable: true
-    },
+
     {
       title: '操作',
       dataIndex: 'option',
@@ -57,6 +57,7 @@ export default class extends React.Component {
           <a key="1" onClick={() => {
             this.state.showEditForm = true;
             this.state.formValues = record;
+            this.state.formValues.hostId = record.host.id
             this.setState(this.state)
           }}>修改</a>
           <Divider type="vertical"></Divider>
@@ -72,6 +73,7 @@ export default class extends React.Component {
     },
   ];
   handleSave = value => {
+    value.host = {id: value.hostId}
     http.post(api + 'save', value).then(rs => {
       this.state.showAddForm = false;
       this.setState(this.state)
@@ -79,16 +81,15 @@ export default class extends React.Component {
     })
   }
 
-  handleUpdate() {
-    return value => {
-      let params = {...this.state.formValues, ...value};
-      http.post(api + 'update', params).then(rs => {
-        this.state.showEditForm = false;
-        this.setState(this.state)
-        this.actionRef.current.reload();
-      })
-
-    };
+  handleUpdate = value => {
+    value.host = {id: value.hostId}
+    let params = {...this.state.formValues, ...value};
+    http.post(api + 'update', params).then(rs => {
+      this.state.showEditForm = false;
+      this.setState(this.state)
+      this.actionRef.current.reload();
+    })
+    ;
   }
 
   handleDelete = rows => {
@@ -104,11 +105,6 @@ export default class extends React.Component {
     let {showAddForm, showEditForm} = this.state
 
     return (<div>
-
-
-      <div className="panel">
-        <a href="https://cr.console.aliyun.com" target="_blank">阿里云镜像仓库</a>
-      </div>
       <div className="panel">
         <ProTable
           actionRef={this.actionRef}
@@ -159,7 +155,7 @@ export default class extends React.Component {
         footer={null}
       >
         <ProTable
-          onSubmit={this.handleUpdate()}
+          onSubmit={this.handleUpdate}
           form={{initialValues: this.state.formValues}}
           type="form"
           columns={this.columns}

@@ -60,6 +60,7 @@ public class AppController {
 
         app.setAutoDeploy(true);
         app.setConfig(cfg);
+        app.setAutoRestart(true);
 
         app = service.save(app);
 

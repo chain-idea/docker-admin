@@ -26,7 +26,8 @@ export default defineConfig({
         {path: '/admin/app', component: '@/pages/admin/app'},
         {path: '/admin/app/deploy', component: '@/pages/admin/app/deploy'},
         {path: '/admin/app/:id', component: '@/pages/admin/app/view'},
-        {path: '/admin/user/registry', component: '@/pages/admin/user/registry'},
+        {path: '/admin/registry', component: '@/pages/admin/registry'},
+        {path: '/admin/runner', component: '@/pages/admin/runner'},
         {path: '/admin/container/:hostId/:containerId', component: '@/pages/admin/container/view'},
         // 修改密码
         {path: '*', component: '@/pages/404'},

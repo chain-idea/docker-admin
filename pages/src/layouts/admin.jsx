@@ -43,8 +43,8 @@ export default class extends React.Component {
 
 
             <h3>设置</h3>
-            <Link to="/admin/user/registry">仓库配置</Link>
-            <Link to="/admin/user/runner">执行器</Link>
+            <Link to="/admin/registry">仓库配置</Link>
+            <Link to="/admin/runner">执行器</Link>
           </Space>
 
         </Sider>
