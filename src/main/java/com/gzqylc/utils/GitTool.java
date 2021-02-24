@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -34,7 +35,7 @@ public class GitTool {
         Git git = cloneCommand.call();
 
         if (isCommitRef) {
-            git.reset().setRef(value).call();
+            git.reset().setRef(value).setMode(ResetCommand.ResetType.HARD).call();
         }
 
         git.close();
