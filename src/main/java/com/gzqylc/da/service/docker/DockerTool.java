@@ -46,10 +46,7 @@ public class DockerTool {
 
 
     private static String getLocalDockerHost() {
-        if (SystemTool.isWindows()) {
-            return "tcp://localhost:2375";
-        }
-        return "unix:///var/run/docker.sock";
+        return SystemTool.isWindows() ? "tcp://localhost:2375" : "unix:///var/run/docker.sock";
     }
 
 

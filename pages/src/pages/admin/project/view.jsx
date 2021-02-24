@@ -76,17 +76,11 @@ export default class extends React.Component {
              onOk={this.submitTrigger}
              destroyOnClose={true}
              onCancel={() => this.setState({showTrigger: false})}>
-        <Form labelCol={{span: 4}} ref={this.triggerFormRef} initialValues={{type: 'branch', value: 'master'}}
+        <Form ref={this.triggerFormRef}
+              layout="vertical"
+              initialValues={{value: 'master'}}
               preserve={false}>
-          <Form.Item name="type" label="触发方式">
-            <Select>
-              <Select.Option value="branch">分支</Select.Option>
-              <Select.Option value="tag">标签</Select.Option>
-              <Select.Option value="commit">commit </Select.Option>
-            </Select>
-
-          </Form.Item>
-          <Form.Item name="value" label="值">
+          <Form.Item name="value" label="分支、标签、CommitId">
             <Input/>
           </Form.Item>
         </Form>
