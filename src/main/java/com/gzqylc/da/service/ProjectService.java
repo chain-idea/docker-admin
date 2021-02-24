@@ -16,6 +16,7 @@ import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.lang.web.base.BaseService;
+import com.gzqylc.utils.GitTool;
 import com.gzqylc.utils.HttpTool;
 import lombok.Data;
 import org.apache.commons.io.FileUtils;
@@ -78,30 +79,8 @@ public class ProjectService extends BaseService<Project> {
             logger.info("使用本机构建");
             // 获取代码
             File workDir = new File("/tmp/" + UUID.randomUUID());
-            logger.info("工作目录为 {}", workDir.getAbsolutePath());
-            logger.info("获取代码 git clone {}", cfg.getGitUrl());
+            GitTool.clone(cfg.getGitUrl(), cfg.getGitUsername(), cfg.getGitPassword(), cfg.getBranch(), workDir);
 
-
-            UsernamePasswordCredentialsProvider provider = new UsernamePasswordCredentialsProvider(cfg.getGitUsername(), cfg.getGitPassword());
-
-            if (workDir.exists()) {
-                boolean delete = workDir.delete();
-                Assert.state(delete, "删除文件失败");
-            }
-
-            Git git = Git.cloneRepository()
-                    .setURI(cfg.getGitUrl())
-                    .setNoTags()
-                    .setCredentialsProvider(provider)
-                    .setDirectory(workDir)
-                    .call();
-
-            String commitMsg = git.log().call().iterator().next().getFullMessage();
-            logger.info("git log : {}", commitMsg);
-            git.close();
-
-
-            logger.info("代码获取完毕, 共 {} M", FileUtils.sizeOfDirectory(workDir) / 1024 / 1024);
 
             logger.info("连接构建主机容器引擎中...");
             DockerClient dockerClient = DockerTool.getClient(dockerId, cfg.getRegistryHost(),
