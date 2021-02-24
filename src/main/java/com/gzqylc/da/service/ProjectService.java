@@ -1,36 +1,21 @@
 package com.gzqylc.da.service;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.BuildImageCmd;
-import com.github.dockerjava.api.command.PushImageCmd;
-import com.google.common.collect.Sets;
 import com.gzqylc.da.dao.HostDao;
 import com.gzqylc.da.dao.RegistryDao;
 import com.gzqylc.da.dao.RunnerDao;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.RunnerHookController;
 import com.gzqylc.da.web.logger.PipelineLogger;
-import com.gzqylc.da.service.docker.BuildImageResultCallback;
-import com.gzqylc.da.service.docker.PushImageCallback;
 import com.gzqylc.lang.web.JsonTool;
-import com.gzqylc.lang.web.jpa.specification.Criteria;
-import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.lang.web.base.BaseService;
-import com.gzqylc.utils.GitTool;
 import com.gzqylc.utils.HttpTool;
 import lombok.Data;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
 
 @Service
 public class ProjectService extends BaseService<Project> {
