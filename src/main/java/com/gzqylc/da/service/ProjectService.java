@@ -87,9 +87,8 @@ public class ProjectService extends BaseService<Project> {
                     cfg.getRegistryUsername(),
                     cfg.getRegistryPassword());
             String imageUrl = cfg.getImageUrl();
-            String latestTag = imageUrl + ":latest";
             String commitTag = imageUrl + ":" + cfg.getBranch();
-            Set<String> tags = Sets.newHashSet(latestTag, commitTag);
+            Set<String> tags = Sets.newHashSet(commitTag);
 
 
             File buildDir = new File(workDir, cfg.getContext());
