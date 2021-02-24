@@ -62,9 +62,7 @@ export default class  extends React.Component {
 
 
 
-        <Form.Item name="buildHost" label="构建主机" >
-          <RemoteSelect url="api/host/options"></RemoteSelect>
-        </Form.Item>
+
 
 
         <Form.Item wrapperCol={{offset: 4}}>

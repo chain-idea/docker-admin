@@ -3,6 +3,7 @@ package com.gzqylc.da.entity;
 import com.gzqylc.lang.web.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity
 @FieldNameConstants
+@ToString
 public class Runner extends BaseEntity {
 
     @NotNull
