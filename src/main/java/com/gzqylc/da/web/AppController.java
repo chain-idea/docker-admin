@@ -32,8 +32,6 @@ public class AppController {
     private HostService hostService;
 
 
-
-
     @Route("list")
     public Page<App> list(Pageable pageable, @RequestBody App app) {
         Page<App> list = service.findAll(app, pageable);
@@ -99,6 +97,21 @@ public class AppController {
 
 
         AjaxResult rs = AjaxResult.success("自动部署:" + (autoDeploy ? "启用" : "停用"));
+        return rs;
+    }
+
+    @Route("autoRestart")
+    public AjaxResult autoRestart(String id, boolean autoRestart) throws InterruptedException {
+
+        App db = service.findOne(id);
+        db.setAutoRestart(autoRestart);
+        db.getConfig().setRestart(autoRestart);
+
+        service.save(db);
+        service.deploy(db);
+
+
+        AjaxResult rs = AjaxResult.success("自动重启:" + (autoRestart ? "启用" : "停用"));
         return rs;
     }
 

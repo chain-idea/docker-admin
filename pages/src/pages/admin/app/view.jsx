@@ -50,6 +50,10 @@ export default class extends React.Component {
   setAutoDeploy = (id, autoDeploy) => {
     http.get("/api/app/autoDeploy", {id, autoDeploy})
   }
+  setAutoRestart = (id, autoRestart) => {
+    http.get("/api/app/autoRestart", {id, autoRestart})
+  }
+
 
   handleDelete = () => {
     const id = this.state.app.id
@@ -113,9 +117,7 @@ export default class extends React.Component {
               TODO 时间线记录， 启动，部署等
             </Tabs.TabPane>
 
-            <Tabs.TabPane tab="设置" key="6">
-
-
+            <Tabs.TabPane tab="发布" key="publish">
               <div className="key-value">
                 <div>
                   <label>自动发布</label>
@@ -127,6 +129,25 @@ export default class extends React.Component {
                           }}
                   ></Switch>
                 </div>
+
+
+              </div>
+            </Tabs.TabPane>
+
+            <Tabs.TabPane tab="设置" key="6">
+              <div className="key-value">
+                <div>
+                  <label>自动重启</label>
+                  <Switch checked={app.autoRestart}
+                          onChange={checked => {
+                            app.autoRestart = checked
+                            this.setState({app: this.state.app})
+                            this.setAutoRestart(app.id, checked)
+                          }}
+                  ></Switch>
+                </div>
+
+
                 <div>
                   <label>删除应用</label>
                   <div>
@@ -137,8 +158,6 @@ export default class extends React.Component {
                 </div>
 
               </div>
-
-
             </Tabs.TabPane>
           </Tabs>
 

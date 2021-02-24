@@ -24,9 +24,11 @@ public class ContainerVo implements Serializable {
         state = c.getState();
         id = c.getId();
 
-
         status = c.getStatus();
+        resetStatus();
+    }
 
+    private void resetStatus() {
         status = status.replace("Up", "运行")
                 .replace("Exited", "退出")
 
@@ -37,7 +39,6 @@ public class ContainerVo implements Serializable {
                 .replace("second", "秒")
 
                 .replace("minutes", "分钟");
-
     }
 
     String id;

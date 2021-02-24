@@ -109,6 +109,11 @@ public class AppService extends BaseService<App> {
             envs.add(envCfg.getKey() + "=" + envCfg.getValue());
         }
 
+        // 是否自动启动
+        if (cfg.isRestart()) {
+            hostConfig.withRestartPolicy(RestartPolicy.alwaysRestart());
+        }
+
 
         logger.info("主机配置{}", hostConfig.getBinds());
         CreateContainerResponse response = client.createContainerCmd(image)

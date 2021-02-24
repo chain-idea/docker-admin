@@ -43,6 +43,10 @@ public class App extends BaseEntity {
     @NotNull
     Boolean autoDeploy;
 
+    // 自动重启
+    @NotNull
+    Boolean autoRestart;
+
     @Lob
     @Convert(converter = ObjectConverter.class)
     AppConfig config;
@@ -53,7 +57,7 @@ public class App extends BaseEntity {
         String image;
         boolean privileged;
 
-        String restart; // always, no
+        boolean restart; // always, no
 
         // 主机:容器
         List<PortBinding> ports = new ArrayList<>(); //  - 7100:7100/udp  - 7100:7100/tcp
