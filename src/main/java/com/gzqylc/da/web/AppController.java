@@ -131,6 +131,13 @@ public class AppController {
         return AjaxResult.success();
     }
 
+    @Route("updateApp")
+    public AjaxResult updateApp(String id, String tag) throws InterruptedException {
+        service.updateApp(id, tag);
+
+        return AjaxResult.success();
+    }
+
     @Route("start/{appId}")
     public AjaxResult start(@PathVariable String appId) {
         service.start(appId);

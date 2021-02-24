@@ -84,6 +84,9 @@ pre.code {
 .q-mb-md {
   margin-bottom: 8px;
 }
+.q-mt-md {
+  margin-top: 8px;
+}
 
 code {
   background: #9ba3af;

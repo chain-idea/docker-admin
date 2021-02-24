@@ -237,6 +237,18 @@ public class AppService extends BaseService<App> {
 
     }
 
+    public void updateApp(String id, String tag) throws InterruptedException {
+        Assert.hasLength(tag, "tag不能为空");
+        // 远程删除应用
+        App app = baseDao.findOne(id);
+        this.deleteContainer(app);
+
+        app.setImageTag(tag);
+        save(app);
+
+        SpringTool.getBean(getClass()).deploy(app);
+    }
+
     private void deleteContainer(App app) {
         DockerClient client = DockerTool.getClient(app.getHost().getDockerId());
 
@@ -254,4 +266,6 @@ public class AppService extends BaseService<App> {
             client.removeContainerCmd(c.getId()).exec();
         });
     }
+
+
 }

@@ -1,4 +1,19 @@
-import {Button, Card, Col, Form, Descriptions, Row, Space, Switch, Tabs, Divider, Alert, Modal, Tag} from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Typography,
+  Descriptions,
+  Row,
+  Space,
+  Switch,
+  Tabs,
+  Divider,
+  Alert,
+  Modal,
+  Tag
+} from 'antd';
 import React from 'react';
 import http from "@/utils/request";
 import Log from "./Log";
@@ -22,6 +37,9 @@ export default class extends React.Component {
 
     moveApp: {
       targetHostId: null
+    },
+    publishApp: {
+      targetVersion: null
     }
 
   }
@@ -65,6 +83,14 @@ export default class extends React.Component {
     const id = this.state.app.id;
     const hostId = this.state.moveApp.targetHostId;
     http.get("/api/app/moveApp", {id, hostId}).then(rs => {
+      this.fetchData()
+    })
+  }
+
+  updateApp=()=>{
+    const id = this.state.app.id;
+    const tag = this.state.publishApp.targetVersion;
+    http.get("/api/app/updateApp", {id, tag}).then(rs => {
       this.fetchData()
     })
   }
@@ -115,7 +141,7 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="move">
+          <Tabs tabPosition="left" defaultActiveKey="publish">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>
@@ -129,6 +155,8 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
             <Tabs.TabPane tab="发布" key="publish" className="panel">
+
+
               <Row wrap={false}>
                 <Col flex="100px">自动发布</Col>
                 <Col flex="auto">
@@ -138,7 +166,28 @@ export default class extends React.Component {
                             this.setState({app: this.state.app})
                             this.setAutoDeploy(app.id, checked)
                           }}
-                  ></Switch></Col>
+                  ></Switch>
+                  <div className="q-mt-md">
+                    <Typography.Text type="secondary">当有镜像构建成功后，自动更新应用到最新构建的版本</Typography.Text>
+                  </div>
+                </Col>
+              </Row>
+              <Divider></Divider>
+
+              <Row wrap={false}>
+                <Col flex="100px">手动发布</Col>
+                <Col flex="auto">
+                  <RemoteSelect url={"api/repository/tagList?url=" + app.imageUrl} style={{width: 300}} placeholder="请选择"
+                                showSearch
+                                value={this.state.publishApp.targetVersion} onChange={targetVersion => {
+                    this.setState({publishApp: {targetVersion}})
+                  }}></RemoteSelect>
+                  <Button type={"primary"} onClick={this.updateApp}>更新应用</Button>
+
+                  <div className="q-mt-md">
+                    <Typography.Text type="secondary">用指定的镜像版本</Typography.Text>
+                  </div>
+                </Col>
               </Row>
 
             </Tabs.TabPane>
@@ -163,10 +212,10 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="设置" key="6">
-              <div className="key-value">
-                <div>
-                  <label>自动重启</label>
+            <Tabs.TabPane tab="设置" key="6" className="panel">
+              <Row wrap={false}>
+                <Col flex="100px">自动重启</Col>
+                <Col flex="auto">
                   <Switch checked={app.autoRestart}
                           onChange={checked => {
                             app.autoRestart = checked
@@ -174,19 +223,23 @@ export default class extends React.Component {
                             this.setAutoRestart(app.id, checked)
                           }}
                   ></Switch>
-                </div>
+                </Col>
 
+              </Row>
 
-                <div>
-                  <label>删除应用</label>
-                  <div>
+              <Divider></Divider>
+              <Row wrap={false}>
+                <Col flex="100px">删除应用</Col>
+                <Col flex="auto">
+                  <Space direction={"vertical"}>
                     <Alert message="请注意，删除应用将清除该应用的所有数据，且该操作不能被恢复，您确定要删除吗?" type="warning"
-                           style={{marginBottom: 8}}></Alert>
+                    ></Alert>
                     <Button danger type="primary" onClick={this.handleDelete}>删除应用</Button>
-                  </div>
-                </div>
+                  </Space>
+                </Col>
+              </Row>
 
-              </div>
+
             </Tabs.TabPane>
           </Tabs>
 
