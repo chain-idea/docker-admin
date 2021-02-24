@@ -30,19 +30,21 @@ export default class extends React.Component {
             <Divider style={{height: 1}}></Divider>
 
             <Link to="/admin">首页</Link>
+
+            <h3>交付中心</h3>
+            <Link to="/admin/repository">镜像仓库</Link>
+            <a>我的收藏</a>
+
+
             <h3>应用平台</h3>
-
-            <Link to="/admin/project">项目</Link>
-            <Link to="/admin/app">应用</Link>
-
             <Link to="/admin/host">主机</Link>
+            <Link to="/admin/app">应用</Link>
+            <Link to="/admin/project">项目</Link>
 
-            <h3>镜像中心</h3>
-            <Link to="/admin/repository">镜像仓库</Link><a>我的收藏</a>
 
-
-            <h3>用户中心</h3>
+            <h3>设置</h3>
             <Link to="/admin/user/registry">仓库配置</Link>
+            <Link to="/admin/user/runner">执行器</Link>
           </Space>
 
         </Sider>

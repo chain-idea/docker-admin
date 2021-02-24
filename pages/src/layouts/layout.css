@@ -66,13 +66,13 @@ pre.code {
 }
 
 .ant-layout-sider a {
-  color: #9ba3af;
+  color: rgb(155, 163, 175);
   margin-left: 4px;
 }
 
 .ant-layout-sider h3 {
   margin-top: 30px;
-  color: #595f69;
+  color: rgb(89, 95, 105);
 }
 
 
