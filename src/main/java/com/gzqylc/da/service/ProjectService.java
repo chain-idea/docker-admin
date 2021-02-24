@@ -87,6 +87,7 @@ public class ProjectService extends BaseService<Project> {
         form.regPassword = cfg.getRegistryPassword();
         form.imageUrl = cfg.getImageUrl();
         form.buildContext = cfg.getContext();
+        form.dockerfile = cfg.getDockerfile();
         form.logHook = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
         form.resultHook = cfg.getServerUrl() + RunnerHookController.API_PIPE_FINISH + "/" + pipelineId + "/" + pipeId;
 
@@ -116,6 +117,7 @@ public class ProjectService extends BaseService<Project> {
 
     @Data
     public static class BuildImageForm {
+        String dockerfile;
         String gitUrl;
         String gitUsername;
         String gitPassword;
