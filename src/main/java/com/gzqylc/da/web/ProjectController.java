@@ -5,6 +5,7 @@ import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
 import com.gzqylc.da.entity.Project;
 import com.gzqylc.da.service.ProjectService;
+import com.gzqylc.lang.web.base.BaseEntity;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.framework.AjaxResult;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +35,7 @@ public class ProjectController {
     private AppService appService;
 
     @Route("list")
-    public Page<Project> list(@RequestBody Map<String, String> param, Pageable pageable) {
+    public Page<Project> list(@RequestBody Map<String, String> param, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Project> c = new Criteria<>();
         c.add(Restrictions.like(Project.Fields.name, param.get("keyword")));
         

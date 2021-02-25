@@ -113,11 +113,7 @@ export default class extends React.Component {
               formValues: row
             })
           }}>修改</Menu.Item>
-          <Menu.Item key="2">
-            <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete(row)}>
-              <a>删除</a>
-            </Popconfirm>
-          </Menu.Item>
+
         </Menu>;
 
 
@@ -149,18 +145,13 @@ export default class extends React.Component {
 
   }
 
-  handleDelete = row => {
-    http.post(api + 'delete', row.id, '删除数据').then(rs => {
-      this.actionRef.current.reload();
-    })
-  }
+
 
   render() {
     let {showAddForm, showEditForm} = this.state
 
     return (<div>
 
-      {/*表格*/}
       <ProTable
         actionRef={this.actionRef}
         search={false}
@@ -183,7 +174,6 @@ export default class extends React.Component {
       />
 
 
-      {/*添加表单*/}
       <Modal
         maskClosable={false}
         destroyOnClose
@@ -205,7 +195,6 @@ export default class extends React.Component {
       </Modal>
 
 
-      {/*修改表单*/}
       <Modal
         maskClosable={false}
         destroyOnClose
