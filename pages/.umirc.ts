@@ -19,7 +19,8 @@ export default defineConfig({
         {path: '/admin', component: '@/pages/index'},
         {path: '/admin/project', component: '@/pages/admin/project'},
         {path: '/admin/project/:id', component: '@/pages/admin/project/view'},
-        {path: '/admin/repository', component: '@/pages/admin/repository'},
+        {path: '/admin/image', component: '@/pages/admin/image'},
+        {path: '/admin/image/star', component: '@/pages/admin/image/star'},
 
         {path: '/admin/host', component: '@/pages/admin/host'},
         {path: '/admin/host/:id', component: '@/pages/admin/host/view'},

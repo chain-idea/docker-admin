@@ -9,15 +9,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class StarImageService extends BaseService<StarImage> {
 
+    @Autowired
+    StarImageDao dao;
+
     public void star(String name) {
         StarImage db = dao.findByName(name);
-        if(db == null){
+        if (db == null) {
             db = new StarImage();
             db.setName(name);
             dao.save(db);
         }
     }
 
-    @Autowired
-    StarImageDao dao;
+
+    public void unstar(String name) {
+        StarImage db = dao.findByName(name);
+        if (db != null) {
+            dao.delete(db);
+        }
+    }
 }

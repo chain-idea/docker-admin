@@ -47,8 +47,6 @@ export default class extends React.Component {
     http.get("api/registry/all").then(registryList => {
       this.setState({registryList})
     })
-
-
   }
 
   render() {

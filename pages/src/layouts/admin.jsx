@@ -32,8 +32,8 @@ export default class extends React.Component {
             <Link to="/admin">首页</Link>
 
             <h3>交付中心</h3>
-            <Link to="/admin/repository">镜像仓库</Link>
-            <a>我的收藏</a>
+            <Link to="/admin/image">镜像仓库</Link>
+            <Link to="/admin/image/star">我的收藏</Link>
             <Link to="/admin/dockerHub">镜像搜索</Link>
 
             <h3>应用平台</h3>

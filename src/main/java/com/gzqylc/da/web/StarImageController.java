@@ -36,5 +36,10 @@ public class StarImageController extends BaseController {
         return AjaxResult.success("收藏成功");
     }
 
+    @RequestMapping("unstar/{name}")
+    public AjaxResult unstar(@PathVariable String name) {
+        service.unstar(name);
 
+        return AjaxResult.success("收藏成功");
+    }
 }

@@ -5,7 +5,7 @@ import http from "@/utils/request";
 import {Link} from 'umi';
 import {history} from "../../../.umi/core/history";
 
-let api = '/api/dockerHub/';
+let api = '/api/starImage/';
 
 
 export default class extends React.Component {
@@ -31,21 +31,25 @@ export default class extends React.Component {
       render: (_, row) => {
         const name = row.name;
         return <Space>
-          <Button onClick={()=>this.star(name)}>收藏</Button>
+          <Button onClick={()=>this.unstar(name)}>取消收藏</Button>
           <Button onClick={() => history.push("app/deploy?url=" + row.name)}>部署应用</Button>
         </Space>
       }
     },
   ];
-  star(name){
-    http.get('api/starImage/star/' + name)
+  unstar(name){
+    http.get('api/starImage/unstar/' + name).then(rs=>{
+      this.tableRef.current.reload()
+    })
   }
 
+  tableRef = React.createRef();
   render() {
 
     return (<div className="panel">
-      <Alert message="请输入关键字搜索 Docker Hub 镜像"></Alert>
+      <Alert message={"我收藏的镜像"}></Alert>
       <ProTable
+        actionRef={this.tableRef}
         request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
         columns={this.columns}
         rowSelection={false}
@@ -54,7 +58,6 @@ export default class extends React.Component {
         rowKey="name"
         pagination={false}
       />
-
 
     </div>)
   }
