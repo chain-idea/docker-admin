@@ -33,3 +33,4 @@ docker run -d --name docker-agent \
 
 # TODO 
 端口冲突时，没有提示
+创建项目后，直接跳转到项目详情
