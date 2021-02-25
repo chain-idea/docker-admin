@@ -1,9 +1,7 @@
-import {PlusOutlined} from '@ant-design/icons';
-import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select, Alert, Space, Typography} from 'antd';
+import {Alert, Typography} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
-import RemoteSelect from "../../../components/RemoteSelect";
 import {Link} from 'umi';
 
 let api = '/api/dockerHub/';
@@ -14,8 +12,9 @@ export default class extends React.Component {
   columns = [
     {
       title: '名称', dataIndex: 'name', render: (name, row) => {
-        return <Link>{ name } &nbsp;
-          {  row.is_official && <Typography.Text type={"success"}>官方认证</Typography.Text>}</Link>
+        let url = 'https://hub.docker.com/_/' + name
+        return <a href={url} target="_blank">{name} &nbsp;
+          {row.is_official && <Typography.Text type={"success"}>官方认证</Typography.Text>}</a>
 
       }
     },
@@ -26,14 +25,6 @@ export default class extends React.Component {
       dataIndex: 'star_count',
     },
   ];
-  handleSave = value => {
-    value.host = {id: value.hostId}
-    http.post(api + 'save', value).then(rs => {
-      this.state.showAddForm = false;
-      this.setState(this.state)
-      this.actionRef.current.reload();
-    })
-  }
 
 
   render() {
@@ -46,7 +37,7 @@ export default class extends React.Component {
         rowSelection={false}
         search={false}
         options={{search: true}}
-        rowKey="id"
+        rowKey="name"
         pagination={false}
       />
 
