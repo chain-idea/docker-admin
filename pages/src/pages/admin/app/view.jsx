@@ -150,11 +150,11 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="容器日志" key="container-log" className="panel">
+            <Tabs.TabPane tab="日志" key="container-log" className="panel">
               {container.id && <Log id={app.id} container={container}></Log>}
             </Tabs.TabPane>
 
-            <Tabs.TabPane tab="应用日志" key="log" className="panel">
+            <Tabs.TabPane tab="事件" key="log" className="panel">
 
               {this.state.app.logUrl &&
               <div style={{minHeight: 600}}>
@@ -171,9 +171,7 @@ export default class extends React.Component {
 
             </Tabs.TabPane>
 
-            <Tabs.TabPane tab="事件" key="event" className="panel">
-              TODO 时间线记录， 启动，部署等
-            </Tabs.TabPane>
+
 
             <Tabs.TabPane tab="云隧道" key="export-wan" className="panel">
               开发者的安全云隧道，跨网络的容器云地址，让您在本地也能部署公网服务器。
