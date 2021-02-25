@@ -1,4 +1,4 @@
-import {Alert, Button, Typography} from 'antd';
+import {Alert, Button, Space, Typography, message} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
@@ -30,14 +30,16 @@ export default class extends React.Component {
       title: '-',
       render: (_, row) => {
         const name = row.name;
-        return <div>
+        return <Space>
           <Button onClick={()=>this.star(name)}>收藏</Button>
           <Button onClick={() => history.push("app/deploy?url=" + row.name)}>部署应用</Button>
-        </div>
+        </Space>
       }
     },
   ];
-
+  star(name){
+    http.get('api/starImage/star/' + name)
+  }
 
   render() {
 
