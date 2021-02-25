@@ -53,8 +53,8 @@ public class ProjectController {
     }
 
     @Route("delete")
-    public AjaxResult delete(@RequestBody List<String> ids) {
-        service.deleteAllById(ids);
+    public AjaxResult delete(@RequestBody String id) {
+        service.deleteProject(id);
         return AjaxResult.success("删除成功");
     }
 

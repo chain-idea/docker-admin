@@ -1,6 +1,6 @@
 package com.gzqylc.da.service;
 
-import com.gzqylc.da.dao.PipelineJnlDao;
+import com.gzqylc.da.dao.PipelineDao;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.RequestTool;
@@ -22,7 +22,7 @@ import java.util.List;
 public class PipelineService extends BaseService<Pipeline> {
 
     @Autowired
-    PipelineJnlDao dao;
+    PipelineDao dao;
 
     @Autowired
     AppService appService;

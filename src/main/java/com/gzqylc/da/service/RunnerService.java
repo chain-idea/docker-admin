@@ -14,14 +14,14 @@ public class RunnerService extends BaseService<Runner> {
 
 
     /**
-     * 获得执行器
+     * 获得执行节点
      *
      * @return
      */
     public Runner getRunner() {
-        // TODO 负载均衡
+        // TODO 负载均衡， 优化
         List<Runner> all = dao.findAll();
-        Assert.notEmpty(all, "请先配置执行器");
+        Assert.notEmpty(all, "请先配置执行节点");
 
         return all.get(0);
     }

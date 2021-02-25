@@ -1,13 +1,13 @@
 package com.gzqylc.da.service;
 
-import com.gzqylc.da.dao.HostDao;
-import com.gzqylc.da.dao.RegistryDao;
-import com.gzqylc.da.dao.RunnerDao;
+import com.gzqylc.da.dao.*;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.RunnerHookController;
 import com.gzqylc.da.web.logger.PipelineLogger;
 import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.base.BaseService;
+import com.gzqylc.lang.web.jpa.specification.Criteria;
+import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.utils.HttpTool;
 import lombok.Data;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ProjectService extends BaseService<Project> {
@@ -37,7 +39,10 @@ public class ProjectService extends BaseService<Project> {
     RunnerService runnerService;
 
     @Autowired
-    RunnerDao dao;
+    PipelineDao pipelineDao;
+
+    @Autowired
+    AppDao appDao;
 
     public void saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
@@ -60,7 +65,7 @@ public class ProjectService extends BaseService<Project> {
 
         Runner runner = runnerService.getRunner();
         Assert.state(runner != null, "执行节点为空，请先配置");
-        logger.info("执行器信息, {}", runner);
+        logger.info("执行节点信息, {}", runner);
 
         BuildImageForm form = new BuildImageForm();
         form.gitUrl = cfg.getGitUrl();
@@ -97,6 +102,27 @@ public class ProjectService extends BaseService<Project> {
         return Pipeline.PipeProcessResult.PROCESSING;
 
 
+    }
+
+    @Transactional
+    public void deleteProject(String id) {
+        Project project = baseDao.findOne(id);
+
+        // 判断是否有应用依赖
+
+        Criteria<App> c = new Criteria<>();
+        c.add(Restrictions.eq(App.Fields.imageUrl, project.getImageUrl()));
+        long count = appDao.count(c);
+
+        Assert.state(count == 0, "项目[" + project.getName() + "]有关联应用，请先删除相关应用");
+
+
+        // 删除构建日志
+        List<Pipeline> list = pipelineDao.findAllByField("project.id", id);
+        pipelineDao.deleteAll(list);
+
+        // 删除镜像仓库
+        baseDao.deleteById(id);
     }
 
 

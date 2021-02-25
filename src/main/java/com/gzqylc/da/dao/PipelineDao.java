@@ -5,5 +5,5 @@ import com.gzqylc.lang.web.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PipelineJnlDao extends BaseDao<Pipeline> {
+public class PipelineDao extends BaseDao<Pipeline> {
 }

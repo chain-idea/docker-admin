@@ -114,7 +114,7 @@ export default class extends React.Component {
             })
           }}>修改</Menu.Item>
           <Menu.Item key="2">
-            <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete([row])}>
+            <Popconfirm title={'是否确定' + deleteTitle} onConfirm={() => this.handleDelete(row)}>
               <a>删除</a>
             </Popconfirm>
           </Menu.Item>
@@ -149,11 +149,8 @@ export default class extends React.Component {
 
   }
 
-  handleDelete = rows => {
-    if (!rows) return true;
-
-    let ids = rows.map(row => row.id);
-    http.post(api + 'delete', ids, '删除数据').then(rs => {
+  handleDelete = row => {
+    http.post(api + 'delete', row.id, '删除数据').then(rs => {
       this.actionRef.current.reload();
     })
   }
