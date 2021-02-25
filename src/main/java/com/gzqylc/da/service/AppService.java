@@ -67,82 +67,94 @@ public class AppService extends BaseService<App> {
                                              String registryHost, String registryUsername, String registryPassword,
                                              App.AppConfig cfg) throws InterruptedException {
         FileLogger logger = FileLogger.getLogger(pipelineId, appId);
-        logger.info("部署阶段开始");
-        DockerClient client = DockerTool.getClient(dockerId, registryHost, registryUsername, registryPassword);
-
-        logger.info("开始拉取镜像");
-        client.pullImageCmd(image).exec(new PullImageCallback(logger)).awaitCompletion();
+        try {
 
 
-        logger.info("开始部署镜像 {}", image);
+            logger.info("部署阶段开始");
+            DockerClient client = DockerTool.getClient(dockerId, registryHost, registryUsername, registryPassword);
 
-        List<Container> containers = getContainer(name, client);
+            logger.info("开始拉取镜像");
+            client.pullImageCmd(image).exec(new PullImageCallback(logger)).awaitCompletion();
 
 
-        for (Container container : containers) {
+            logger.info("开始部署镜像 {}", image);
 
-            logger.info("容器状态 {}", container.getState());
-            if (container.getState().equals("running")) {
-                logger.info("停止容器{}", container.getNames());
-                client.stopContainerCmd(container.getId()).exec();
+            List<Container> containers = getContainer(name, client);
+
+
+            for (Container container : containers) {
+
+                logger.info("容器状态 {}", container.getState());
+                if (container.getState().equals("running")) {
+                    logger.info("停止容器{}", container.getNames());
+                    client.stopContainerCmd(container.getId()).exec();
+                }
+                logger.info("删除容器{}", container.getNames());
+                client.removeContainerCmd(container.getId()).exec();
             }
-            logger.info("删除容器{}", container.getNames());
-            client.removeContainerCmd(container.getId()).exec();
+
+
+            HostConfig hostConfig = new HostConfig();
+
+            // 端口
+            Ports ports = new Ports();
+            List<ExposedPort> exposedPorts = new ArrayList<>();
+            for (App.PortBinding p : cfg.getPorts()) {
+                ExposedPort e = new ExposedPort(p.getPrivatePort(), InternetProtocol.valueOf(p.getProtocol()));
+                exposedPorts.add(e);
+
+                ports.bind(e, Ports.Binding.bindPort(p.getPublicPort()));
+            }
+            hostConfig.withPortBindings(ports);
+
+
+            // 路径绑定
+            List<Bind> binds = new ArrayList<>();
+            for (App.BindConfig v : cfg.getBinds()) {
+                // /host:/container:ro
+                AccessMode accessMode = v.getReadOnly() ? AccessMode.ro : AccessMode.rw;
+                binds.add(new Bind(v.getPublicVolume(), new Volume(v.getPrivateVolume()), accessMode));
+            }
+            hostConfig.withBinds(binds);
+
+
+            // 环境变量
+            List<String> envs = new ArrayList<>();
+            for (App.EnvironmentConfig envCfg : cfg.getEnvironment()) {
+                envs.add(envCfg.getKey() + "=" + envCfg.getValue());
+            }
+
+            // 是否自动启动
+            if (cfg.isRestart()) {
+                hostConfig.withRestartPolicy(RestartPolicy.alwaysRestart());
+            }
+
+
+            logger.info("主机配置{}", hostConfig.getBinds());
+            CreateContainerResponse response = client.createContainerCmd(image)
+                    .withName(name + "_1")
+                    .withLabels(getAppLabelFilter(name))
+                    .withHostConfig(hostConfig)
+                    .withExposedPorts(exposedPorts) // 如果dockerfile中未指定端口，需要在这里指定
+                    .withEnv(envs)
+                    .exec();
+
+
+            logger.info("创建容器{}", response);
+
+            String containerId = response.getId();
+
+            client.startContainerCmd(containerId).exec();
+
+
+            logger.info("启动容器");
+            logger.info("部署阶段结束");
+        }catch (Exception e){
+            logger.info("--------------------------------------------------");
+            logger.info("部署失败:" + e.getMessage());
+            logger.info("--------------------------------------------------");
+            return Pipeline.PipeProcessResult.ERROR;
         }
-
-
-        HostConfig hostConfig = new HostConfig();
-
-        // 端口
-        Ports ports = new Ports();
-        List<ExposedPort> exposedPorts = new ArrayList<>();
-        for (App.PortBinding p : cfg.getPorts()) {
-            ExposedPort e = new ExposedPort(p.getPrivatePort(), InternetProtocol.valueOf(p.getProtocol()));
-            exposedPorts.add(e);
-
-            ports.bind(e, Ports.Binding.bindPort(p.getPublicPort()));
-        }
-        hostConfig.withPortBindings(ports);
-
-
-        // 路径绑定
-        List<Bind> binds = new ArrayList<>();
-        for (App.BindConfig v : cfg.getBinds()) {
-            // /host:/container:ro
-            AccessMode accessMode = v.getReadOnly() ? AccessMode.ro : AccessMode.rw;
-            binds.add(new Bind(v.getPublicVolume(), new Volume(v.getPrivateVolume()), accessMode));
-        }
-        hostConfig.withBinds(binds);
-
-
-        // 环境变量
-        List<String> envs = new ArrayList<>();
-        for (App.EnvironmentConfig envCfg : cfg.getEnvironment()) {
-            envs.add(envCfg.getKey() + "=" + envCfg.getValue());
-        }
-
-        // 是否自动启动
-        if (cfg.isRestart()) {
-            hostConfig.withRestartPolicy(RestartPolicy.alwaysRestart());
-        }
-
-
-        logger.info("主机配置{}", hostConfig.getBinds());
-        CreateContainerResponse response = client.createContainerCmd(image)
-                .withName(name + "_1")
-                .withLabels(getAppLabelFilter(name))
-                .withHostConfig(hostConfig)
-                .withExposedPorts(exposedPorts) // 如果dockerfile中未指定端口，需要在这里指定
-                .withEnv(envs)
-                .exec();
-
-
-        logger.info("创建容器{}", response);
-
-        client.startContainerCmd(response.getId()).exec();
-
-        logger.info("启动容器");
-        logger.info("部署阶段结束");
 
         return Pipeline.PipeProcessResult.SUCCESS;
     }
