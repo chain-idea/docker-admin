@@ -9,10 +9,13 @@ import com.gzqylc.da.web.logger.LoggerConstants;
 import com.gzqylc.da.web.vo.ContainerVo;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
+import com.gzqylc.lang.web.base.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +38,7 @@ public class AppController {
 
 
     @Route("list")
-    public Page<App> list(Pageable pageable, App app) {
+    public Page<App> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, App app) {
         Page<App> list = service.findAll(app, pageable);
         return list;
     }

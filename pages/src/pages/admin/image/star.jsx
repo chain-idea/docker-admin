@@ -32,7 +32,7 @@ export default class extends React.Component {
         const name = row.name;
         return <Space>
           <Button onClick={()=>this.unstar(name)}>取消收藏</Button>
-          <Button onClick={() => history.push("app/deploy?url=" + row.name)}>部署应用</Button>
+          <Button onClick={() => history.push("/admin/app/deploy?url=" + row.name)}>部署应用</Button>
         </Space>
       }
     },
