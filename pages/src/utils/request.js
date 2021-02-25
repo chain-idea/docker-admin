@@ -62,7 +62,7 @@ request.interceptors.request.use((url, options) => {
   let isFullUrl = url.startsWith("http") || url.startsWith("https");
   if (!isFullUrl) {
     // 防止双斜杠出现
-    if(serverUrl.endsWith("/") && url.startsWith("/")) {
+    if (serverUrl.endsWith("/") && url.startsWith("/")) {
       url = url.substr(1)
     }
     // 添加请求前缀
@@ -213,31 +213,23 @@ const http = {
     return send(false, url, params, false)
   },
   // 获得分页数据
-  getPageableData: (url, param, sort) => {
-
-
-
-
+  getPageableData: (url, params, sort) => {
     // 分页参数
-    param.pageNumber = param.current;
+    params.pageNumber = params.current;
+    delete  params.current
     if (sort) {
       let keys = Object.keys(sort);
       if (keys.length > 0) {
         let key = keys[0];
         let dir = sort[key] == 'ascend' ? 'asc' : 'desc';
-        param.orderBy = key + "," + dir
+        params.orderBy = key + "," + dir
       }
     }
-
-    const  {current, pageNumber,  pageSize, orderBy, ...data} = param;
-    const params = {pageNumber, pageSize, orderBy};
-
-
 
 
 
     return new Promise((resolve, reject) => {
-      request.post(url, {params, data}).then(pageable => {
+      request.get(url, {params: params}).then(pageable => {
         // 按pro table 的格式修改数据结构
         pageable.data = pageable.content;
         pageable.success = true;

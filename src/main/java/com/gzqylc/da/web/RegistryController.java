@@ -24,7 +24,7 @@ public class RegistryController extends BaseController {
     private RegistryService service;
 
     @Route("list")
-    public Page<Registry> list(Pageable pageable, @RequestBody Registry t) {
+    public Page<Registry> list(Pageable pageable,  Registry t) {
         Page<Registry> list = service.findAll(t, pageable);
         return list;
     }

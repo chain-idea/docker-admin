@@ -35,10 +35,10 @@ public class ProjectController {
     private AppService appService;
 
     @Route("list")
-    public Page<Project> list(@RequestBody Map<String, String> param, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<Project> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Project> c = new Criteria<>();
-        c.add(Restrictions.like(Project.Fields.name, param.get("keyword")));
-        
+        c.add(Restrictions.like(Project.Fields.name, keyword));
+
         Page<Project> list = service.findAll(c, pageable);
         return list;
     }

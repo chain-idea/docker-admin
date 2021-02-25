@@ -42,13 +42,13 @@ public class HostController extends BaseController {
     public AjaxResult add(HttpServletRequest request) throws IOException {
         String server = RequestTool.getBaseUrl(request);
         String uri = FrpController.INSTALL_FRPC;
-        if(uri.startsWith("/")){
+        if (uri.startsWith("/")) {
             uri = uri.substring(1);
         }
         String scriptUrl = server + uri;
         String cmd = "curl -s " + scriptUrl + " | sh -e";
 
-        return AjaxResult.success("获取命令成功",cmd);
+        return AjaxResult.success("获取命令成功", cmd);
     }
 
     @Route("notifyAdd/{dockerId}")
@@ -67,7 +67,7 @@ public class HostController extends BaseController {
     }
 
     @Route("list")
-    public Page<Host> list(@PageableDefault(sort = "name") Pageable pageable, @RequestBody Host host) {
+    public Page<Host> list(@PageableDefault(sort = "name") Pageable pageable, Host host) {
         Page<Host> list = service.findAll(host, pageable);
         return list;
     }

@@ -33,7 +33,7 @@ public class AppController {
 
 
     @Route("list")
-    public Page<App> list(Pageable pageable, @RequestBody App app) {
+    public Page<App> list(Pageable pageable, App app) {
         Page<App> list = service.findAll(app, pageable);
         return list;
     }
