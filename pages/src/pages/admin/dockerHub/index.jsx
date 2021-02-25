@@ -31,14 +31,15 @@ export default class extends React.Component {
       render: (_, row) => {
         const name = row.name;
         return <Space>
-          <Button onClick={()=>this.star(name)}>收藏</Button>
+          <Button onClick={() => this.star(name)}>收藏</Button>
           <Button onClick={() => history.push("app/deploy?url=" + row.name)}>部署应用</Button>
         </Space>
       }
     },
   ];
-  star(name){
-    http.get('api/starImage/star/' + name)
+
+  star(name) {
+    http.get('api/starImage/star', {name})
   }
 
   render() {

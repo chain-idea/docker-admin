@@ -29,15 +29,15 @@ public class StarImageController extends BaseController {
     }
 
 
-    @RequestMapping("star/{name}")
-    public AjaxResult star(@PathVariable String name) {
+    @RequestMapping("star")
+    public AjaxResult star( String name) {
         service.star(name);
 
         return AjaxResult.success("收藏成功");
     }
 
-    @RequestMapping("unstar/{name}")
-    public AjaxResult unstar(@PathVariable String name) {
+    @RequestMapping("unstar")
+    public AjaxResult unstar( String name) {
         service.unstar(name);
 
         return AjaxResult.success("收藏成功");

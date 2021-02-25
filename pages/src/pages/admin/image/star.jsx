@@ -38,7 +38,7 @@ export default class extends React.Component {
     },
   ];
   unstar(name){
-    http.get('api/starImage/unstar/' + name).then(rs=>{
+    http.get('api/starImage/unstar' ,{ name}).then(rs=>{
       this.tableRef.current.reload()
     })
   }
