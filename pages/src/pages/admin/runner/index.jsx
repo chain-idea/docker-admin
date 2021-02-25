@@ -107,7 +107,7 @@ export default class extends React.Component {
       <div className="panel">
         <Space>
           <Alert message="执行节点需要运行镜像 	registry.cn-beijing.aliyuncs.com/chain-idea/docker-admin-agent"></Alert>
-          <Link to="/admin/repository">跳转到镜像仓库</Link>
+          <Link to="/admin/repository">点击跳转到镜像仓库</Link>
         </Space>
         <ProTable
           actionRef={this.actionRef}
