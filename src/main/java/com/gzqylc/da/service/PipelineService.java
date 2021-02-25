@@ -105,6 +105,7 @@ public class PipelineService extends BaseService<Pipeline> {
                     Pipeline.PipeDeployConfig cfg = new Pipeline.PipeDeployConfig();
                     BeanUtils.copyProperties(a.getConfig(), cfg);
 
+                    cfg.setAppId(a.getId());
                     cfg.setName(a.getName());
                     cfg.setHostname(a.getHost().getDockerId());
 
@@ -158,12 +159,12 @@ public class PipelineService extends BaseService<Pipeline> {
             switch (pipe.getType()) {
                 case BUILD_IMAGE: {
                     Pipeline.PipeBuildConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeBuildConfig.class);
-                    result = projectService.buildImage(pipelineId, pipe.getId(),cfg);
+                    result = projectService.buildImage(pipelineId, pipe.getId(), cfg);
                     break;
                 }
                 case DEPLOY: {
                     Pipeline.PipeDeployConfig cfg = JsonTool.jsonToBean(pipe.getConfig(), Pipeline.PipeDeployConfig.class);
-                    result = appService.deploy(pipelineId, cfg.getName(), cfg.getHostname(), cfg.getImage(), cfg.getRegistryHost(),
+                    result = appService.deploy(pipelineId, cfg.getAppId(), cfg.getName(), cfg.getHostname(), cfg.getImage(), cfg.getRegistryHost(),
                             cfg.getRegistryUsername(), cfg.getRegistryPassword(), cfg
                     );
                     break;

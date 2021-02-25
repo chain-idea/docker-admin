@@ -88,6 +88,7 @@ public class Pipeline extends BaseEntity {
 
         String registryUsername;
         String registryPassword;
+        String appId;
     }
 
     @Data

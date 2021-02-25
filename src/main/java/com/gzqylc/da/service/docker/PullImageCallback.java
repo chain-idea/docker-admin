@@ -2,16 +2,16 @@ package com.gzqylc.da.service.docker;
 
 import com.github.dockerjava.api.async.ResultCallbackTemplate;
 import com.github.dockerjava.api.model.PullResponseItem;
-import com.gzqylc.da.web.logger.PipelineLogger;
+import com.gzqylc.da.web.logger.FileLogger;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PullImageCallback extends ResultCallbackTemplate<PullImageCallback, PullResponseItem> {
 
-    private PipelineLogger logger;
+    private FileLogger logger;
     private String error;
 
-    public PullImageCallback(PipelineLogger logger) {
+    public PullImageCallback(FileLogger logger) {
         this.logger = logger;
     }
 

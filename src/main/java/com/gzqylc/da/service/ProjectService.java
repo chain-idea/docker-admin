@@ -4,7 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.da.dao.*;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.RunnerHookController;
-import com.gzqylc.da.web.logger.PipelineLogger;
+import com.gzqylc.da.web.logger.FileLogger;
 import com.gzqylc.lang.web.JsonTool;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
@@ -61,7 +61,7 @@ public class ProjectService extends BaseService<Project> {
 
 
     public Pipeline.PipeProcessResult buildImage(String pipelineId, String pipeId, Pipeline.PipeBuildConfig cfg) throws GitAPIException, InterruptedException, IOException {
-        PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
+        FileLogger logger = FileLogger.getLogger(pipelineId);
         logger.info("开始构建镜像任务开始");
 
         Runner runner = runnerService.getRunner();

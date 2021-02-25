@@ -20,9 +20,9 @@ import Log from "./Log";
 import AppForm from "./AppForm";
 import RemoteSelect from "../../../components/RemoteSelect";
 import {history} from "umi";
+import {LazyLog, ScrollFollow} from "react-lazylog";
 
 let api = '/api/app/';
-
 
 
 export default class extends React.Component {
@@ -39,7 +39,7 @@ export default class extends React.Component {
     },
     publishApp: {
       targetVersion: null
-    }
+    },
 
   }
 
@@ -51,7 +51,8 @@ export default class extends React.Component {
   fetchData = () => {
     let {params} = this.props.match;
     http.get(api + "get", params).then(app => {
-      this.setState({app})
+      this.setState({app,})
+
     })
 
     http.get("/api/app/container", params).then(container => {
@@ -149,9 +150,27 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="日志" key="log" className="panel">
+            <Tabs.TabPane tab="容器日志" key="container-log" className="panel">
               {container.id && <Log id={app.id} container={container}></Log>}
             </Tabs.TabPane>
+
+            <Tabs.TabPane tab="应用日志" key="log" className="panel">
+
+              {this.state.app.logUrl &&
+              <div style={{minHeight: 600}}>
+                <ScrollFollow
+                  startFollowing={true}
+                  render={({follow, onScroll}) => (
+                    <LazyLog url={this.state.app.logUrl}
+                             websocket
+                             stream follow={follow} onScroll={onScroll}/>
+                  )}
+                />
+
+              </div>}
+
+            </Tabs.TabPane>
+
             <Tabs.TabPane tab="事件" key="event" className="panel">
               TODO 时间线记录， 启动，部署等
             </Tabs.TabPane>

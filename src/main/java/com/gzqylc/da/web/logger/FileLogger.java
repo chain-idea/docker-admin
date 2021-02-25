@@ -1,7 +1,6 @@
 package com.gzqylc.da.web.logger;
 
 import com.github.dockerjava.api.model.ResponseItem;
-import com.github.kevinsawicki.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +9,8 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO
@@ -17,30 +18,32 @@ import java.nio.charset.StandardCharsets;
  * 2. 文件删除策略
  */
 @Slf4j
-public class PipelineLogger {
+public class FileLogger {
 
 
-    String id;
-    File logFile;
+    Map<String, File> fileDict = new HashMap<>();
+
 
     private StringBuffer buffer = new StringBuffer();
 
-
-    private PipelineLogger(String id) {
-        this.id = id;
-        this.logFile = new File(LoggerConstants.getLogPath(id));
-        if (!logFile.exists()) {
-            try {
-                FileUtils.forceMkdirParent(logFile);
-                logFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+    private FileLogger(String... ids) {
+        for (String id : ids) {
+            File logFile = new File(LoggerConstants.getLogPath(id));
+            if (!logFile.exists()) {
+                try {
+                    FileUtils.forceMkdirParent(logFile);
+                    logFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            fileDict.put(id, logFile);
         }
+
     }
 
-    public static PipelineLogger getLogger(String id) {
-        return new PipelineLogger(id);
+    public static FileLogger getLogger(String... ids) {
+        return new FileLogger(ids);
     }
 
     public void info(ResponseItem item) {
@@ -97,13 +100,15 @@ public class PipelineLogger {
         }
         log.info(msg);
 
-
-        try {
-            String time = DateFormatUtils.format(System.currentTimeMillis(), "HH:mm:ss");
-            FileUtils.write(logFile, time + "  " + msg + "\r\n", StandardCharsets.UTF_8, true);
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (File logFile : fileDict.values()) {
+            try {
+                String time = DateFormatUtils.format(System.currentTimeMillis(), "HH:mm:ss");
+                FileUtils.write(logFile, time + "  " + msg + "\r\n", StandardCharsets.UTF_8, true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
 }

@@ -15,7 +15,7 @@ export default class extends React.Component {
       title: '名称', dataIndex: 'name', render: (name, row) => {
         let url = 'https://hub.docker.com/_/' + name
         return <a href={url} target="_blank">{name} &nbsp;
-          {row.is_official && <Typography.Text type={"success"}>官方认证</Typography.Text>}</a>
+          {row.official && <Typography.Text type={"success"}>官方认证</Typography.Text>}</a>
 
       }
     },
@@ -23,7 +23,7 @@ export default class extends React.Component {
 
     {
       title: '官方收藏数',
-      dataIndex: 'star_count',
+      dataIndex: 'starCount',
     },
 
     {

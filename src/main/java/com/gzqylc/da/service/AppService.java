@@ -12,7 +12,7 @@ import com.gzqylc.da.service.docker.PullImageCallback;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
-import com.gzqylc.da.web.logger.PipelineLogger;
+import com.gzqylc.da.web.logger.FileLogger;
 import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.lang.web.spring.SpringTool;
 import lombok.extern.slf4j.Slf4j;
@@ -59,14 +59,14 @@ public class AppService extends BaseService<App> {
         }
 
 
-        this.deploy(null, name, dockerId, image, registryHost, registryUsername, registryPassword, cfg);
+        this.deploy(null, app.getId(), name, dockerId, image, registryHost, registryUsername, registryPassword, cfg);
     }
 
 
-    public Pipeline.PipeProcessResult deploy(String pipelineId, String name, String dockerId, String image,
+    public Pipeline.PipeProcessResult deploy(String pipelineId, String appId, String name, String dockerId, String image,
                                              String registryHost, String registryUsername, String registryPassword,
                                              App.AppConfig cfg) throws InterruptedException {
-        PipelineLogger logger = PipelineLogger.getLogger(pipelineId);
+        FileLogger logger = FileLogger.getLogger(pipelineId, appId);
         logger.info("部署阶段开始");
         DockerClient client = DockerTool.getClient(dockerId, registryHost, registryUsername, registryPassword);
 
@@ -209,16 +209,6 @@ public class AppService extends BaseService<App> {
         return findAll(c);
     }
 
-
-    public App updatePorts(String id, List<App.PortBinding> ports) {
-        App db = findOne(id);
-        if (db.getConfig() == null) {
-            db.setConfig(new App.AppConfig());
-        }
-        db.getConfig().setPorts(ports);
-        return save(db);
-
-    }
 
     public void deleteApp(String id) {
         // 远程删除应用

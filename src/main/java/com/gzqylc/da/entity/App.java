@@ -52,6 +52,11 @@ public class App extends BaseEntity {
     @Convert(converter = ObjectConverter.class)
     AppConfig config;
 
+    @Transient
+    String logUrl;
+
+
+
     @Data
     public static class AppConfig {
 

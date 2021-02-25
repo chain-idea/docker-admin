@@ -1,7 +1,7 @@
 package com.gzqylc.da.web;
 
 import com.gzqylc.da.service.PipelineService;
-import com.gzqylc.da.web.logger.PipelineLogger;
+import com.gzqylc.da.web.logger.FileLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,13 +20,13 @@ public class RunnerHookController {
 
     @RequestMapping(API_LOG + "/{id}")
     public void log(@PathVariable String id, @RequestBody String msg) throws IOException {
-        PipelineLogger logger = PipelineLogger.getLogger(id);
+        FileLogger logger = FileLogger.getLogger(id);
         logger.info("远程执行节点：" + msg);
     }
 
     @RequestMapping(API_PIPE_FINISH + "/{id}/{pipeId}/{result}")
     public void hook(@PathVariable String id, @PathVariable String pipeId, @PathVariable boolean result) throws IOException {
-        PipelineLogger logger = PipelineLogger.getLogger(id);
+        FileLogger logger = FileLogger.getLogger(id);
         logger.info("接收到hook {},{}, {}", id, pipeId, result);
 
         pipelineService.notifyPipeFinishAsync(id, pipeId, result);

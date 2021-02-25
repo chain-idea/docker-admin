@@ -5,6 +5,7 @@ import com.gzqylc.da.web.form.DeployForm;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
 import com.gzqylc.da.service.HostService;
+import com.gzqylc.da.web.logger.LoggerConstants;
 import com.gzqylc.da.web.vo.ContainerVo;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -152,8 +154,12 @@ public class AppController {
     }
 
     @Route("get")
-    public App get(String id) {
-        return service.findOne(id);
+    public App get(String id, HttpServletRequest request) {
+        String prefix = "ws://" + request.getServerName() + ":" + request.getServerPort() + LoggerConstants.WEBSOCKET_URL_PREFIX;
+
+        App db = service.findOne(id);
+        db.setLogUrl(prefix + db.getId());
+        return db;
     }
 
     @Route("container")
