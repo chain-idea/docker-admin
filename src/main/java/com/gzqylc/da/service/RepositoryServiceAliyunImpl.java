@@ -10,13 +10,11 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.entity.Repository;
-import com.gzqylc.da.entity.Tag;
 import com.gzqylc.lang.web.JsonTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class RepositoryServiceAliyunImpl implements IRepositoryService {
     }
 
     @Override
-    public List<Tag> findTagList(String url, Registry registry) throws Exception {
+    public List<String> findTagList(String url, Registry registry) throws Exception {
         IAcsClient client = getClient(registry);
         CommonRequest request = getCommonRequest(registry);
 
@@ -72,16 +70,7 @@ public class RepositoryServiceAliyunImpl implements IRepositoryService {
         List<Map> tags = (List<Map>) ((Map) map.get("data")).get("tags");
 
 
-        return tags.stream().map(t -> {
-            Tag tag = new Tag();
-            tag.setTag((String) t.get("tag"));
-            Long imageSize = Long.valueOf(t.get("imageSize").toString());
-            tag.setSize(imageSize);
-            tag.setCreateTime(new Date((Long) t.get("imageCreate")));
-            tag.setModifyTime(new Date((Long) t.get("imageUpdate")));
-
-            return tag;
-        }).collect(Collectors.toList());
+        return tags.stream().map(t -> (String) t.get("tag")).collect(Collectors.toList());
 
 
     }

@@ -2,7 +2,6 @@ package com.gzqylc.da.web;
 
 import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.entity.Repository;
-import com.gzqylc.da.entity.Tag;
 import com.gzqylc.da.service.IRepositoryService;
 import com.gzqylc.da.service.RegistryService;
 import com.gzqylc.da.service.RepositoryServiceFactory;
@@ -44,9 +43,9 @@ public class RepositoryController extends BaseController {
 
         Registry registry = registryService.findByUrl(url);
 
-        List<Tag> list = repositoryService.findTagList(url, registry);
+        List<String> list = repositoryService.findTagList(url, registry);
 
-        return super.convert(list, i -> new Option(i.getTag(), i.getTag()));
+        return super.convert(list, i -> new Option(i, i));
 
     }
 }

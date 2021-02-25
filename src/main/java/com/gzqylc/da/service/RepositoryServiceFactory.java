@@ -11,13 +11,13 @@ public class RepositoryServiceFactory {
     }
 
 
-    public static RepositoryServiceAliyunImpl getRepositoryService(String url) {
+    public static IRepositoryService getRepositoryService(String url) {
         if (url.contains("aliyuncs.com")) {
             return new RepositoryServiceAliyunImpl();
         }
 
         // 目前只实现了阿里云镜像仓库接口
-        return null;
+        return new RepositoryServiceDockerHubImpl();
     }
 
 

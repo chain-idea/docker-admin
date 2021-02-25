@@ -16,4 +16,11 @@ public class Repository {
 
     Date modifyTime;
     String latestVersion;
+
+    String description;
+    int starCount;
+
+    boolean isOfficial;
+
+
 }

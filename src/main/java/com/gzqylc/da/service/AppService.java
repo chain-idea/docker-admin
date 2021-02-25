@@ -40,17 +40,23 @@ public class AppService extends BaseService<App> {
 
     @Async
     public void deploy(App app) throws InterruptedException {
-        Registry registry = registryService.findByUrl(app.getImageUrl());
-
         String dockerId = app.getHost().getDockerId();
         String image = app.getImageUrl() + ":" + app.getImageTag();
-
-        String registryHost = registry.getHost();
-        String registryUsername = registry.getUsername();
-        String registryPassword = registry.getPassword();
         String name = app.getName();
-
         App.AppConfig cfg = app.getConfig();
+
+
+        String registryHost = null;
+        String registryUsername = null;
+        String registryPassword = null;
+
+        Registry registry = registryService.findByUrl(app.getImageUrl());
+
+        if (registry != null) {
+            registryHost = registry.getHost();
+            registryUsername = registry.getUsername();
+            registryPassword = registry.getPassword();
+        }
 
 
         this.deploy(null, name, dockerId, image, registryHost, registryUsername, registryPassword, cfg);

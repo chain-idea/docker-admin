@@ -1,8 +1,9 @@
-import {Alert, Typography} from 'antd';
+import {Alert, Button, Typography} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
 import {Link} from 'umi';
+import {history} from "../../../.umi/core/history";
 
 let api = '/api/dockerHub/';
 
@@ -21,8 +22,19 @@ export default class extends React.Component {
     {title: '描述', dataIndex: 'description'},
 
     {
-      title: '收藏数',
+      title: '官方收藏数',
       dataIndex: 'star_count',
+    },
+
+    {
+      title: '-',
+      render: (_, row) => {
+        const name = row.name;
+        return <div>
+          <Button onClick={()=>this.star(name)}>收藏</Button>
+          <Button onClick={() => history.push("app/deploy?url=" + row.name)}>部署应用</Button>
+        </div>
+      }
     },
   ];
 
