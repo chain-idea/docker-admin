@@ -18,8 +18,8 @@ import React from 'react';
 import http from "@/utils/request";
 import Log from "./Log";
 import AppForm from "./AppForm";
-import {BugFilled} from "@ant-design/icons";
 import RemoteSelect from "../../../components/RemoteSelect";
+import {history} from "umi";
 
 let api = '/api/app/';
 
@@ -87,7 +87,7 @@ export default class extends React.Component {
     })
   }
 
-  updateApp=()=>{
+  updateApp = () => {
     const id = this.state.app.id;
     const tag = this.state.publishApp.targetVersion;
     http.get("/api/app/updateApp", {id, tag}).then(rs => {
@@ -100,8 +100,11 @@ export default class extends React.Component {
     const id = this.state.app.id
     http.post(api + 'delete', id, '删除数据').then(rs => {
 
-      Modal.info({title: '删除操作', content: rs.msg})
-      console.log(rs)
+      Modal.info({
+        title: '删除操作', content: rs.msg, okText: '跳转到应用列表', onOk: () => {
+          history.push("/admin/app")
+        }
+      })
     })
   }
 
@@ -181,7 +184,8 @@ export default class extends React.Component {
               <Row wrap={false}>
                 <Col flex="100px">手动发布</Col>
                 <Col flex="auto">
-                  <RemoteSelect url={"api/repository/tagList?url=" + app.imageUrl} style={{width: 300}} placeholder="请选择"
+                  <RemoteSelect url={"api/repository/tagList?url=" + app.imageUrl} style={{width: 300}}
+                                placeholder="请选择"
                                 showSearch
                                 value={this.state.publishApp.targetVersion} onChange={targetVersion => {
                     this.setState({publishApp: {targetVersion}})
