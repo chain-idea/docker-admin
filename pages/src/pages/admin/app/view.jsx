@@ -23,7 +23,6 @@ import {history} from "umi";
 
 let api = '/api/app/';
 
-const Item = Descriptions.Item;
 
 
 export default class extends React.Component {
@@ -144,7 +143,7 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="publish">
+          <Tabs tabPosition="left" defaultActiveKey="log">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>

@@ -61,7 +61,6 @@ public class RepositoryServiceDockerHubImpl implements IRepositoryService {
 
         List<String> tagList = maps.stream().map(map -> (String) map.get("name")).collect(Collectors.toList());
 
-        log.info("{}", maps);
         return tagList;
 
     }
