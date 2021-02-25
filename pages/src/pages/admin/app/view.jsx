@@ -173,9 +173,7 @@ export default class extends React.Component {
 
 
 
-            <Tabs.TabPane tab="云隧道" key="export-wan" className="panel">
-              开发者的安全云隧道，跨网络的容器云地址，让您在本地也能部署公网服务器。
-            </Tabs.TabPane>
+
 
             <Tabs.TabPane tab="发布" key="publish" className="panel">
 
