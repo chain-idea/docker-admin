@@ -1,5 +1,6 @@
 package com.gzqylc.da.web;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
 import com.gzqylc.da.entity.Project;
@@ -53,7 +54,7 @@ public class ProjectController {
     }
 
     @Route("delete")
-    public AjaxResult delete(@RequestBody String id) {
+    public AjaxResult delete(@RequestBody String id) throws ClientException {
         service.deleteProject(id);
         return AjaxResult.success("删除成功");
     }

@@ -1,5 +1,6 @@
 package com.gzqylc.da.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.da.dao.*;
 import com.gzqylc.da.entity.*;
 import com.gzqylc.da.web.RunnerHookController;
@@ -105,7 +106,7 @@ public class ProjectService extends BaseService<Project> {
     }
 
     @Transactional
-    public void deleteProject(String id) {
+    public void deleteProject(String id) throws ClientException {
         Project project = baseDao.findOne(id);
 
         // 判断是否有应用依赖
@@ -122,6 +123,11 @@ public class ProjectService extends BaseService<Project> {
         pipelineDao.deleteAll(list);
 
         // 删除镜像仓库
+        IRepositoryService repositoryService = RepositoryServiceFactory.getRepositoryService(project.getRegistry());
+
+        repositoryService.deleteTag(project.getImageUrl(), project.getRegistry());
+
+
         baseDao.deleteById(id);
     }
 

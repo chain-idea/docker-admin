@@ -16,6 +16,7 @@ public class RepositoryServiceFactory {
             return new RepositoryServiceAliyunImpl();
         }
 
+        // 目前只实现了阿里云镜像仓库接口
         return null;
     }
 

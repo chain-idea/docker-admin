@@ -4,6 +4,7 @@ import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.FormatType;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
@@ -11,9 +12,11 @@ import com.gzqylc.da.entity.Registry;
 import com.gzqylc.da.entity.Repository;
 import com.gzqylc.da.entity.Tag;
 import com.gzqylc.lang.web.JsonTool;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 // registry.cn-hangzhou.aliyuncs.com
+@Slf4j
 public class RepositoryServiceAliyunImpl implements IRepositoryService {
 
 
@@ -65,7 +69,7 @@ public class RepositoryServiceAliyunImpl implements IRepositoryService {
         String data = response.getData();
 
         Map<String, Object> map = JsonTool.jsonToMap(data);
-        List<Map> tags = (List<Map>) ((Map)map.get("data")).get("tags");
+        List<Map> tags = (List<Map>) ((Map) map.get("data")).get("tags");
 
 
         return tags.stream().map(t -> {
@@ -78,6 +82,27 @@ public class RepositoryServiceAliyunImpl implements IRepositoryService {
 
             return tag;
         }).collect(Collectors.toList());
+
+
+    }
+
+    @Override
+    public void deleteTag(String imageUrl, Registry registry) throws ClientException {
+        IAcsClient client = getClient(registry);
+        CommonRequest request = getCommonRequest(registry);
+        request.setSysMethod(MethodType.DELETE);
+
+        String subUrl = imageUrl.substring(imageUrl.indexOf("/") + 1);
+
+        request.setUriPattern("/repos/" + subUrl);
+        String requestBody = "" +
+                "{}";
+        request.setHttpContent(requestBody.getBytes(), "utf-8", FormatType.JSON);
+
+        CommonResponse response = client.getCommonResponse(request);
+
+
+        log.info("删除镜像结果 {}", response);
 
 
     }
