@@ -149,7 +149,7 @@ public class AppService extends BaseService<App> {
 
             logger.info("启动容器");
             logger.info("部署阶段结束");
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info("--------------------------------------------------");
             logger.info("部署失败:" + e.getMessage());
             logger.info("--------------------------------------------------");
@@ -199,8 +199,7 @@ public class AppService extends BaseService<App> {
         return labels;
     }
 
-    public Container getContainer(String id) {
-        App app = this.findOne(id);
+    public Container getContainer(App app) {
         String dockerId = app.getHost().getDockerId();
         DockerClient client = DockerTool.getClient(dockerId);
 

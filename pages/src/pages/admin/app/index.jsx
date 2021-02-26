@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Divider, Dropdown, Menu, Modal, Popconfirm, Popover} from 'antd';
+import {Button, Divider, Dropdown, Menu, Modal, Popconfirm, Popover, Tag} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
@@ -46,7 +46,13 @@ export default class extends React.Component {
     },
     {
       title: '状态',
-      dataIndex: 'imageTag',
+      dataIndex: 'containerStatus',
+      render: s => {
+        if (s && s.indexOf('Up') >= 0) {
+          return <Tag color={"green"}>{s} </Tag>
+        }
+        return <Tag color={"red"}>{s || '未知'}</Tag>
+      }
 
     },
 
@@ -57,7 +63,6 @@ export default class extends React.Component {
     },
 
   ];
-
 
 
   render() {

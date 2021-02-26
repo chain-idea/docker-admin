@@ -1,6 +1,8 @@
 package com.gzqylc.da.web;
 
+import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
+import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.da.web.form.DeployForm;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
@@ -40,6 +42,19 @@ public class AppController {
     @Route("list")
     public Page<App> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, App app) {
         Page<App> list = service.findAll(app, pageable);
+
+
+        list.forEach(a -> {
+            try {
+                Container container = service.getContainer(a);
+                a.setContainerStatus(container.getStatus());
+            }catch (Exception e){
+                a.setContainerStatus(e.getMessage());
+            }
+
+        });
+
+
         return list;
     }
 
@@ -167,7 +182,8 @@ public class AppController {
 
     @Route("container")
     public ContainerVo containers(String id) {
-        Container container = service.getContainer(id);
+        App app = service.findOne(id);
+        Container container = service.getContainer(app);
         return new ContainerVo(container);
     }
 

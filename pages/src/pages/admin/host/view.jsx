@@ -8,7 +8,6 @@ let api = '/api/host/';
 
 const dict = {
   architecture: '架构',
-  kernelVersion: '内核',
   operatingSystem: '操作系统',
   systemTime: '系统时间',
   serverVersion: 'docker版本',
