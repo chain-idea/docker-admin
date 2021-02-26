@@ -7,14 +7,12 @@ import Images from "./Images";
 let api = '/api/host/';
 
 const dict = {
-  Architecture: '架构',
-  KernelVersion: '内核',
-  MemTotal: '内存',
-  NCPU: 'NCPU',
-  OperatingSystem: '操作系统',
-  SystemTime: '系统时间',
-  ServerVersion: 'docker版本',
-  ID: 'dockerId',
+  architecture: '架构',
+  kernelVersion: '内核',
+  operatingSystem: '操作系统',
+  systemTime: '系统时间',
+  serverVersion: 'docker版本',
+  id: 'dockerId',
 }
 const keys = Object.keys(dict)
 
@@ -44,8 +42,12 @@ export default class extends React.Component {
     return (<div>
       <div className="panel">
         <div>
-          <Row><Col flex="100px">主机名</Col> <Col> {host.fullName}</Col>
-          </Row>
+          <Row><Col flex="100px">主机名</Col> <Col> {host.fullName}</Col> </Row>
+          <Row><Col flex="100px">内存</Col> <Col>
+
+            {(info.memTotal / 1024 / 1024 / 1024).toFixed(1)} G
+
+          </Col></Row>
           {
             keys.map(k => <Row key={k}><Col flex="100px">{dict[k]}</Col> <Col> {info[k]}</Col> </Row>)
           }

@@ -23,7 +23,7 @@ public class Host extends BaseEntity {
 
 
     public String getFullName() {
-        return name + (remark != null ? "(" + remark + ")" : "");
+        return name + (remark != null ? " (" + remark + ")" : "");
     }
 
 
