@@ -17,7 +17,10 @@ import javax.validation.constraints.NotNull;
 public class Project extends BaseEntity {
 
     @NotNull
+    @Column(unique = true)
     String name;
+
+    String remark;
 
 
     String gitUrl;

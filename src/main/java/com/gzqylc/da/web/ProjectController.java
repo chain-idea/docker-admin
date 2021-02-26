@@ -54,7 +54,7 @@ public class ProjectController {
 
     @Route("update")
     public AjaxResult update(@RequestBody Project project) {
-        service.saveProject(project);
+        service.updateRemark(project);
         return AjaxResult.success("修改成功");
     }
 

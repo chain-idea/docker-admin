@@ -58,6 +58,10 @@ export default class extends React.Component {
       })
     })
   }
+  save = value => {
+    value.id = this.state.project.id
+    http.post(api + 'update', value)
+  }
 
   render() {
     const {project, showTrigger} = this.state;
@@ -87,6 +91,24 @@ export default class extends React.Component {
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="设置" key="4">
+
+            <Form initialValues={project} labelCol={{span: 3}} onFinish={this.save}>
+              <Form.Item name={"name"} label={"项目名称"}
+                         rules={[{required: true}, {pattern: /^[a-zA-Z-0-9|_|\-]+$/, message: '字母、数字、下划线'}]}>
+                <Input readOnly></Input>
+              </Form.Item>
+              <Form.Item name={"remark"} label={"备注"}>
+                <Input></Input>
+              </Form.Item>
+              <Form.Item wrapperCol={{offset: 3}}>
+                <Button htmlType={"submit"} type={"primary"}>保存修改</Button>
+              </Form.Item>
+
+            </Form>
+
+            <Divider></Divider>
+
+
             <Space direction={"vertical"}>
               <Alert message="请注意，删除项目将清除项目的所有历史数据以及相关的镜像，且该操作不能被恢复，您确定要删除吗?" type={"warning"}></Alert>
 

@@ -139,6 +139,12 @@ public class ProjectService extends BaseService<Project> {
         baseDao.deleteById(id);
     }
 
+    public void updateRemark(Project project) {
+        Project db = baseDao.findOne(project);
+        db.setRemark(project.getRemark());
+        baseDao.save(db);
+    }
+
 
     @Data
     public static class BuildImageForm {

@@ -42,7 +42,10 @@ export default class extends React.Component {
         return <a onClick={() => history.push("project/" + row.id)}>{name}</a>
       }
     },
-
+    {
+      title: '备注',
+      dataIndex: 'remark',
+    },
     {
       title: '最近更新',
       dataIndex: 'modifyTime',
@@ -92,12 +95,7 @@ export default class extends React.Component {
       }
 
     },
-    {
-      title: '执行状态',
-      dataIndex: 'status',
-      hideInSearch: true,
-      hideInForm: true,
-    },
+
     {
       title: '操作',
       dataIndex: 'option',
