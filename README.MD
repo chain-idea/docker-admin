@@ -41,3 +41,7 @@ docker run -d --name docker-agent \
 冲突检测
 
 取消构建
+
+GIT lab SDK
+
+标准的注册中心 SDK
