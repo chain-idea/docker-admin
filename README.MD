@@ -45,3 +45,5 @@ docker run -d --name docker-agent \
 GIT lab SDK
 
 标准的注册中心 SDK
+
+帐号权限
