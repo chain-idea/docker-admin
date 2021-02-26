@@ -2,8 +2,7 @@ import {Alert, Button, Space, Typography, message} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
-import {Link} from 'umi';
-import {history} from "../../../.umi/core/history";
+import {history} from 'umi';
 
 let api = '/api/dockerHub/';
 
