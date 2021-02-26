@@ -130,5 +130,21 @@ public class ContainerController extends BaseController {
         return AjaxResult.success("停止容器成功");
 
     }
+    @Route("start")
+    @ResponseBody
+    public AjaxResult start(String hostId, String containerId) {
 
+        Host host = hostService.findOne(hostId);
+
+
+        DockerClient client = DockerTool.getClient(host.getDockerId());
+
+
+        client.startContainerCmd(containerId)
+                .exec();
+
+
+        return AjaxResult.success("启动容器成功");
+
+    }
 }

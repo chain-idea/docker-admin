@@ -22,6 +22,11 @@ public class Host extends BaseEntity {
     String remark;
 
 
+    public String getFullName() {
+        return name + (remark != null ? "(" + remark + ")" : "");
+    }
+
+
     @Column(unique = true)
     String dockerId;
 

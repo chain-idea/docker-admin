@@ -44,7 +44,7 @@ export default class extends React.Component {
     return (<div>
       <div className="panel">
         <div>
-          <Row><Col flex="100px">主机名</Col> <Col> {host.name}<Divider type={"vertical"}></Divider> {host.remark}</Col>
+          <Row><Col flex="100px">主机名</Col> <Col> {host.fullName}</Col>
           </Row>
           {
             keys.map(k => <Row key={k}><Col flex="100px">{dict[k]}</Col> <Col> {info[k]}</Col> </Row>)
@@ -54,7 +54,7 @@ export default class extends React.Component {
       </div>
 
       {host.id && <div className="panel">
-        <Tabs defaultActiveKey="setting">
+        <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab={<Badge count={info.containers} size={"small"}> 容器</Badge>} key="1">
             <Containers id={host.id}></Containers>
           </Tabs.TabPane>

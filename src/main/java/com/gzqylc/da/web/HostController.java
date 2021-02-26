@@ -92,7 +92,7 @@ public class HostController extends BaseController {
 
     @Route("options")
     public List<Option> options(String searchText, String[] selected, Pageable pageable) {
-        return service.findOptionList(searchText, selected, pageable, Registry.Fields.name, Host::getName);
+        return service.findOptionList(searchText, selected, pageable, Registry.Fields.name, Host::getFullName);
     }
 
     @Route("get")

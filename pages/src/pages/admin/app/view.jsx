@@ -124,7 +124,7 @@ export default class extends React.Component {
       </Space>}>
         <Row wrap={false}>
           <Col flex="100px">主机</Col>
-          <Col flex="auto">{app.host.name} </Col>
+          <Col flex="auto">{app.host.fullName}</Col>
         </Row>
 
         <Row wrap={false}>

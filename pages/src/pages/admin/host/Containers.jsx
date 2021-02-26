@@ -31,7 +31,10 @@ export default class extends React.Component {
     let params = this.props;
     http.get("/api/container/stop", {hostId: params.id, containerId: id}).then(this.loadData)
   }
-
+  start = (id) => {
+    let params = this.props;
+    http.get("/api/container/start", {hostId: params.id, containerId: id}).then(this.loadData)
+  }
 
   columns = [
     {
@@ -75,6 +78,8 @@ export default class extends React.Component {
         let state = row.State;
         let running = state == 'running';
         return <div>
+          <Button onClick={() => this.start(id)} disabled={running} size="small">启动</Button>
+          <Divider type={"vertical"}/>
           <Button onClick={() => this.stop(id)} disabled={!running} size="small">停止</Button>
           <Divider type={"vertical"}/>
           <Button onClick={() => this.remove(id)} disabled={running} danger size="small">删除</Button></div>
