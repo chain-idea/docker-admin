@@ -45,9 +45,11 @@ public class ProjectController {
 
     @Route("save")
     public AjaxResult save(@RequestBody Project project) {
-        service.saveProject(project);
+        Project db = service.saveProject(project);
 
-        return AjaxResult.success("保存成功");
+        AjaxResult rs = AjaxResult.success("保存成功");
+        rs.put("id", db.getId());
+        return rs;
     }
 
     @Route("update")

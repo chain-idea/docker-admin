@@ -132,6 +132,9 @@ export default class extends React.Component {
       this.state.showAddForm = false;
       this.setState(this.state)
       this.actionRef.current.reload();
+
+      // 跳转到项目
+      history.push("/admin/project/" + rs.id)
     })
   }
 

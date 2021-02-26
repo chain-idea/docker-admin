@@ -11,6 +11,7 @@ import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.utils.HttpTool;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProjectService extends BaseService<Project> {
 
 
@@ -45,7 +47,7 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     AppDao appDao;
 
-    public void saveProject(Project project) {
+    public Project saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
 
         project.setImageUrl(registry.getHost() + "/" + registry.getNamespace() + "/" + project.getName());
@@ -57,6 +59,7 @@ public class ProjectService extends BaseService<Project> {
         }
 
         project = super.save(project);
+        return project;
     }
 
 
@@ -125,7 +128,12 @@ public class ProjectService extends BaseService<Project> {
         // 删除镜像仓库
         IRepositoryService repositoryService = RepositoryServiceFactory.getRepositoryService(project.getRegistry());
 
-        repositoryService.deleteTag(project.getImageUrl(), project.getRegistry());
+        try{
+            repositoryService.deleteTag(project.getImageUrl(), project.getRegistry());
+        }catch (Exception e){
+            log.error("删除镜像仓库出错，请手动删除 {}", project.getImageUrl());
+        }
+
 
 
         baseDao.deleteById(id);

@@ -41,6 +41,7 @@ public class DockerTool {
                 .virtualHost(dockerId) // 使用dockerId 作为路由转发的标识
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+
         return dockerClient;
     }
 
