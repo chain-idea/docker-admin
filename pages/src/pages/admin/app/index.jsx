@@ -73,7 +73,7 @@ export default class extends React.Component {
         actionRef={this.actionRef}
         toolBarRender={(action, {selectedRows}) => [
           <Button type="primary" onClick={() => {
-            history.push("repository")
+            history.push("/admin/image")
 
           }}>
             <PlusOutlined/> 创建应用
