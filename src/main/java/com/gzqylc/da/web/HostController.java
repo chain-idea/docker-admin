@@ -8,6 +8,7 @@ import com.github.dockerjava.api.model.Info;
 import com.gzqylc.da.entity.Host;
 import com.gzqylc.da.service.HostService;
 import com.gzqylc.da.entity.Registry;
+import com.gzqylc.da.web.vo.DockerInfo;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
 import com.gzqylc.lang.bean.Option;
@@ -15,10 +16,12 @@ import com.gzqylc.lang.web.RequestTool;
 import com.gzqylc.lang.web.base.BaseController;
 import com.gzqylc.da.service.docker.DockerTool;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,6 +75,13 @@ public class HostController extends BaseController {
         return list;
     }
 
+    @Route("update")
+    public AjaxResult update(@RequestBody Host host) {
+        Assert.notNull(host.getId(), "id不能为空");
+        service.updateNameAndRemark(host);
+        return AjaxResult.success("保存");
+    }
+
 
     @Route("delete")
     public AjaxResult delete(@RequestBody List<String> ids) {
@@ -90,9 +100,14 @@ public class HostController extends BaseController {
         Host host = service.findOne(id);
         Info info = service.getDockerInfo(host);
 
+        DockerInfo dockerInfo = new DockerInfo();
+        BeanUtils.copyProperties(info, dockerInfo);
+
+
+
         Map<String, Object> result = new HashMap<>();
         result.put("host", host);
-        result.put("info", info);
+        result.put("info", dockerInfo);
 
         return result;
     }

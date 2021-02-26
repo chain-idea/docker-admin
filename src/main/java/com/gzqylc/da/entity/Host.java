@@ -19,6 +19,7 @@ import javax.persistence.*;
 public class Host extends BaseEntity {
 
     String name;
+    String remark;
 
 
     @Column(unique = true)

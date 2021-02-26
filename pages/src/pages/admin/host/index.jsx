@@ -33,7 +33,10 @@ export default class extends React.Component {
         return <a onClick={() => history.push("host/" + row.id)}>{name}</a>
       }
     },
-
+    {
+      title: '备注',
+      dataIndex: 'remark'
+    },
 
     {
       title: '操作',
@@ -61,6 +64,7 @@ export default class extends React.Component {
       this.actionRef.current.reload();
     })
   }
+
 
   render() {
     let {showAddForm} = this.state
@@ -94,15 +98,12 @@ export default class extends React.Component {
         }}
         footer={null}
       >
-
-
         <p> 安装主机监控程序</p>
-        <p> 安装好 Docker 后，运行主机安装命令。查看如何安装 Docker</p>
+        <p> 安装好 Docker 后，运行主机安装命令。</p>
 
         <code>
           {this.state.cmd}
         </code>
-
       </Modal>
 
 

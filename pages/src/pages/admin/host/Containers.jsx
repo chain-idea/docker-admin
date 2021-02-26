@@ -65,7 +65,7 @@ export default class extends React.Component {
       title: '端口(主机:容器)', dataIndex: 'Ports',
       width: 180,
       render: ps => {
-        return ps.map(p => <div>{p.PublicPort}:{p.PrivatePort}/{p.Type}</div>)
+        return ps.map(p => <div key={p.PublicPort}>{p.PublicPort}:{p.PrivatePort}/{p.Type}</div>)
       }
     },
     {title: '状态', dataIndex: 'Status', width: 180},
@@ -91,6 +91,7 @@ export default class extends React.Component {
              bordered
              columns={this.columns}
              scroll={{x: 1000}}
+             rowKey="Id"
       />
 
 

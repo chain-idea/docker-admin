@@ -49,4 +49,11 @@ public class HostService extends BaseService<Host> {
         client.removeImageCmd(imageId).exec();
 
     }
+
+    public void updateNameAndRemark(Host host) {
+        Host db = baseDao.findOne(host);
+        db.setName(host.getName());
+        db.setRemark(host.getRemark());
+        baseDao.save(db);
+    }
 }
