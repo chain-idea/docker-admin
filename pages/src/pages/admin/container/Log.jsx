@@ -9,10 +9,8 @@ export default class extends React.Component {
 
 
   render() {
-    const {id} = this.props;
-    const {container} = this.props
-    let containerId = container.id;
-    let url = serverUrl + api + "log?appId=" + id + "&containerId=" + containerId;
+    const {hostId, containerId} = this.props;
+    let url = serverUrl + api + "log/" + hostId + "/" + containerId;
 
     return <div style={{height: 500, width: '100%'}}>
       <ScrollFollow

@@ -15,11 +15,13 @@ import com.gzqylc.da.service.docker.DockerTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Path;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
@@ -47,8 +49,8 @@ public class ContainerController extends BaseController {
         return response;
     }
 
-    @Route("logByHost")
-    public void logByHost(@RequestParam String hostId, @RequestParam String containerId, HttpServletResponse response) throws Exception {
+    @Route("log/{hostId}/{containerId}")
+    public void logByHost(@PathVariable String hostId, @PathVariable String containerId, HttpServletResponse response) throws Exception {
         Host host = hostService.findOne(hostId);
 
         DockerClient client = DockerTool.getClient(host.getDockerId());
@@ -70,30 +72,6 @@ public class ContainerController extends BaseController {
 
     }
 
-
-    @Route("log")
-    public void log(String appId, String containerId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        App app = appService.findOne(appId);
-
-
-        DockerClient client = DockerTool.getClient(app.getHost().getDockerId());
-
-        Charset charset = Charset.forName("iso-8859-1");
-
-
-        PrintWriter out = response.getWriter();
-        client.logContainerCmd(containerId)
-                .withStdOut(true)
-                .withStdErr(true)
-                .withTimestamps(false)
-                .exec(new LogContainerResultCallback() {
-                    @Override
-                    public void onNext(Frame item) {
-                        out.write(new String(item.getPayload(), charset));
-                    }
-                }).awaitCompletion();
-
-    }
 
     @Route("remove")
     @ResponseBody
@@ -130,6 +108,7 @@ public class ContainerController extends BaseController {
         return AjaxResult.success("停止容器成功");
 
     }
+
     @Route("start")
     @ResponseBody
     public AjaxResult start(String hostId, String containerId) {

@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import React from 'react';
 import http from "@/utils/request";
-import Log from "./Log";
+import Log from "../container/Log";
 import AppForm from "./AppForm";
 import RemoteSelect from "../../../components/RemoteSelect";
 import {history} from "umi";
@@ -153,14 +153,14 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="log">
+          <Tabs tabPosition="left" defaultActiveKey="container-log">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>
 
 
             <Tabs.TabPane tab="日志" key="container-log" className="panel">
-              {container.id && <Log id={app.id} container={container}></Log>}
+              {container.id && <Log hostId={app.host.id} containerId={container.id}></Log>}
             </Tabs.TabPane>
 
             <Tabs.TabPane tab="事件" key="log" className="panel">
