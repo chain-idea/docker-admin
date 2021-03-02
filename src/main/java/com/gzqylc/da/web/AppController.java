@@ -48,7 +48,7 @@ public class AppController {
             try {
                 Container container = service.getContainer(a);
                 a.setContainerStatus(container.getStatus());
-            }catch (Exception e){
+            } catch (Exception e) {
                 a.setContainerStatus(e.getMessage());
             }
 
@@ -169,6 +169,12 @@ public class AppController {
     public AjaxResult stop(@PathVariable String appId) {
         service.stop(appId);
         return AjaxResult.success("部署指令已发送");
+    }
+
+    @Route("rename/{appId}")
+    public AjaxResult rename(@PathVariable String appId, @RequestBody String newName) {
+        App app = service.rename(appId, newName);
+        return AjaxResult.success("部署指令已发送", app);
     }
 
     @Route("get")

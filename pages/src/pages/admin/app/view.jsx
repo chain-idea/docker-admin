@@ -12,7 +12,7 @@ import {
   Divider,
   Alert,
   Modal,
-  Tag
+  Tag, Input
 } from 'antd';
 import React from 'react';
 import http from "@/utils/request";
@@ -40,6 +40,9 @@ export default class extends React.Component {
     publishApp: {
       targetVersion: null
     },
+
+    showEditName: false,
+    newName: ''
 
   }
 
@@ -107,6 +110,12 @@ export default class extends React.Component {
       })
     })
   }
+  rename = () => {
+    let id = this.state.app.id;
+    http.post(api + 'rename/' + id, this.state.newName, '修改容器名称').then(rs => {
+      this.setState({app: rs.data, showEditName: false})
+    })
+  }
 
   render() {
     const {app, container} = this.state;
@@ -144,7 +153,7 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="log">
+          <Tabs tabPosition="left" defaultActiveKey="setting">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>
@@ -170,9 +179,6 @@ export default class extends React.Component {
               </div>}
 
             </Tabs.TabPane>
-
-
-
 
 
             <Tabs.TabPane tab="发布" key="publish" className="panel">
@@ -234,7 +240,29 @@ export default class extends React.Component {
             </Tabs.TabPane>
 
 
-            <Tabs.TabPane tab="设置" key="6" className="panel">
+            <Tabs.TabPane tab="设置" key="setting" className="panel"> <Divider></Divider>
+              <Row wrap={false}>
+                <Col flex="100px">名称</Col>
+                <Col flex="auto">
+
+                  {!this.state.showEditName ? <div>
+                    {this.state.app.name} <a onClick={() => this.setState({
+                    newName: this.state.app.name,
+                    showEditName: true
+                  })}>修改名称</a>
+                  </div> : <div>
+
+                    <Input value={this.state.newName} style={{width: 200}}
+                           onChange={e => this.setState({newName: e.target.value})}></Input>
+
+                    <Button type={"primary"} onClick={this.rename}>确定</Button>
+                  </div>}
+
+
+                </Col>
+
+              </Row>
+              <Divider></Divider>
               <Row wrap={false}>
                 <Col flex="100px">自动重启</Col>
                 <Col flex="auto">
@@ -248,6 +276,7 @@ export default class extends React.Component {
                 </Col>
 
               </Row>
+
 
               <Divider></Divider>
               <Row wrap={false}>

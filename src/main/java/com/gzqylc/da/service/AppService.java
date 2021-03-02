@@ -39,7 +39,7 @@ public class AppService extends BaseService<App> {
 
 
     @Async
-    public void deploy(App app) throws InterruptedException {
+    public void deploy(App app) {
         String dockerId = app.getHost().getDockerId();
         String image = app.getImageUrl() + ":" + app.getImageTag();
         String name = app.getName();
@@ -65,7 +65,7 @@ public class AppService extends BaseService<App> {
 
     public Pipeline.PipeProcessResult deploy(String pipelineId, String appId, String name, String dockerId, String image,
                                              String registryHost, String registryUsername, String registryPassword,
-                                             App.AppConfig cfg) throws InterruptedException {
+                                             App.AppConfig cfg) {
         FileLogger logger = FileLogger.getLogger(pipelineId, appId);
         try {
 
@@ -185,6 +185,19 @@ public class AppService extends BaseService<App> {
         for (Container container : list) {
             client.startContainerCmd(container.getId()).exec();
         }
+    }
+
+    public App rename(String appId, String newName) {
+        App app = this.findOne(appId);
+        this.deleteContainer(app);
+
+        app.setName(newName);
+        App saved = this.save(app);
+
+
+        this.deploy(app);
+
+        return saved;
     }
 
     private List<Container> getContainer(String name, DockerClient client) {
