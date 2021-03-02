@@ -202,7 +202,9 @@ public class AppService extends BaseService<App> {
 
     private List<Container> getContainer(String name, DockerClient client) {
         Map<String, String> labels = getAppLabelFilter(name);
-        List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
+        List<Container> list = client.listContainersCmd()
+                .withLabelFilter(labels)
+                .withShowAll(true).exec();
         return list;
     }
 

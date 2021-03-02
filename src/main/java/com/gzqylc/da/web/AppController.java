@@ -1,8 +1,6 @@
 package com.gzqylc.da.web;
 
-import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
-import com.gzqylc.da.service.docker.DockerTool;
 import com.gzqylc.da.web.form.DeployForm;
 import com.gzqylc.da.entity.App;
 import com.gzqylc.da.service.AppService;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @Slf4j
