@@ -63,10 +63,13 @@ public class ContainerController extends BaseController {
                 .withStdOut(true)
                 .withStdErr(true)
                 .withTimestamps(false)
+                .withFollowStream(true)
+                .withTail(3000)
                 .exec(new LogContainerResultCallback() {
                     @Override
                     public void onNext(Frame item) {
                         out.write(new String(item.getPayload(), charset));
+                        out.flush();
                     }
                 }).awaitCompletion();
 
