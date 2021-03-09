@@ -5,7 +5,7 @@ import {serverUrl} from "../../../config";
 let api = '/api/container/';
 
 
-export default class extends React.Component {
+export default class ContainerLog extends React.Component {
 
 
   render() {
