@@ -153,7 +153,7 @@ export default class extends React.Component {
 
       {app.id && <div>
         <div className="panel">
-          <Tabs tabPosition="left" defaultActiveKey="container-log">
+          <Tabs tabPosition="left" defaultActiveKey="log">
             <Tabs.TabPane tab="配置" key="2">
               <AppForm app={app}/>
             </Tabs.TabPane>
