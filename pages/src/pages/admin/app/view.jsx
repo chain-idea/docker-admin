@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import React from 'react';
 import http from "@/utils/request";
-import Log from "../container/Log";
+import ContainerLog from "../container/ContainerLog";
 import AppForm from "./AppForm";
 import RemoteSelect from "../../../components/RemoteSelect";
 import {history} from "umi";
@@ -160,7 +160,7 @@ export default class extends React.Component {
 
 
             <Tabs.TabPane tab="日志" key="container-log" className="panel">
-              {container.id && <Log hostId={app.host.id} containerId={container.id}></Log>}
+              {container.id && <ContainerLog hostId={app.host.id} containerId={container.id}></ContainerLog>}
             </Tabs.TabPane>
 
             <Tabs.TabPane tab="事件" key="log" className="panel">

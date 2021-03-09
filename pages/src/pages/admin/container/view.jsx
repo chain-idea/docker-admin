@@ -1,7 +1,5 @@
 import React from 'react';
-import http from "@/utils/request";
-import {LazyLog, ScrollFollow} from "react-lazylog";
-import {serverUrl} from "../../../config";
+import ContainerLog from "./ContainerLog";
 
 let api = '/api/container/';
 
@@ -31,14 +29,7 @@ export default class extends React.Component {
 
 
       <div style={{height: '100%'}}>
-        <ScrollFollow
-          startFollowing={true}
-          render={({follow, onScroll}) => (
-            <LazyLog url={serverUrl + api + "logByHost?hostId=" + hostId + "&containerId=" + containerId}
-                     enableSearch
-                     stream follow={follow} onScroll={onScroll}/>
-          )}
-        />
+       <ContainerLog containerId={containerId} hostId={hostId}></ContainerLog>
       </div>
     </div>)
   }

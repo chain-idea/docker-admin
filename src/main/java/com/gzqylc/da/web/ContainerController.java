@@ -79,16 +79,11 @@ public class ContainerController extends BaseController {
     @Route("remove")
     @ResponseBody
     public AjaxResult removeContainer(String hostId, String containerId) {
-
         Host host = hostService.findOne(hostId);
-
-
         DockerClient client = DockerTool.getClient(host.getDockerId());
-
 
         client.removeContainerCmd(containerId)
                 .exec();
-
 
         return AjaxResult.success("删除容器成功");
 
