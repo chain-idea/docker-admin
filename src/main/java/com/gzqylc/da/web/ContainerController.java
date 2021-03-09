@@ -64,7 +64,7 @@ public class ContainerController extends BaseController {
                 .withStdErr(true)
                 .withTimestamps(false)
                 .withFollowStream(true)
-                .withTail(3000)
+                .withTail(500)
                 .exec(new LogContainerResultCallback() {
                     @Override
                     public void onNext(Frame item) {
