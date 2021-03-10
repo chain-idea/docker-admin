@@ -77,7 +77,6 @@ public class LoggerWebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
-        error.printStackTrace();
     }
 
     /**
@@ -89,7 +88,6 @@ public class LoggerWebSocketServer {
             remote.sendText(message);
         } catch (IOException e) {
             log.error("发送消息出错：{}", e.getMessage());
-            e.printStackTrace();
         }
     }
 
