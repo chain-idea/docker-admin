@@ -68,7 +68,4 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
-logging:
-  file:
-    name: docker-admin.log
 
