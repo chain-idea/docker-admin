@@ -21,10 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -66,6 +63,11 @@ public class AppService extends BaseService<App> {
     public Pipeline.PipeProcessResult deploy(String pipelineId, String appId, String name, String dockerId, String image,
                                              String registryHost, String registryUsername, String registryPassword,
                                              App.AppConfig cfg) {
+        App app = this.findOne(appId);
+        // 修改更新时间
+        app.setModifyTime(new Date());
+        this.save(app);
+
         FileLogger logger = FileLogger.getLogger(pipelineId, appId);
         try {
 

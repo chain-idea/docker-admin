@@ -12,10 +12,8 @@ let api = '/api/app/';
 export default class extends React.Component {
 
   state = {
-    showAddForm: false,
-    showEditForm: false,
-    formValues: {},
   }
+
   actionRef = React.createRef();
 
   columns = [
@@ -85,6 +83,7 @@ export default class extends React.Component {
         rowKey="id"
         bordered={true}
         search={false}
+        options={{search:true}}
       />
 
 

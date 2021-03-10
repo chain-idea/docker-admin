@@ -10,6 +10,8 @@ import com.gzqylc.docker.admin.web.vo.ContainerVo;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
 import com.gzqylc.lang.web.base.BaseEntity;
+import com.gzqylc.lang.web.jpa.specification.Criteria;
+import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,8 +39,10 @@ public class AppController {
 
 
     @Route("list")
-    public Page<App> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, App app,String keyword) {
-        Page<App> list = service.findAll(app, pageable);
+    public Page<App> list(@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, String keyword) {
+        Criteria<App> c = new Criteria<>();
+        c.add(Restrictions.like(App.Fields.name, keyword));
+        Page<App> list = service.findAll(c, pageable);
 
         list.forEach(a -> {
             try {
