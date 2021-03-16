@@ -1,5 +1,5 @@
-dbip: www.gzqylc.com
-dbpwd: xxxx
+dbip: 192.168.2.193
+dbpwd: xjw1234
 
 dbport: 3306
 dbname: docker_admin
