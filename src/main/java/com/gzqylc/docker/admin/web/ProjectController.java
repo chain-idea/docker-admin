@@ -57,7 +57,7 @@ public class ProjectController {
         return AjaxResult.success("修改成功");
     }
 
-    @Route("delete")
+    @Route(value = "delete", title = "删除项目" , logEnable = true)
     public AjaxResult delete(@RequestBody String id) throws ClientException {
         service.deleteProject(id);
         return AjaxResult.success("删除成功");
