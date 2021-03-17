@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Divider, Dropdown, Menu, Modal, Popconfirm, Popover, Tag} from 'antd';
+import {Button, Divider, Dropdown, Menu, Modal, Popconfirm, Popover, Tabs, Tag} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
@@ -12,6 +12,7 @@ let api = '/api/app/';
 export default class extends React.Component {
 
   state = {
+    classifyList: [],
   }
 
   actionRef = React.createRef();
@@ -61,30 +62,39 @@ export default class extends React.Component {
     },
 
   ];
-
+  componentDidMount() {
+    http.get("api/classify/all").then(classifyList => {
+      this.setState({classifyList : classifyList})
+    })
+  }
 
   render() {
 
-    return (<div>
+    return (<div className="panel">
+      <Tabs defaultActiveKey="0">
+        {this.state.classifyList.map((classify, index) => <Tabs.TabPane tab={classify.groupName} key={index}>
+          <ProTable
+            actionRef={this.actionRef}
+            toolBarRender={(action, {selectedRows}) => [
+              <Button type="primary" onClick={() => {
+                history.push("/admin/image")
 
-      <ProTable
-        actionRef={this.actionRef}
-        toolBarRender={(action, {selectedRows}) => [
-          <Button type="primary" onClick={() => {
-            history.push("/admin/image")
+              }}>
+                <PlusOutlined/> 创建应用
+              </Button>,
+            ]}
+            request={(params, sort) => http.getPageableData(api + 'list?classifyId=' + classify.id, params, sort)}
+            columns={this.columns}
+            rowSelection={false}
+            rowKey="id"
+            bordered={true}
+            search={false}
+            options={{search:true}}
+          />
+        </Tabs.TabPane>)}
 
-          }}>
-            <PlusOutlined/> 创建应用
-          </Button>,
-        ]}
-        request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        rowKey="id"
-        bordered={true}
-        search={false}
-        options={{search:true}}
-      />
+      </Tabs>
+
 
 
     </div>)

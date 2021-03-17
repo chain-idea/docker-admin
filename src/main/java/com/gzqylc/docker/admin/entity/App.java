@@ -114,4 +114,7 @@ public class App extends BaseEntity {
 
 
     }
+
+    @ManyToOne
+    Classify classify;
 }

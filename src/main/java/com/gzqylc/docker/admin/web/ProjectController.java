@@ -2,6 +2,7 @@ package com.gzqylc.docker.admin.web;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.docker.admin.entity.App;
+import com.gzqylc.docker.admin.entity.Classify;
 import com.gzqylc.docker.admin.service.AppService;
 import com.gzqylc.docker.admin.entity.Project;
 import com.gzqylc.docker.admin.service.ProjectService;
@@ -33,10 +34,11 @@ public class ProjectController {
     @Autowired
     private AppService appService;
 
-    @Route("list")//todo 改造查询接口
-    public Page<Project> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
+    @Route("list")
+    public Page<Project> list(String keyword, String classifyId,@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Project> c = new Criteria<>();
         c.add(Restrictions.like(Project.Fields.name, keyword));
+        c.add(Restrictions.eq("classify.id", classifyId));
 
         Page<Project> list = service.findAll(c, pageable);
         return list;

@@ -30,4 +30,7 @@ public class Host extends BaseEntity {
     @Column(unique = true)
     String dockerId;
 
+    @ManyToOne
+    Classify classify;
+
 }

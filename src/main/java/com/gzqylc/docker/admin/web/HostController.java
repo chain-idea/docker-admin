@@ -5,6 +5,7 @@ import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
+import com.gzqylc.docker.admin.entity.App;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.docker.admin.service.HostService;
 import com.gzqylc.docker.admin.entity.Registry;
@@ -15,6 +16,8 @@ import com.gzqylc.lang.bean.Option;
 import com.gzqylc.lang.web.RequestTool;
 import com.gzqylc.lang.web.base.BaseController;
 import com.gzqylc.docker.admin.service.docker.DockerTool;
+import com.gzqylc.lang.web.jpa.specification.Criteria;
+import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +73,11 @@ public class HostController extends BaseController {
     }
 
     @Route("list")
-    public Page<Host> list(@PageableDefault(sort = "name") Pageable pageable, Host host) {
-        Page<Host> list = service.findAll(host, pageable);
+    public Page<Host> list(String classifyId,@PageableDefault(sort = "name") Pageable pageable, Host host) {
+        Criteria<Host> c = new Criteria<>();
+        c.add(Restrictions.eq("classify.id", classifyId));
+
+        Page<Host> list = service.findAll(c, pageable);
         return list;
     }
 

@@ -32,7 +32,6 @@ public class RepositoryController extends BaseController {
 
         Page<Repository> list = repositoryService.findRepositoryList(pageable, registry, keyword);
 
-
         return list;
     }
 

@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Button, Divider, Dropdown, Menu, Modal, Popconfirm} from 'antd';
+import {Button, Divider, Dropdown, Menu, Modal, Popconfirm, Tabs} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
@@ -16,6 +16,7 @@ export default class extends React.Component {
     showEditForm: false,
     formValues: {},
     cmd: '',
+    classifyList: [],
   }
   actionRef = React.createRef();
 
@@ -64,27 +65,36 @@ export default class extends React.Component {
       this.actionRef.current.reload();
     })
   }
-
+  componentDidMount() {
+    http.get("api/classify/all").then(classifyList => {
+      this.setState({classifyList : classifyList})
+    })
+  }
 
   render() {
     let {showAddForm} = this.state
 
-    return (<div>
+    return (<div className="panel">
+      <Tabs defaultActiveKey="0">
+        {this.state.classifyList.map((classify, index) => <Tabs.TabPane tab={classify.groupName} key={index}>
+          <ProTable
+            actionRef={this.actionRef}
+            toolBarRender={(action, {selectedRows}) => [
+              <Button type="primary" onClick={this.clickAddBtn}>
+                <PlusOutlined/> 添加主机
+              </Button>,
+            ]}
+            request={(params, sort) => http.getPageableData(api + 'list?classifyId=' + classify.id, params, sort)}
+            columns={this.columns}
+            rowSelection={false}
+            rowKey="id"
+            bordered={true}
+            search={false}
+          />
+        </Tabs.TabPane>)}
 
-      <ProTable
-        actionRef={this.actionRef}
-        toolBarRender={(action, {selectedRows}) => [
-          <Button type="primary" onClick={this.clickAddBtn}>
-            <PlusOutlined/> 添加主机
-          </Button>,
-        ]}
-        request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        rowKey="id"
-        bordered={true}
-        search={false}
-      />
+      </Tabs>
+
 
       <Modal
         maskClosable={false}

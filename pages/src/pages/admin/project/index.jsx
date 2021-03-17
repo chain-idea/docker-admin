@@ -1,5 +1,5 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select} from 'antd';
+import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select,Tabs} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
@@ -24,6 +24,7 @@ export default class extends React.Component {
     showAddForm: false,
     showEditForm: false,
     formValues: {},
+    classifyList: [],
   }
   actionRef = React.createRef();
 
@@ -146,33 +147,41 @@ export default class extends React.Component {
 
   }
 
-
+  componentDidMount() {
+    http.get("api/classify/all").then(classifyList => {
+      this.setState({classifyList : classifyList})
+    })
+  }
 
   render() {
     let {showAddForm, showEditForm} = this.state
 
-    return (<div>
+    return (<div className="panel">
+        <Tabs defaultActiveKey="0">
+          {this.state.classifyList.map((classify, index) => <Tabs.TabPane tab={classify.groupName} key={index}>
+            <ProTable
+              actionRef={this.actionRef}
+              search={false}
+              toolBarRender={(action, {selectedRows}) => [
+                <Button type="primary" onClick={() => {
+                  this.state.showAddForm = true;
+                  this.setState(this.state)
+                }}>
+                  <PlusOutlined/> 新建
+                </Button>,
+              ]}
+              request={(params, sort) => http.getPageableData(api + 'list?classifyId=' + classify.id, params, sort)}
+              columns={this.columns}
+              rowSelection={false}
+              rowKey="id"
+              bordered={true}
+              options={{search: true}}
 
-      <ProTable
-        actionRef={this.actionRef}
-        search={false}
-        toolBarRender={(action, {selectedRows}) => [
-          <Button type="primary" onClick={() => {
-            this.state.showAddForm = true;
-            this.setState(this.state)
-          }}>
-            <PlusOutlined/> 新建
-          </Button>,
-        ]}
-        request={(params, sort) => http.getPageableData(api + 'list', params, sort)}
-        columns={this.columns}
-        rowSelection={false}
-        rowKey="id"
-        bordered={true}
-        options={{search: true}}
+              size="small"
+            />
+          </Tabs.TabPane>)}
 
-        size="small"
-      />
+        </Tabs>
 
 
       <Modal

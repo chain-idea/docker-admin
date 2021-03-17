@@ -41,5 +41,6 @@ public class Project extends BaseEntity {
     @Convert(converter = ObjectConverter.class)
     App.BuildConfig buildConfig;
 
-
+    @ManyToOne
+    Classify classify;
 }

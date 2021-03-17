@@ -47,9 +47,6 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     AppDao appDao;
 
-    @Autowired
-    GroupTargetService groupTargetService;
-
     @Transactional
     public Project saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
@@ -168,4 +165,5 @@ public class ProjectService extends BaseService<Project> {
         String logHook;
         String resultHook;
     }
+
 }

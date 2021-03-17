@@ -3,7 +3,7 @@ import ProTable, { EditableProTable } from '@ant-design/pro-table';
 import http from "../../../utils/request";
 import React from "react";
 
-let api = '/api/group/';
+let api = '/api/classify/';
 let prefix = serverUrl;
 if (prefix.endsWith("/")) {
   prefix = prefix.substr(0, prefix.length - 1);

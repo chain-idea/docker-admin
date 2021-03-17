@@ -1,6 +1,5 @@
 package com.gzqylc.docker.admin.entity;
 
-
 import com.gzqylc.lang.web.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,24 +10,19 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 /**
- * 分组表对象表 存储分组所对应的id
+ * 分组表 描述当前已有分组
  */
 @Entity
 @Getter
 @Setter
 @FieldNameConstants
-public class GroupTarget extends BaseEntity {
+public class Classify extends BaseEntity {
 
-    /**
-     * 分组名字的id
+      /**
+     * 分组自己的名字
      */
-    @NotNull
-    String groupId;
-
-    /**
-     * 分组对象的id
-     */
-    @NotNull
     @Column(unique = true)
-    String targetId;
+    @NotNull
+    String groupName;
+
 }
