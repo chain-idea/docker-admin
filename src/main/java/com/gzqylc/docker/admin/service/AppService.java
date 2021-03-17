@@ -101,6 +101,7 @@ public class AppService extends BaseService<App> {
             // 端口
             Ports ports = new Ports();
             List<ExposedPort> exposedPorts = new ArrayList<>();
+            // TODO cfg 解决空指针问题
             for (App.PortBinding p : cfg.getPorts()) {
                 ExposedPort e = new ExposedPort(p.getPrivatePort(), InternetProtocol.valueOf(p.getProtocol()));
                 exposedPorts.add(e);
@@ -154,6 +155,7 @@ public class AppService extends BaseService<App> {
         } catch (Exception e) {
             logger.info("--------------------------------------------------");
             logger.info("部署失败:" + e.getMessage());
+            e.printStackTrace();
             logger.info("--------------------------------------------------");
             return Pipeline.PipeProcessResult.ERROR;
         }
