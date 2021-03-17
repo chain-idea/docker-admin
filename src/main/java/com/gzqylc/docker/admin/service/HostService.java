@@ -19,7 +19,8 @@ public class HostService extends BaseService<Host> {
 
     public Info getDockerInfo(Host host) {
 
-        DockerClient client = DockerTool.getClient(host.getDockerId());
+        String dockerId = host.getDockerId();
+        DockerClient client = DockerTool.getClient(dockerId);
         Info info = client.infoCmd().exec();
 
         return info;
