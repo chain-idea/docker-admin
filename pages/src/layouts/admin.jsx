@@ -45,6 +45,7 @@ export default class extends React.Component {
             <h3>设置</h3>
             <Link to="/admin/registry">仓库帐号</Link>
             <Link to="/admin/runner">执行节点</Link>
+            <Link to="/admin/group">分组管理</Link>
           </Space>
 
         </Sider>

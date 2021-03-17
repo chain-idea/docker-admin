@@ -33,7 +33,7 @@ public class ProjectController {
     @Autowired
     private AppService appService;
 
-    @Route("list")
+    @Route("list")//todo 改造查询接口
     public Page<Project> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Project> c = new Criteria<>();
         c.add(Restrictions.like(Project.Fields.name, keyword));
@@ -42,7 +42,7 @@ public class ProjectController {
         return list;
     }
 
-    @Route("save")
+    @Route("save")//todo 改造保存的接口，可以再保存的时候选择分类
     public AjaxResult save(@RequestBody Project project) {
         Project db = service.saveProject(project);
 

@@ -30,6 +30,7 @@ export default defineConfig({
         {path: '/admin/registry', component: '@/pages/admin/registry'},
         {path: '/admin/dockerHub', component: '@/pages/admin/dockerHub'},
         {path: '/admin/runner', component: '@/pages/admin/runner'},
+        {path: '/admin/group', component: '@/pages/admin/group'},
         {path: '/admin/container/:hostId/:containerId', component: '@/pages/admin/container/view'},
         // 修改密码
         {path: '*', component: '@/pages/404'},
