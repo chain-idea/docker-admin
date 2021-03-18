@@ -19,14 +19,24 @@ export default class extends React.Component {
 
   state = {
     host: {},
-    info: {}
+    info: {},
+    classifyList: [],
+    isloadHost: false,
+    isLoadClassify: false
   }
 
-  componentDidMount() {
+  componentWillMount() {
     let {params} = this.props.match;
 
     http.get(api + "get", params).then(result => {
+      result.host.classifyId = result.host.classify.id;
+
       this.setState({...result})
+      this.setState({isloadHost: true})
+    })
+    http.get("api/classify/all").then(classifyList => {
+      this.setState({classifyList: classifyList})
+      this.setState({isLoadClassify: true})
     })
   }
 
@@ -37,7 +47,9 @@ export default class extends React.Component {
 
 
   render() {
-    const {host, info} = this.state;
+    const {host, info, classifyList} = this.state;
+    const isload = this.state.isLoadClassify && this.state.isloadHost
+
     return (<div>
       <div className="panel">
         <div>
@@ -54,7 +66,7 @@ export default class extends React.Component {
 
       </div>
 
-      {host.id && <div className="panel">
+      {isload && <div className="panel">
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab={<Badge count={info.containers} size={"small"}> 容器</Badge>} key="1">
             <Containers id={host.id}></Containers>
@@ -64,8 +76,6 @@ export default class extends React.Component {
 
           </Tabs.TabPane>
           <Tabs.TabPane tab="设置" key="setting">
-
-
             <Form initialValues={host} labelCol={{span: 3}} onFinish={this.save}>
               <Form.Item name={"name"} label={"主机名"}
                          rules={[{required: true}, {pattern: /^[a-zA-Z-0-9|_|\-]+$/, message: '字母、数字、下划线'}]}>
@@ -74,12 +84,33 @@ export default class extends React.Component {
               <Form.Item name={"remark"} label={"备注"}>
                 <Input></Input>
               </Form.Item>
+              <Form.Item
+                name={"classifyId"} label={"分组"}>
+                <Select
+                  showSearch
+                  style={{width: 200}}
+                  placeholder="Select a person"
+                  optionFilterProp="children"
+                  defaultValue={ host.classify.id }
+                  // key="0"
+                  filterOption={(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {
+                    this.state.classifyList.map(classify => {
+                      return <Select.Option key={classify.id} value={classify.id}>{classify.groupName}</Select.Option>
+                    })
+                  }
+                </Select>
+
+              </Form.Item>
+
               <Form.Item wrapperCol={{offset: 3}}>
                 <Button htmlType={"submit"} type={"primary"}>保存修改</Button>
               </Form.Item>
 
             </Form>
-
 
           </Tabs.TabPane>
 

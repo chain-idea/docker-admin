@@ -4,6 +4,7 @@ import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
 import {history} from 'umi';
+import common from "../../../utils/common";
 
 const addTitle = "添加主机"
 let api = '/api/host/';
@@ -17,6 +18,8 @@ export default class extends React.Component {
     formValues: {},
     cmd: '',
     classifyList: [],
+    showClassifyForm: false,
+    classifyFormValues: {}
   }
   actionRef = React.createRef();
 
@@ -44,7 +47,7 @@ export default class extends React.Component {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-        return <Button onClick={() => history.push("host/" + record.id)}>查看详情</Button>
+        return <Button  onClick={() => history.push("host/" + record.id)}>查看详情</Button>
       },
     },
   ];
@@ -115,7 +118,6 @@ export default class extends React.Component {
           {this.state.cmd}
         </code>
       </Modal>
-
 
     </div>)
   }

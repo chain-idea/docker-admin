@@ -3,12 +3,14 @@ package com.gzqylc.docker.admin.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.*;
+import com.gzqylc.docker.admin.dao.ClassifyDao;
 import com.gzqylc.docker.admin.dao.HostDao;
 import com.gzqylc.docker.admin.entity.App;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.docker.admin.entity.Pipeline;
 import com.gzqylc.docker.admin.entity.Registry;
 import com.gzqylc.docker.admin.service.docker.PullImageCallback;
+import com.gzqylc.docker.admin.web.form.AppClassifyForm;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
@@ -34,6 +36,8 @@ public class AppService extends BaseService<App> {
     @Autowired
     HostDao hostDao;
 
+    @Autowired
+    ClassifyDao classifyDao;
 
     @Async
     public void deploy(App app) {
@@ -191,15 +195,22 @@ public class AppService extends BaseService<App> {
         }
     }
 
-    public App rename(String appId, String newName) {
-        App app = this.findOne(appId);
-        this.deleteContainer(app);
+    public App renameAndClassify(AppClassifyForm appClassifyForm) {
+        App app = this.findOne(appClassifyForm.getAppId());
+        //判断名字是否相等决定是否重新部署
+        boolean isdeploy = !app.getName().equals(appClassifyForm.getName());
 
-        app.setName(newName);
+        if (isdeploy){
+            this.deleteContainer(app);
+            app.setName(appClassifyForm.getName());
+        }
+        //修改分组
+        app.setClassify(classifyDao.findOne(appClassifyForm.getClassifyId()));
         App saved = this.save(app);
 
-
-        this.deploy(app);
+        if(isdeploy){
+            this.deploy(app);
+        }
 
         return saved;
     }

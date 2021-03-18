@@ -1,6 +1,7 @@
 package com.gzqylc.docker.admin.web;
 
 import com.github.dockerjava.api.model.Container;
+import com.gzqylc.docker.admin.web.form.AppClassifyForm;
 import com.gzqylc.docker.admin.web.form.DeployForm;
 import com.gzqylc.docker.admin.entity.App;
 import com.gzqylc.docker.admin.service.AppService;
@@ -172,9 +173,9 @@ public class AppController {
         return AjaxResult.success("部署指令已发送");
     }
 
-    @Route("rename/{appId}")
-    public AjaxResult rename(@PathVariable String appId, @RequestBody String newName) {
-        App app = service.rename(appId, newName);
+    @Route("renameAndClassify")
+    public AjaxResult rename(@RequestBody AppClassifyForm appClassifyForm) {
+        App app = service.renameAndClassify(appClassifyForm);
         return AjaxResult.success("部署指令已发送", app);
     }
 

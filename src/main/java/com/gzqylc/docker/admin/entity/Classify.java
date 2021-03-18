@@ -7,6 +7,7 @@ import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -25,4 +26,14 @@ public class Classify extends BaseEntity {
     @NotNull
     String groupName;
 
+    @Transient
+    public static String DEFAULT_GROUP_ID = "0";
+
+    public Classify(String id){
+        this.id = id;
+    }
+
+    public Classify() {
+
+    }
 }

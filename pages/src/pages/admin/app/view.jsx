@@ -12,7 +12,7 @@ import {
   Divider,
   Alert,
   Modal,
-  Tag, Input
+  Tag, Input, Select
 } from 'antd';
 import React from 'react';
 import http from "@/utils/request";
@@ -30,7 +30,7 @@ export default class extends React.Component {
   state = {
     app: {
       yaml: '',
-      host: {}
+      host: {},
     },
     container: {},
 
@@ -40,7 +40,7 @@ export default class extends React.Component {
     publishApp: {
       targetVersion: null
     },
-
+    classifyList: [],
     showEditName: false,
     newName: ''
 
@@ -60,6 +60,9 @@ export default class extends React.Component {
 
     http.get("/api/app/container", params).then(container => {
       this.setState({container})
+    })
+    http.get("api/classify/all").then(classifyList => {
+      this.setState({classifyList : classifyList})
     })
   }
 
@@ -110,16 +113,19 @@ export default class extends React.Component {
       })
     })
   }
-  rename = () => {
-    let id = this.state.app.id;
-    http.post(api + 'rename/' + id, this.state.newName, '修改容器名称').then(rs => {
+  save = (value) => {
+    const para = {
+      appId: this.state.app.id,
+      classifyId: value.classifyId,
+      name: value.name
+    }
+    http.post(api + 'renameAndClassify/', para).then(rs => {
       this.setState({app: rs.data, showEditName: false})
     })
   }
 
   render() {
-    const {app, container} = this.state;
-
+    const {app, container } = this.state;
     const {state} = container;
 
     return (<div>
@@ -243,23 +249,52 @@ export default class extends React.Component {
             <Tabs.TabPane tab="设置" key="setting" className="panel"> <Divider></Divider>
               <Row wrap={false}>
                 <Col flex="100px">名称</Col>
-                <Col flex="auto">
-
-                  {!this.state.showEditName ? <div>
-                    {this.state.app.name} <a onClick={() => this.setState({
-                    newName: this.state.app.name,
-                    showEditName: true
-                  })}>修改名称</a>
-                  </div> : <div>
-
-                    <Input value={this.state.newName} style={{width: 200}}
-                           onChange={e => this.setState({newName: e.target.value})}></Input>
-
-                    <Button type={"primary"} onClick={this.rename}>确定</Button>
-                  </div>}
-
-
+                <Col>
+                  <Form initialValues={app} labelCol={{span: 3}} onFinish={this.save}>
+                    <Form.Item name={"classifyId"} label={"分组"}>
+                      <Select
+                        showSearch
+                        style={{ width: 200 }}
+                        placeholder="Select a person"
+                        optionFilterProp="children"
+                        defaultValue={ app.classify.id }
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                      >
+                        {
+                          this.state.classifyList.map(classify => {
+                            return <Option key= { classify.id }value={ classify.id }>{ classify.groupName }</Option>
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                    <Form.Item name = { "name" } label={ "名称" }>
+                      <Input></Input>
+                    </Form.Item>
+                    <Form.Item wrapperCol={{offset: 3}}>
+                      <Button htmlType={"submit"} type={"primary"}>保存修改</Button>
+                    </Form.Item>
+                  </Form>
                 </Col>
+
+                {/*<Col flex="auto">*/}
+
+                {/*  {!this.state.showEditName ? <div>*/}
+                {/*    {this.state.app.name} <a onClick={() => this.setState({*/}
+                {/*    newName: this.state.app.name,*/}
+                {/*    showEditName: true*/}
+                {/*  })}>修改名称</a>*/}
+                {/*  </div> : <div>*/}
+
+                {/*    <Input value={this.state.newName} style={{width: 200}}*/}
+                {/*           onChange={e => this.setState({newName: e.target.value})}></Input>*/}
+
+                {/*    <Button type={"primary"} onClick={this.rename}>确定</Button>*/}
+                {/*  </div>}*/}
+
+
+                {/*</Col>*/}
 
               </Row>
               <Divider></Divider>

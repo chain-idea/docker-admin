@@ -13,7 +13,6 @@ export default class extends React.Component {
 
   actionRef = React.createRef();
   state = {
-    editableKeys: []
   };
   columns = [
     {

@@ -48,6 +48,9 @@ export default class extends React.Component {
       dataIndex: 'remark',
     },
     {
+      dataIndex: 'remark',
+    },
+    {
       title: '最近更新',
       dataIndex: 'modifyTime',
       sorter: true,
@@ -96,7 +99,18 @@ export default class extends React.Component {
       }
 
     },
+    {
+      title: '所属分组',
+      dataIndex: 'classifyId',
+      hideInTable: true,
+      render: v => {
+        return v;
+      },
+      renderFormItem(item, prop) {
+        return <RemoteSelect url="/api/classify/options"></RemoteSelect>;
+      }
 
+    },
     {
       title: '操作',
       dataIndex: 'option',
@@ -105,6 +119,8 @@ export default class extends React.Component {
         let menu = <Menu>
           <Menu.Item key="1" onClick={() => {
             row.registryId = row.registry.id
+            row.classifyId = row.classify.id
+
             this.state.showEditForm = true;
             this.state.formValues = row;
             this.setState({
@@ -112,10 +128,7 @@ export default class extends React.Component {
               formValues: row
             })
           }}>修改</Menu.Item>
-
         </Menu>;
-
-
         return <Dropdown.Button overlay={menu}
                                 onClick={() => history.push("project/" + row.id)}>查看详情</Dropdown.Button>
 
@@ -139,12 +152,16 @@ export default class extends React.Component {
 
   handleUpdate = value => {
     let params = {...this.state.formValues, ...value};
+    this.state.classifyList.map(clssify => {
+      if(clssify.id === params.classifyId){
+        params.classify = clssify
+      }
+    })
     http.post(api + 'update', params).then(rs => {
       this.state.showEditForm = false;
       this.setState(this.state)
       this.actionRef.current.reload();
     })
-
   }
 
   componentDidMount() {
@@ -198,7 +215,6 @@ export default class extends React.Component {
         <ProTable
           {...common.getTableFormProps()}
           onSubmit={this.handleSave}
-
           columns={this.columns}
 
         />
@@ -211,6 +227,7 @@ export default class extends React.Component {
         title={editTitle}
         visible={showEditForm}
         onCancel={() => {
+          console.log("canel")
           this.state.showEditForm = false;
           this.setState(this.state)
         }}

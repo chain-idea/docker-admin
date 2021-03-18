@@ -116,5 +116,5 @@ public class App extends BaseEntity {
     }
 
     @ManyToOne
-    Classify classify;
+    Classify classify = new Classify(Classify.DEFAULT_GROUP_ID);
 }

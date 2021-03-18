@@ -103,7 +103,6 @@ export default class extends React.Component {
               <Form.Item wrapperCol={{offset: 3}}>
                 <Button htmlType={"submit"} type={"primary"}>保存修改</Button>
               </Form.Item>
-
             </Form>
 
             <Divider></Divider>

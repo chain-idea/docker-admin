@@ -5,6 +5,7 @@ import com.gzqylc.docker.admin.entity.Registry;
 import com.gzqylc.docker.admin.service.ClassifyService;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
+import com.gzqylc.lang.bean.Option;
 import com.gzqylc.lang.web.base.BaseEntity;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
@@ -65,7 +66,9 @@ public class ClassifyController {
      */
     @Route("deleteGroupById")
     public AjaxResult deleteGroupById(String id){
-
+        if (Classify.DEFAULT_GROUP_ID.equals(id)){
+            return AjaxResult.error("数据操作失败，不允许删除默认分组");
+        }
         classifyService.delete(id);
         return AjaxResult.success("操作成功");
     }
@@ -80,4 +83,8 @@ public class ClassifyController {
         return list;
     }
 
+    @Route("options")
+    public List<Option> options(String searchText, String[] selected, Pageable pageable) {
+        return classifyService.findOptionList(searchText, selected, pageable, Registry.Fields.name, Classify::getGroupName);
+    }
 }

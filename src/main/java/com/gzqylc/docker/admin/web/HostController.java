@@ -5,7 +5,6 @@ import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
-import com.gzqylc.docker.admin.entity.App;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.docker.admin.service.HostService;
 import com.gzqylc.docker.admin.entity.Registry;
@@ -84,7 +83,7 @@ public class HostController extends BaseController {
     @Route("update")
     public AjaxResult update(@RequestBody Host host) {
         Assert.notNull(host.getId(), "id不能为空");
-        service.updateNameAndRemark(host);
+        service.updateNameAndRemarkAndClassify(host);
         return AjaxResult.success("保存");
     }
 

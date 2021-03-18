@@ -31,6 +31,8 @@ public class Host extends BaseEntity {
     String dockerId;
 
     @ManyToOne
-    Classify classify;
+    Classify classify = new Classify(Classify.DEFAULT_GROUP_ID);
 
+    @Transient
+    String classifyId;
 }

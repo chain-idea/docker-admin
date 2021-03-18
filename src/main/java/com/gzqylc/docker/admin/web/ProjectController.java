@@ -2,7 +2,6 @@ package com.gzqylc.docker.admin.web;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.docker.admin.entity.App;
-import com.gzqylc.docker.admin.entity.Classify;
 import com.gzqylc.docker.admin.service.AppService;
 import com.gzqylc.docker.admin.entity.Project;
 import com.gzqylc.docker.admin.service.ProjectService;
@@ -44,7 +43,7 @@ public class ProjectController {
         return list;
     }
 
-    @Route("save")//todo 改造保存的接口，可以再保存的时候选择分类
+    @Route("save")
     public AjaxResult save(@RequestBody Project project) {
         Project db = service.saveProject(project);
 
@@ -55,7 +54,7 @@ public class ProjectController {
 
     @Route("update")
     public AjaxResult update(@RequestBody Project project) {
-        service.updateRemark(project);
+        service.updateRemarkAndClassify(project);
         return AjaxResult.success("修改成功");
     }
 

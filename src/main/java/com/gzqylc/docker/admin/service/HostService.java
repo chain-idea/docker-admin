@@ -4,10 +4,12 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
+import com.gzqylc.docker.admin.dao.ClassifyDao;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.docker.admin.service.docker.DockerTool;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @Service
 public class HostService extends BaseService<Host> {
 
+    @Autowired
+    ClassifyDao classifyDao;
 
     public Info getDockerInfo(Host host) {
 
@@ -51,8 +55,9 @@ public class HostService extends BaseService<Host> {
 
     }
 
-    public void updateNameAndRemark(Host host) {
+    public void updateNameAndRemarkAndClassify(Host host) {
         Host db = baseDao.findOne(host);
+        db.setClassify(classifyDao.findOne(host.getClassifyId()));
         db.setName(host.getName());
         db.setRemark(host.getRemark());
         baseDao.save(db);

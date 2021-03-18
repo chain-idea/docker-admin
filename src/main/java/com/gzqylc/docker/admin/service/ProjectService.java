@@ -47,6 +47,9 @@ public class ProjectService extends BaseService<Project> {
     @Autowired
     AppDao appDao;
 
+    @Autowired
+    ClassifyDao classifyDao;
+
     @Transactional
     public Project saveProject(Project project) {
         Registry registry = registryDao.findOne(project.getRegistry());
@@ -59,8 +62,6 @@ public class ProjectService extends BaseService<Project> {
             project.setBuildConfig(buildConfig);
         }
         project = super.save(project);
-
-        //菜单绑定逻辑
 
         return project;
     }
@@ -143,8 +144,10 @@ public class ProjectService extends BaseService<Project> {
         baseDao.deleteById(id);
     }
 
-    public void updateRemark(Project project) {
+    public void updateRemarkAndClassify(Project project) {
         Project db = baseDao.findOne(project);
+        //新增分组保存
+        db.setClassify(classifyDao.findOne(project.getClassify().getId()));
         db.setRemark(project.getRemark());
         baseDao.save(db);
     }
