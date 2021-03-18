@@ -173,10 +173,15 @@ public class AppController {
         return AjaxResult.success("部署指令已发送");
     }
 
-    @Route("renameAndClassify")
-    public AjaxResult rename(@RequestBody AppClassifyForm appClassifyForm) {
-        App app = service.renameAndClassify(appClassifyForm);
+    @Route("rename{appId}")
+    public AjaxResult rename(String appId,String newName) {
+        App app = service.rename(appId,newName);
         return AjaxResult.success("部署指令已发送", app);
+    }
+    @Route("reClassify")
+    public AjaxResult rename(@RequestBody AppClassifyForm appClassifyForm) {
+        App app = service.reClassify(appClassifyForm);
+        return AjaxResult.success("分组修改成功", app);
     }
 
     @Route("get")

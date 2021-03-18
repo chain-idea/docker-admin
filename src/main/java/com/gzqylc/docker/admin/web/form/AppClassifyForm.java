@@ -14,5 +14,4 @@ public class AppClassifyForm {
 
     String appId;
     String classifyId;
-    String name;
 }

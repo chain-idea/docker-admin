@@ -195,22 +195,25 @@ public class AppService extends BaseService<App> {
         }
     }
 
-    public App renameAndClassify(AppClassifyForm appClassifyForm) {
+    public App reClassify(AppClassifyForm appClassifyForm){
         App app = this.findOne(appClassifyForm.getAppId());
-        //判断名字是否相等决定是否重新部署
-        boolean isdeploy = !app.getName().equals(appClassifyForm.getName());
-
-        if (isdeploy){
-            this.deleteContainer(app);
-            app.setName(appClassifyForm.getName());
-        }
-        //修改分组
         app.setClassify(classifyDao.findOne(appClassifyForm.getClassifyId()));
+
+        App saved = this.save(app);
+        return saved;
+    }
+
+    public App rename(String appId, String newName) {
+        App app = this.findOne(appId);
+        //判断名字是否相同进行部署
+        if(newName.equals(app.getName())){
+            return app;
+        }
+        this.deleteContainer(app);
+        app.setName(newName);
         App saved = this.save(app);
 
-        if(isdeploy){
-            this.deploy(app);
-        }
+        this.deploy(app);
 
         return saved;
     }
