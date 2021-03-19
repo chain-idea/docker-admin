@@ -29,12 +29,18 @@ export default class extends React.Component {
     let {params} = this.props.match;
 
     http.get(api + "get", params).then(result => {
-      result.host.classifyId = result.host.classify.id;
-
+      result.host.classifyId = result.host.classify? result.host.classify.id : "";
       this.setState({...result})
       this.setState({isloadHost: true})
     })
     http.get("api/classify/all").then(classifyList => {
+      //新增加未分组菜单
+      const classify = {
+        id: "",
+        name: "未分组"
+      }
+      classifyList.unshift(classify)
+
       this.setState({classifyList: classifyList})
       this.setState({isLoadClassify: true})
     })
@@ -91,15 +97,14 @@ export default class extends React.Component {
                   style={{width: 200}}
                   placeholder="Select a person"
                   optionFilterProp="children"
-                  defaultValue={ host.classify.id }
-                  // key="0"
+                  defaultValue={ host.classify ? host.classify.id : "" }
                   filterOption={(input, option) =>
                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                 >
                   {
                     this.state.classifyList.map(classify => {
-                      return <Select.Option key={classify.id} value={classify.id}>{classify.groupName}</Select.Option>
+                      return <Select.Option key={classify.id} value={classify.id}>{classify.name}</Select.Option>
                     })
                   }
                 </Select>

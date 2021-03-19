@@ -5,6 +5,7 @@ import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
+import com.gzqylc.docker.admin.entity.Classify;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.docker.admin.service.HostService;
 import com.gzqylc.docker.admin.entity.Registry;
@@ -15,9 +16,11 @@ import com.gzqylc.lang.bean.Option;
 import com.gzqylc.lang.web.RequestTool;
 import com.gzqylc.lang.web.base.BaseController;
 import com.gzqylc.docker.admin.service.docker.DockerTool;
+import com.gzqylc.lang.web.base.BaseEntity;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,8 +77,11 @@ public class HostController extends BaseController {
     @Route("list")
     public Page<Host> list(String classifyId,@PageableDefault(sort = "name") Pageable pageable, Host host) {
         Criteria<Host> c = new Criteria<>();
-        c.add(Restrictions.eq("classify.id", classifyId));
-
+        if (StringUtils.isEmpty(classifyId)){
+            c.add(Restrictions.isNull(Host.Fields.classify + "." + BaseEntity.Fields.id));
+        }else{
+            c.add(Restrictions.eq(Host.Fields.classify + "." + BaseEntity.Fields.id, classifyId));
+        }
         Page<Host> list = service.findAll(c, pageable);
         return list;
     }

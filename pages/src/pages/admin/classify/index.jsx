@@ -17,7 +17,7 @@ export default class extends React.Component {
   columns = [
     {
       title: '分组名字',
-      dataIndex: 'groupName',
+      dataIndex: 'name',
       formItemProps: {
         rules: [
           {
@@ -57,20 +57,19 @@ export default class extends React.Component {
     }
   ];
 
-  saveGroupData(editableKeys,rows){
+  saveClassifyData(editableKeys, rows){
     let params ={
       id: rows.id,
-      groupName: rows.groupName
+      name: rows.name
     };
-    http.post(api + 'saveOrUpdateGroup', params).then(rs => {
+    http.post(api + 'saveOrUpdateClassify', params).then(rs => {
 
-      // this.loadTableDate
       this.setState(this.state);
     });
     this.actionRef.current.reload();
   }
   deleteRows(id){
-    http.post(  api + 'deleteGroupById?id=' +id ).then(rs =>{
+    http.post(  api + 'deleteClassifyById?id=' +id ).then(rs =>{
       this.setState(this.state);
     });
     this.actionRef.current.reload();
@@ -87,7 +86,7 @@ export default class extends React.Component {
             request={ (params, sort) => http.getPageableData(api + 'list', params, sort) }
             editable={{
               type: 'multiple',
-              onSave: this.saveGroupData.bind(this),
+              onSave: this.saveClassifyData.bind(this),
               onDelete: this.deleteRows.bind(this),
             }}
           />

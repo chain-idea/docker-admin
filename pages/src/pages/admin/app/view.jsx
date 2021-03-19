@@ -62,6 +62,12 @@ export default class extends React.Component {
       this.setState({container})
     })
     http.get("api/classify/all").then(classifyList => {
+      //新增加未分组菜单
+      const classify = {
+        id: "",
+        name: "未分组"
+      }
+      classifyList.unshift(classify)
       this.setState({classifyList : classifyList})
     })
   }
@@ -118,7 +124,7 @@ export default class extends React.Component {
       appId: this.state.app.id,
       classifyId: value.classifyId,
     }
-    http.post(api + 'reClassify/', para).then(rs => {
+    http.post(api + 'updateClassify/', para).then(rs => {
       this.setState({app: rs.data, showEditName: false})
     })
   }
@@ -274,6 +280,8 @@ export default class extends React.Component {
 
               </Row>
               <Divider></Divider>
+              {
+                this.state.classifyList.length > 0 &&
                 <Row wrap={ false }>
                   <Col>
                     <Form initialValues={app} labelCol={{span: 3}} onFinish={this.save}>
@@ -283,14 +291,14 @@ export default class extends React.Component {
                           style={{ width: 200 }}
                           placeholder="Select a person"
                           optionFilterProp="children"
-                          defaultValue={ app.classify.id }
+                          defaultValue={ app.classify? app.classify.id: ""  }
                           filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                           }
                         >
                           {
                             this.state.classifyList.map(classify => {
-                              return <Option key= { classify.id }value={ classify.id }>{ classify.groupName }</Option>
+                              return <Option key= { classify.id }value={ classify.id }>{ classify.name }</Option>
                             })
                           }
                         </Select>
@@ -302,6 +310,8 @@ export default class extends React.Component {
                   </Col>
 
                 </Row>
+
+              }
               <Divider></Divider>
               <Row wrap={false}>
                 <Col flex="100px">自动重启</Col>

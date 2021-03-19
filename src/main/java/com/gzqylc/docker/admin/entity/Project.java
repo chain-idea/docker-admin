@@ -42,5 +42,5 @@ public class Project extends BaseEntity {
     App.BuildConfig buildConfig;
 
     @ManyToOne
-    Classify classify = new Classify(Classify.DEFAULT_GROUP_ID);
+    Classify classify;
 }

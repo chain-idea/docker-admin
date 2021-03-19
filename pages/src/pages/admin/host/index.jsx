@@ -70,6 +70,12 @@ export default class extends React.Component {
   }
   componentDidMount() {
     http.get("api/classify/all").then(classifyList => {
+      //新增加未分组菜单
+      const classify = {
+        id: "",
+        name: "未分组"
+      }
+      classifyList.unshift(classify)
       this.setState({classifyList : classifyList})
     })
   }
@@ -79,7 +85,7 @@ export default class extends React.Component {
 
     return (<div className="panel">
       <Tabs defaultActiveKey="0">
-        {this.state.classifyList.map((classify, index) => <Tabs.TabPane tab={classify.groupName} key={index}>
+        {this.state.classifyList.length > 0 && this.state.classifyList.map((classify, index) => <Tabs.TabPane tab={classify.name} key={index}>
           <ProTable
             actionRef={this.actionRef}
             toolBarRender={(action, {selectedRows}) => [

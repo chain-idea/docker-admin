@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 分组表 描述当前已有分组
+ * @author yefeng
  */
 @Entity
 @Getter
@@ -24,16 +25,6 @@ public class Classify extends BaseEntity {
      */
     @Column(unique = true)
     @NotNull
-    String groupName;
+    String name;
 
-    @Transient
-    public static String DEFAULT_GROUP_ID = "0";
-
-    public Classify(String id){
-        this.id = id;
-    }
-
-    public Classify() {
-
-    }
 }

@@ -2,6 +2,7 @@ package com.gzqylc.docker.admin.web;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.gzqylc.docker.admin.entity.App;
+import com.gzqylc.docker.admin.entity.Classify;
 import com.gzqylc.docker.admin.service.AppService;
 import com.gzqylc.docker.admin.entity.Project;
 import com.gzqylc.docker.admin.service.ProjectService;
@@ -11,6 +12,7 @@ import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import com.gzqylc.framework.AjaxResult;
 import com.gzqylc.framework.Route;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +39,12 @@ public class ProjectController {
     public Page<Project> list(String keyword, String classifyId,@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Project> c = new Criteria<>();
         c.add(Restrictions.like(Project.Fields.name, keyword));
-        c.add(Restrictions.eq("classify.id", classifyId));
+        if(StringUtils.isEmpty(classifyId)){
+            c.add(Restrictions.isNull(Project.Fields.classify + "." + BaseEntity.Fields.id));
+        }else{
+            c.add(Restrictions.eq(Project.Fields.classify + "." + BaseEntity.Fields.id, classifyId));
+
+        }
 
         Page<Project> list = service.findAll(c, pageable);
         return list;

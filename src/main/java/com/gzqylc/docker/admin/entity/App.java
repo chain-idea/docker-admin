@@ -55,6 +55,8 @@ public class App extends BaseEntity {
     @Transient
     String logUrl;
 
+    @Transient
+    String containerStatus;
 
     @Data
     public static class AppConfig {
@@ -114,5 +116,6 @@ public class App extends BaseEntity {
     }
 
     @ManyToOne
-    Classify classify = new Classify(Classify.DEFAULT_GROUP_ID);
+    Classify classify;
+
 }

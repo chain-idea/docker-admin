@@ -14,6 +14,7 @@ import com.gzqylc.lang.web.base.BaseEntity;
 import com.gzqylc.lang.web.jpa.specification.Criteria;
 import com.gzqylc.lang.web.jpa.specification.Restrictions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +44,23 @@ public class AppController {
     public Page<App> list(String classifyId,@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, String keyword) {
         Criteria<App> c = new Criteria<>();
         c.add(Restrictions.like(App.Fields.name, keyword));
-//        c.add(Restrictions.eq("classify.id", classifyId));
+        if(StringUtils.isEmpty(classifyId)){
+            c.add(Restrictions.isNull(App.Fields.classify + "." + BaseEntity.Fields.id));
+        }else{
+            c.add(Restrictions.eq(App.Fields.classify + "." + BaseEntity.Fields.id, classifyId));
+        }
+
         Page<App> list = service.findAll(c, pageable);
+
+        list.forEach(a -> {
+            try {
+                Container container = service.getContainer(a);
+                a.setContainerStatus(container.getStatus());
+            } catch (Exception e) {
+                a.setContainerStatus(e.getMessage());
+            }
+
+        });
 
 
         return list;
@@ -168,9 +184,9 @@ public class AppController {
         App app = service.rename(appId,newName);
         return AjaxResult.success("部署指令已发送", app);
     }
-    @Route("reClassify")
-    public AjaxResult rename(@RequestBody AppClassifyForm appClassifyForm) {
-        App app = service.reClassify(appClassifyForm);
+    @Route("updateClassify")
+    public AjaxResult updateClassify(@RequestBody AppClassifyForm appClassifyForm) {
+        App app = service.updateClassify(appClassifyForm);
         return AjaxResult.success("分组修改成功", app);
     }
 

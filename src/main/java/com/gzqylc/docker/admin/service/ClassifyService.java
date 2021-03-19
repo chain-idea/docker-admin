@@ -13,12 +13,9 @@ public class ClassifyService extends BaseService<Classify> {
 
 
     /**
-     * 增删改查？
-     */
-    /**
      * 新增或者修改分组
      */
-    public void saveOrUpdateGroup(Classify classify){
+    public void saveOrUpdateClassify(Classify classify){
 
         if (StringUtils.isEmpty(classify.getId())){
             classify.setCreateTime(new Date());

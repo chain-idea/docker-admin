@@ -5,6 +5,7 @@ import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.Info;
 import com.gzqylc.docker.admin.dao.ClassifyDao;
+import com.gzqylc.docker.admin.entity.Classify;
 import com.gzqylc.docker.admin.entity.Host;
 import com.gzqylc.lang.web.base.BaseService;
 import com.gzqylc.docker.admin.service.docker.DockerTool;
@@ -56,8 +57,11 @@ public class HostService extends BaseService<Host> {
     }
 
     public void updateNameAndRemarkAndClassify(Host host) {
+
         Host db = baseDao.findOne(host);
-        db.setClassify(classifyDao.findOne(host.getClassifyId()));
+        Classify classify = classifyDao.findOne(host.getClassifyId());
+
+        db.setClassify(classify);
         db.setName(host.getName());
         db.setRemark(host.getRemark());
         baseDao.save(db);

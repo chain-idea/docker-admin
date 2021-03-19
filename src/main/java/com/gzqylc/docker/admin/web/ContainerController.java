@@ -2,8 +2,6 @@ package com.gzqylc.docker.admin.web;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.exception.NotFoundException;
-import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.gzqylc.docker.admin.entity.Host;
@@ -20,12 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.print.Doc;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -124,31 +119,6 @@ public class ContainerController extends BaseController {
 
 
         return AjaxResult.success("启动容器成功");
-
-    }
-
-
-    @Route("status")
-    @ResponseBody
-    public AjaxResult status(String hostId, String appName) {
-        Host host = hostService.findOne(hostId);
-        DockerClient client = DockerTool.getClient(host.getDockerId());
-        Map<String, String> appLabelFilter = DockerTool.getAppLabelFilter(appName);
-
-        try {
-
-            List<Container> list = client.listContainersCmd().withLabelFilter(appLabelFilter).withShowAll(true).exec();
-            if (list.isEmpty()) {
-                return AjaxResult.success("未知");
-            }
-
-            Container container = list.get(0);
-
-            return AjaxResult.success(container.getStatus());
-        } catch (NotFoundException e) {
-
-            return AjaxResult.success("未知");
-        }
 
     }
 }

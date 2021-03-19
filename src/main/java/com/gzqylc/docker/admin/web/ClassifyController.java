@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * 分组管理
+ * @author yefeng
  */
 @RestController
 @Slf4j
@@ -41,7 +42,7 @@ public class ClassifyController {
     @Route("list")
     public Page<Classify> list(String keyword, @PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable) {
         Criteria<Classify> c = new Criteria<>();
-        c.add(Restrictions.like(Classify.Fields.groupName, keyword));
+        c.add(Restrictions.like(Classify.Fields.name, keyword));
 
         Page<Classify> list = classifyService.findAll(c, pageable);
         return list;
@@ -52,10 +53,10 @@ public class ClassifyController {
      * @param classify 分组对象 分组id为空为新增 分组id不为空则为修改
      * @return 通用返回对象
      */
-    @Route("saveOrUpdateGroup")
-    public AjaxResult saveOrUpdateGroup(@RequestBody Classify classify){
+    @Route("saveOrUpdateClassify")
+    public AjaxResult saveOrUpdateClassify(@RequestBody Classify classify){
 
-        classifyService.saveOrUpdateGroup(classify);
+        classifyService.saveOrUpdateClassify(classify);
         return AjaxResult.success("操作成功");
     }
 
@@ -64,11 +65,8 @@ public class ClassifyController {
      * @param id
      * @return
      */
-    @Route("deleteGroupById")
-    public AjaxResult deleteGroupById(String id){
-        if (Classify.DEFAULT_GROUP_ID.equals(id)){
-            return AjaxResult.error("数据操作失败，不允许删除默认分组");
-        }
+    @Route("deleteClassifyById")
+    public AjaxResult deleteClassifyById(String id){
         classifyService.delete(id);
         return AjaxResult.success("操作成功");
     }
@@ -85,6 +83,6 @@ public class ClassifyController {
 
     @Route("options")
     public List<Option> options(String searchText, String[] selected, Pageable pageable) {
-        return classifyService.findOptionList(searchText, selected, pageable, Registry.Fields.name, Classify::getGroupName);
+        return classifyService.findOptionList(searchText, selected, pageable, Registry.Fields.name, Classify::getName);
     }
 }

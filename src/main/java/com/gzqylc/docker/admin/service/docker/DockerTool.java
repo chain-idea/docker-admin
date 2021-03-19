@@ -9,9 +9,6 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import com.gzqylc.lang.tool.SystemTool;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 public class DockerTool {
 
@@ -52,15 +49,6 @@ public class DockerTool {
     private static String getLocalDockerHost() {
         return SystemTool.isWindows() ? "tcp://localhost:2375" : "unix:///var/run/docker.sock";
     }
-
-
-    public static Map<String, String> getAppLabelFilter(String name) {
-        Map<String, String> labels = new HashMap<>();
-        labels.put("app.name", name);
-        return labels;
-    }
-
-
 
 
 }

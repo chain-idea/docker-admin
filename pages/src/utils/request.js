@@ -200,8 +200,8 @@ function send(isGet, url, params, autoAlertMsg = true, alertTitle) {
 
 const http = {
   request: request,
-  get: (url, params,autoAlertMsg=true) => {
-    return send(true, url, params, autoAlertMsg)
+  get: (url, params) => {
+    return send(true, url, params, true)
   },
   post: (url, params, alertTitle) => {
     return send(false, url, params, true, alertTitle)
