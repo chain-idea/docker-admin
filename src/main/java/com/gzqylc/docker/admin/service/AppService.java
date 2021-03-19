@@ -140,7 +140,7 @@ public class AppService extends BaseService<App> {
             logger.info("主机配置{}", hostConfig.getBinds());
             CreateContainerResponse response = client.createContainerCmd(image)
                     .withName(name + "_1")
-                    .withLabels(getAppLabelFilter(name))
+                    .withLabels(DockerTool.getAppLabelFilter(name))
                     .withHostConfig(hostConfig)
                     .withExposedPorts(exposedPorts) // 如果dockerfile中未指定端口，需要在这里指定
                     .withEnv(envs)
@@ -195,7 +195,7 @@ public class AppService extends BaseService<App> {
         }
     }
 
-    public App reClassify(AppClassifyForm appClassifyForm){
+    public App reClassify(AppClassifyForm appClassifyForm) {
         App app = this.findOne(appClassifyForm.getAppId());
         app.setClassify(classifyDao.findOne(appClassifyForm.getClassifyId()));
 
@@ -206,7 +206,7 @@ public class AppService extends BaseService<App> {
     public App rename(String appId, String newName) {
         App app = this.findOne(appId);
         //判断名字是否相同进行部署
-        if(newName.equals(app.getName())){
+        if (newName.equals(app.getName())) {
             return app;
         }
         this.deleteContainer(app);
@@ -219,18 +219,13 @@ public class AppService extends BaseService<App> {
     }
 
     private List<Container> getContainer(String name, DockerClient client) {
-        Map<String, String> labels = getAppLabelFilter(name);
+        Map<String, String> labels = DockerTool.getAppLabelFilter(name);
         List<Container> list = client.listContainersCmd()
                 .withLabelFilter(labels)
                 .withShowAll(true).exec();
         return list;
     }
 
-    private Map<String, String> getAppLabelFilter(String name) {
-        Map<String, String> labels = new HashMap<>();
-        labels.put("app.name", name);
-        return labels;
-    }
 
     public Container getContainer(App app) {
         String dockerId = app.getHost().getDockerId();
@@ -238,7 +233,7 @@ public class AppService extends BaseService<App> {
 
         String name = app.getName();
 
-        Map<String, String> labels = getAppLabelFilter(name);
+        Map<String, String> labels = DockerTool.getAppLabelFilter(name);
         List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
         if (!list.isEmpty()) {
             return list.get(0);
@@ -293,7 +288,7 @@ public class AppService extends BaseService<App> {
         DockerClient client = DockerTool.getClient(app.getHost().getDockerId());
 
 
-        Map<String, String> labels = getAppLabelFilter(app.getName());
+        Map<String, String> labels = DockerTool.getAppLabelFilter(app.getName());
         List<Container> list = client.listContainersCmd().withLabelFilter(labels).withShowAll(true).exec();
         log.info("已有容器个数 {}", list.size());
 

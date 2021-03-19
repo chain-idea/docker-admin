@@ -43,18 +43,8 @@ public class AppController {
     public Page<App> list(String classifyId,@PageableDefault(sort = BaseEntity.Fields.modifyTime, direction = Sort.Direction.DESC) Pageable pageable, String keyword) {
         Criteria<App> c = new Criteria<>();
         c.add(Restrictions.like(App.Fields.name, keyword));
-        c.add(Restrictions.eq("classify.id", classifyId));
+//        c.add(Restrictions.eq("classify.id", classifyId));
         Page<App> list = service.findAll(c, pageable);
-
-        list.forEach(a -> {
-            try {
-                Container container = service.getContainer(a);
-                a.setContainerStatus(container.getStatus());
-            } catch (Exception e) {
-                a.setContainerStatus(e.getMessage());
-            }
-
-        });
 
 
         return list;
