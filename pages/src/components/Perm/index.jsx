@@ -1,5 +1,4 @@
 import React from 'react';
-import {connect} from 'dva';
 
 /**
  * 使用该标签，可以判断权限到按钮级别,
