@@ -55,8 +55,7 @@ public class App extends BaseEntity {
     @Transient
     String logUrl;
 
-    @Transient
-    String containerStatus;
+
 
     @Data
     public static class AppConfig {

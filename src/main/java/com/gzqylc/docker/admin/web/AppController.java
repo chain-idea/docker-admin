@@ -52,15 +52,7 @@ public class AppController {
 
         Page<App> list = service.findAll(c, pageable);
 
-        list.forEach(a -> {
-            try {
-                Container container = service.getContainer(a);
-                a.setContainerStatus(container.getStatus());
-            } catch (Exception e) {
-                a.setContainerStatus(e.getMessage());
-            }
 
-        });
 
 
         return list;

@@ -4,6 +4,7 @@ import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
 import {history} from 'umi';
+import ContainerStatus from "../../../components/ContainerStatus";
 
 const deleteTitle = '删除应用'
 let api = '/api/app/';
@@ -46,11 +47,8 @@ export default class extends React.Component {
     {
       title: '状态',
       dataIndex: 'containerStatus',
-      render: s => {
-        if (s && s.indexOf('Up') >= 0) {
-          return <Tag color={"green"}>{s} </Tag>
-        }
-        return <Tag color={"red"}>{s || '未知'}</Tag>
+      render: (_,row) => {
+        return <ContainerStatus hostId={row.host.id} appName={row.name}></ContainerStatus>
       }
 
     },
