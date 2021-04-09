@@ -48,9 +48,6 @@ export default class extends React.Component {
       dataIndex: 'remark',
     },
     {
-      dataIndex: 'remark',
-    },
-    {
       title: '最近更新',
       dataIndex: 'modifyTime',
       sorter: true,
@@ -244,7 +241,6 @@ export default class extends React.Component {
           columns={this.columns}
         />
       </Modal>
-      Provides ability to open pages and links by Internet Explorer (Cloned IE View based on WebExtensions-based)
     </div>)
   }
 
