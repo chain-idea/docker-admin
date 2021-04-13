@@ -149,6 +149,10 @@ public class ProjectService extends BaseService<Project> {
         Project db = baseDao.findOne(project);
         Classify classify = classifyDao.findOne(project.getClassify().getId());
         //新增分组保存
+        if(project.getGitUrl() != null){
+            db.setGitUrl(project.getGitUrl());
+        }
+
         db.setClassify(classify);
         db.setRemark(project.getRemark());
         baseDao.save(db);

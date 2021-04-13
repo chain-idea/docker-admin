@@ -1,7 +1,6 @@
 import React from 'react';
 import http from "../../../utils/request";
 import {Button, Form, Switch, Input} from "antd";
-import RemoteSelect from "../../../components/RemoteSelect";
 
 let api = '/api/project/';
 
