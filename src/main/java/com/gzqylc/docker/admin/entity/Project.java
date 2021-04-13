@@ -28,6 +28,7 @@ public class Project extends BaseEntity {
 
     String gitPassword;
 
+    @Column(unique = true)
     @NotNull
     String imageUrl;
 
