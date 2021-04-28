@@ -17,7 +17,6 @@ ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootA
 RUN mvn -q -DskipTests=true  package
 
 
-
 ADD src ./src
 COPY --from=0 /tmp/build/dist/ src/main/resources/static/
 RUN mvn -q -DskipTests=true package \
