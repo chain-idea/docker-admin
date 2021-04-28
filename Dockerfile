@@ -14,7 +14,7 @@ WORKDIR /tmp/build
 
 ADD pom.xml .
 ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootApplication.java
-RUN mvn  -DskipTests=true  package
+RUN mvn -q  -DskipTests=true  package
 
 
 ADD src ./src
