@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.gzqylc.framework</groupId>
             <artifactId>framework-web-spring</artifactId>
-            <version>1.4.3</version>
+            <version>1.4.15</version>
             <exclusions>
                 <exclusion>
                     <groupId>mysql</groupId>
