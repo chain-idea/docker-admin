@@ -4,8 +4,6 @@ services:
     image: registry.cn-beijing.aliyuncs.com/chain-idea/docker-admin
     ports:
       - "8082:8080"
-    environment:
-      dbpwd: xjw1234
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/docker_data/hgs-face-test/h2db/:/root/h2db/
