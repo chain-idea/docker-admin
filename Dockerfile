@@ -8,7 +8,7 @@ RUN npm install
 ADD pages/ .
 RUN npm run build
 
-FROM maven:3
+FROM maven:3.6.3
 
 WORKDIR /tmp/build
 
