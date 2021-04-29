@@ -12,7 +12,7 @@ FROM maven:3
 
 WORKDIR /tmp/build
 
-RUN ping nexus.dev.gzqylc.com -n 10
+RUN ping nexus.dev.gzqylc.com -c 10
 ADD pom.xml .
 ADD src/main/java/com/gzqylc/BootApplication.java src/main/java/com/gzqylc/BootApplication.java
 RUN mvn -X -DskipTests=true  package
