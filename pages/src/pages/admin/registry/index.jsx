@@ -1,10 +1,9 @@
 import {PlusOutlined} from '@ant-design/icons';
-import {Menu, Button, Divider, Dropdown, Modal, Popconfirm, Select} from 'antd';
+import {Button, Divider, Modal, Popconfirm} from 'antd';
 import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "@/utils/request";
 import {serverUrl} from "@/config";
-import {history} from 'umi';
 
 const addTitle = "添加模板"
 const editTitle = '编辑模板'
