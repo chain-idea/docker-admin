@@ -3,7 +3,7 @@ import React from 'react';
 import ProTable from '@ant-design/pro-table';
 import http from "../../../utils/request";
 import {LazyLog, ScrollFollow} from "react-lazylog";
-import {CheckCircleFilled, ClockCircleOutlined, CloseCircleFilled, Loading3QuartersOutlined} from "@ant-design/icons";
+import {CheckCircleFilled, ClockCircleOutlined, CloseCircleFilled, Loading3QuartersOutlined,MinusCircleTwoTone} from "@ant-design/icons";
 
 let api = '/api/pipeline/';
 
