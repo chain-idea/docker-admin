@@ -1,4 +1,4 @@
-FROM node:12.20.1-alpine3.10
+FROM node:12.20.1-alpine3.10 as BUILD
 WORKDIR /tmp/build
 
 RUN npm config set registry http://registry.npm.taobao.org/
@@ -18,7 +18,7 @@ RUN mvn -q -DskipTests=true  package
 
 
 ADD src ./src
-COPY --from=0 /tmp/build/dist/ src/main/resources/static/
+COPY --from=BUILD /tmp/build/dist/ src/main/resources/static/
 RUN mvn  -q -DskipTests=true package \
         && mv target/*.jar /app.jar \
         && cd / && rm -rf /tmp/build

@@ -89,6 +89,8 @@ public class ProjectService extends BaseService<Project> {
         form.logHook = cfg.getServerUrl() + RunnerHookController.API_LOG + "/" + pipelineId;
         form.resultHook = cfg.getServerUrl() + RunnerHookController.API_PIPE_FINISH + "/" + pipelineId + "/" + pipeId;
 
+        logger.info("日志回调地址 (如果是localhost，构建阶段可能无法请求成功) {}", form.logHook);
+
 
         form.gitUrl = form.gitUrl.replace(runner.getGitUrlReplaceSource(), runner.getGitUrlReplaceTarget());
         logger.info("替换git地址 {}", form.gitUrl);
