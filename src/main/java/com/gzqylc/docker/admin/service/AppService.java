@@ -135,6 +135,8 @@ public class AppService extends BaseService<App> {
             }
 
 
+
+
             logger.info("主机配置{}", hostConfig.getBinds());
             CreateContainerResponse response = client.createContainerCmd(image)
                     .withName(name + "_1")
