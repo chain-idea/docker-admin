@@ -13,7 +13,8 @@ function getIcon(key, index) {
     PENDING: <ClockCircleOutlined key={index}/>,
     PROCESSING: <Loading3QuartersOutlined key={index} spin/>,
     SUCCESS: <CheckCircleFilled key={index} style={{color: 'green'}}/>,
-    ERROR: <CloseCircleFilled key={index} style={{color: 'red'}}/>
+    ERROR: <CloseCircleFilled key={index} style={{color: 'red'}}/>,
+    CANCEL: <MinusCircleTwoTone />
   }
   return iconDict[key]
 }
