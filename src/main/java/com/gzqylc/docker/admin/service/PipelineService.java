@@ -63,24 +63,25 @@ public class PipelineService extends BaseService<Pipeline> {
             buildPipe.setType(Pipeline.Pipe.Type.BUILD_IMAGE);
 
             App.BuildConfig buildConfig = project.getBuildConfig();
-            Pipeline.PipeBuildConfig cfg = new Pipeline.PipeBuildConfig();
-            BeanUtils.copyProperties(buildConfig, cfg);
+            Pipeline.PipeBuildConfig buildCfg = new Pipeline.PipeBuildConfig();
+            BeanUtils.copyProperties(buildConfig, buildCfg);
 
-            cfg.setBranch(branch);
+            buildCfg.setBranch(branch);
 
-            cfg.setImageUrl(project.getImageUrl());
+            buildCfg.setImageUrl(project.getImageUrl());
 
-            cfg.setGitUrl(project.getGitUrl());
-            cfg.setGitUsername(project.getGitUsername());
-            cfg.setGitPassword(project.getGitPassword());
+            buildCfg.setGitUrl(project.getGitUrl());
+            buildCfg.setGitUsername(project.getGitUsername());
+            buildCfg.setGitPassword(project.getGitPassword());
 
-            cfg.setRegistryHost(project.getRegistry().getHost());
-            cfg.setRegistryUsername(project.getRegistry().getUsername());
-            cfg.setRegistryPassword(project.getRegistry().getPassword());
+            buildCfg.setRegistryHost(project.getRegistry().getHost());
+            buildCfg.setRegistryUsername(project.getRegistry().getUsername());
+            buildCfg.setRegistryPassword(project.getRegistry().getPassword());
 
-            cfg.setServerUrl(RequestTool.getBaseUrl(request));
+            buildCfg.setServerUrl(RequestTool.getBaseUrl(request));
 
-            buildPipe.setConfig(JsonTool.toJsonQuietly(cfg));
+
+            buildPipe.setConfig(JsonTool.toJsonQuietly(buildCfg));
 
 
             buildState.getPipeList().add(buildPipe);
@@ -105,22 +106,23 @@ public class PipelineService extends BaseService<Pipeline> {
                     deployPipe.setType(Pipeline.Pipe.Type.DEPLOY);
                     deployPipe.setName("部署应用");
 
-                    Pipeline.PipeDeployConfig cfg = new Pipeline.PipeDeployConfig();
-                    BeanUtils.copyProperties(a.getConfig(), cfg);
+                    Pipeline.PipeDeployConfig deployCfg = new Pipeline.PipeDeployConfig();
+                    BeanUtils.copyProperties(a.getConfig(), deployCfg);
 
-                    cfg.setAppId(a.getId());
-                    cfg.setName(a.getName());
-                    cfg.setHostname(a.getHost().getDockerId());
+                    deployCfg.setRestart(a.getAutoRestart());
+                    deployCfg.setAppId(a.getId());
+                    deployCfg.setName(a.getName());
+                    deployCfg.setHostname(a.getHost().getDockerId());
 
                     Registry registry = registryService.findByUrl(a.getImageUrl());
 
-                    cfg.setRegistryHost(registry.getHost());
-                    cfg.setRegistryUsername(registry.getUsername());
-                    cfg.setRegistryPassword(registry.getPassword());
+                    deployCfg.setRegistryHost(registry.getHost());
+                    deployCfg.setRegistryUsername(registry.getUsername());
+                    deployCfg.setRegistryPassword(registry.getPassword());
 
-                    cfg.setImage(image);
+                    deployCfg.setImage(image);
 
-                    deployPipe.setConfig(JsonTool.toJsonQuietly(cfg));
+                    deployPipe.setConfig(JsonTool.toJsonQuietly(deployCfg));
 
                     deployStage.getPipeList().add(deployPipe);
                 }

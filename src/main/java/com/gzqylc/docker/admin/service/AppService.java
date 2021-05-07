@@ -129,6 +129,7 @@ public class AppService extends BaseService<App> {
             }
 
             // 是否自动启动
+            log.info("是否自动重启 {}",cfg.isRestart());
             if (cfg.isRestart()) {
                 hostConfig.withRestartPolicy(RestartPolicy.alwaysRestart());
             }
