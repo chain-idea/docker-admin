@@ -22,12 +22,6 @@
             <groupId>com.gzqylc.framework</groupId>
             <artifactId>framework-web-spring</artifactId>
             <version>1.4.22</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 
@@ -91,11 +85,6 @@
             <version>4.5.1</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
 
 
     </dependencies>

@@ -1,2 +1,5 @@
+dbip: 172.17.0.76
+dbpwd: xjw1234
+
 server:
   port: 9000

@@ -1,3 +1,7 @@
+dbip: 192.168.2.193
+dbpwd: xjw1234
+
+dbport: 3306
 dbname: docker_admin
 
 
@@ -40,21 +44,24 @@ spring:
       max-request-size: 300MB
   jpa:
     hibernate.ddl-auto: update
+    database: MYSQL
+    database-platform: MYSQL
     show-sql: false
-    properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
     naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    database: h2
-    database-platform: h2
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:file:~/h2db/docker_admin
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+    jdbc-url: jdbc:mysql://${dbip}:${dbport}/${dbname}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    url: jdbc:mysql://${dbip}:${dbport}/${dbname}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    username: root
+    password: ${dbpwd}
+    hikari:
+      connection-test-query: SELECT 1
+      max-lifetime: 30000
+      maximum-pool-size: 500
+      minimum-idle: 20
+      idle-timeout: 180000
 
 
 # 防止XSS攻击
