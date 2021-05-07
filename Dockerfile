@@ -27,4 +27,4 @@ FROM openjdk:8-alpine
 COPY --from=1 /app.jar /app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Duser.timezone=Asia/Shanghai","-jar","/app.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Duser.timezone=Asia/Shanghai","-jar","/app.jar","--spring.profiles.active=prod"]

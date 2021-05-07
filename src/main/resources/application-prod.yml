@@ -2,4 +2,4 @@ dbip: 39.105.74.223
 dbpwd: xjw1234
 
 server:
-  port: 9000
+  port: 8080
