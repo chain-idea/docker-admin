@@ -222,7 +222,31 @@ public class PipelineService extends BaseService<Pipeline> {
 
         Pipeline db = dao.findOne(pipelineId);
         db.setStageList(stageList);
+
+        // 修改其他等待任务为取消
+        if(!success) {
+            for (Pipeline.PipeStage stage : stageList) {
+                List<Pipeline.Pipe> pipeList = stage.getPipeList();
+                for(Pipeline.Pipe p: pipeList){
+                    if(p.getStatus() == Pipeline.Pipe.Status.PENDING){
+                        p.setStatus(Pipeline.Pipe.Status.CANCEL);
+                    }
+                }
+
+            }
+
+
+
+        }
+
+
         dao.save(db);
+
+        if(!success){
+            notifyStop(pipelineId, false);
+            return;
+        }
+
 
 
         Pipeline.PipeStage currentStage = stageList.stream().filter(pipeStage -> pipeStage.getPipeList().contains(pipe)).findFirst().get();
@@ -236,7 +260,7 @@ public class PipelineService extends BaseService<Pipeline> {
             if (nextStageIndex == stageList.size()) {
                 // 所有阶段完成
 
-                notifyStop(pipelineId);
+                notifyStop(pipelineId,true);
 
             } else if (nextStageIndex < stageList.size()) {
                 Pipeline.PipeStage nextStage = stageList.get(nextStageIndex);
@@ -247,11 +271,11 @@ public class PipelineService extends BaseService<Pipeline> {
         }
     }
 
-    private void notifyStop(String pipelineId) {
+    private void notifyStop(String pipelineId, boolean success) {
         Pipeline db = dao.findOne(pipelineId);
         db.setStopTime(new Date());
         db.setConsumeTime((int) ((System.currentTimeMillis() - db.getCreateTime().getTime()) / 1000));
-        db.setStatus(Pipeline.Status.SUCCESS);
+        db.setStatus(success ? Pipeline.Status.SUCCESS : Pipeline.Status.ERROR);
         dao.save(db);
     }
 

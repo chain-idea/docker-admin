@@ -129,7 +129,8 @@ public class Pipeline extends BaseEntity {
             PENDING,
             PROCESSING,
             SUCCESS,
-            ERROR
+            ERROR,
+            CANCEL
         }
     }
 
