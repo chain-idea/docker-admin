@@ -116,7 +116,11 @@ public class AppService extends BaseService<App> {
             List<Bind> binds = new ArrayList<>();
             for (App.BindConfig v : cfg.getBinds()) {
                 // /host:/container:ro
-                AccessMode accessMode = v.getReadOnly() ? AccessMode.ro : AccessMode.rw;
+                boolean readonly = false;
+                if(v.getReadOnly() != null){
+                    readonly = v.getReadOnly();
+                }
+                AccessMode accessMode = readonly ? AccessMode.ro : AccessMode.rw;
                 binds.add(new Bind(v.getPublicVolume(), new Volume(v.getPrivateVolume()), accessMode));
             }
             hostConfig.withBinds(binds);
